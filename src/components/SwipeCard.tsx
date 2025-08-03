@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Heart, X, Star, MapPin, Briefcase, GraduationCap, MoreVertical, Flag, Shield, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { sendProfileViewNotification } from '@/lib/emailNotifications';
 
 interface Profile {
   id: string;
@@ -41,6 +42,15 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Send profile view notification when card is rendered
+  React.useEffect(() => {
+    sendProfileViewNotification(profile.id, {
+      name: 'You',
+      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+      id: 'current-user'
+    });
+  }, [profile.id]);
 
   const handleImageClick = (direction: 'prev' | 'next') => {
     if (direction === 'next' && currentImageIndex < profile.images.length - 1) {

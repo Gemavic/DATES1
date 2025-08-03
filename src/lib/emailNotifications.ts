@@ -120,6 +120,7 @@ class EmailNotificationManager {
     text: string;
   } {
     const baseUrl = 'https://dates.care';
+    const appUrl = 'https://beamish-clafoutis-01d1f8.netlify.app';
     
     const subject = `Dates.care - ${notification.title}`;
     
@@ -223,8 +224,8 @@ class EmailNotificationManager {
     this.addNotification(
       userId,
       'like',
-      'Someone Liked You! 💖',
-      `${fromUser.name} liked your profile! Check out their profile and like them back if you're interested.`,
+      `${fromUser.name} Liked You! 💖`,
+      `Great news! ${fromUser.name} just liked your profile. They seem interested in getting to know you better. Why not check out their profile and see if there's a mutual connection? You can like them back or send them a message to start a conversation!`,
       fromUser
     );
   }
@@ -233,8 +234,8 @@ class EmailNotificationManager {
     this.addNotification(
       userId,
       'message',
-      'New Message! 💬',
-      `You received a new message from ${fromUser.name}. Open the app to read and reply.`,
+      `New Message from ${fromUser.name}! 💬`,
+      `${fromUser.name} just sent you a message! They're trying to connect with you. Open the Dates app to read their message and continue the conversation. Don't keep them waiting - great connections start with great conversations!`,
       fromUser
     );
   }
@@ -243,8 +244,8 @@ class EmailNotificationManager {
     this.addNotification(
       userId,
       'email',
-      'New Email! 📧',
-      `${fromUser.name} sent you a private email. Check your inbox to read their message.`,
+      `Private Email from ${fromUser.name}! 📧`,
+      `You've received a private email from ${fromUser.name}! This is a more personal way to connect. Check your Dates inbox to read their thoughtful message and respond. Private emails often lead to deeper connections!`,
       fromUser
     );
   }
@@ -273,8 +274,8 @@ class EmailNotificationManager {
     this.addNotification(
       userId,
       'view',
-      'Profile Viewed! 👀',
-      `${fromUser.name} viewed your profile. Check out their profile too!`,
+      `${fromUser.name} Viewed Your Profile! 👀`,
+      `Someone's interested! ${fromUser.name} just checked out your profile. This could be the start of something special. Take a look at their profile and see if you'd like to connect. If you're interested, send them a like or a message!`,
       fromUser
     );
   }

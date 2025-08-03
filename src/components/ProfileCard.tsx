@@ -2,6 +2,7 @@ import React from 'react';
 import { Heart, X, Star, MapPin, Briefcase, GraduationCap, MoreVertical, Flag, Shield } from 'lucide-react';
 import { SecurityManager } from '@/lib/security';
 import { creditManager } from '@/lib/creditSystem';
+import { sendProfileViewNotification } from '@/lib/emailNotifications';
 
 interface ProfileCardProps {
   profile: {
@@ -31,6 +32,15 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   onBlock
 }) => {
   const [showMenu, setShowMenu] = React.useState(false);
+
+  // Send profile view notification when card is rendered
+  React.useEffect(() => {
+    sendProfileViewNotification(profile.id, {
+      name: 'You',
+      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+      id: 'current-user'
+    });
+  }, [profile.id]);
 
   const handleReport = () => {
     if (onReport) {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Layout } from '@/components/Layout';
 import { MessageCircle, Heart } from 'lucide-react';
+import { sendMessageNotification } from '@/lib/emailNotifications';
 
 interface MatchesProps {
   onNavigate: (screen: string) => void;
@@ -83,6 +84,14 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
             {matches.map((match) => (
               <div
                 key={match.id}
+                onClick={() => {
+                  // Send message notification when user clicks on a match to start conversation
+                  sendMessageNotification(match.id, {
+                    name: 'You',
+                    image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+                    id: 'current-user'
+                  });
+                }}
                 className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/20 transition-colors cursor-pointer"
               >
                 <div className="flex items-center space-x-3">

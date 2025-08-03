@@ -194,6 +194,13 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
         };
         setEditableMessages(prev => new Map(prev.set(messageId, newEditableMessage)));
         
+        // Send email notification
+        sendEmailNotification('recipient-id', {
+          name: 'You',
+          image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+          id: 'current-user'
+        });
+        
         // Show success message
         const successMessage = document.createElement('div');
         successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';

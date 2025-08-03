@@ -91,6 +91,13 @@ export const ModernDiscovery: React.FC<ModernDiscoveryProps> = ({ onNavigate }) 
       id: 'current-user'
     });
     
+    // Send profile view notification as well (since liking implies viewing)
+    sendProfileViewNotification(currentProfile.id, {
+      name: 'You',
+      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+      id: 'current-user'
+    });
+    
     nextProfile();
   };
 
@@ -104,6 +111,13 @@ export const ModernDiscovery: React.FC<ModernDiscoveryProps> = ({ onNavigate }) 
     
     // Send email notification for super like
     sendLikeNotification(currentProfile.id, {
+      name: 'You',
+      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+      id: 'current-user'
+    });
+    
+    // Send profile view notification as well
+    sendProfileViewNotification(currentProfile.id, {
       name: 'You',
       image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
       id: 'current-user'
