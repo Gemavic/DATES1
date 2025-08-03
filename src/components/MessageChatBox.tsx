@@ -517,19 +517,19 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
       {/* Chat Button in Navigation */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg hover:scale-110 transition-all duration-300 ${className}`}
+        className={`relative w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg hover:scale-110 transition-all duration-300 flex items-center justify-center ${className}`}
       >
-        <MessageCircle className="w-6 h-6 text-white" />
+        <MessageCircle className="w-4 h-4 text-white" />
         {totalUnread > 0 && (
-          <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs font-bold">{totalUnread > 9 ? '9+' : totalUnread}</span>
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+            <span className="text-white text-xs font-bold">{totalUnread > 9 ? '9' : totalUnread}</span>
           </div>
         )}
       </button>
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed top-20 right-4 z-50 w-80 h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+        <div className="fixed bottom-20 right-4 z-50 w-80 h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
           {activeThread ? renderChatView() : renderThreadList()}
         </div>
       )}

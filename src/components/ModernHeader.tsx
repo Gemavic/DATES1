@@ -87,8 +87,6 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
 
         {/* Right Section */}
         <div className="flex items-center space-x-2">
-          {/* Message Chat Box */}
-          <MessageChatBox />
           {showSearch && (
             <button 
               onClick={onSearch}

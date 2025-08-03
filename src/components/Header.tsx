@@ -64,8 +64,6 @@ export const Header: React.FC<HeaderProps> = ({
       
       {/* Right side buttons */}
       <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-        {/* Message Chat Box */}
-        <MessageChatBox />
         {showSettings && (
           <button 
             onClick={onSettings}
