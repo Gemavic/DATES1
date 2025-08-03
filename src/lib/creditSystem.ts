@@ -531,6 +531,7 @@ class ModernCreditManager {
       { id: 'send_following_mail', name: 'Send Following Mail', cost: 30, description: 'Additional letters' },
       { id: 'read_first_mail', name: 'Read First Mail', cost: 0, description: 'First letter is free' },
       { id: 'read_following_mail', name: 'Read Following Mail', cost: 10, description: 'Additional letters' },
+      { id: 'send_blink', name: 'Send Blink', cost: 1, description: 'Quick way to show interest' },
       { id: 'send_photo_mail', name: 'Send Photo (Mail)', cost: 0, description: 'Free of charge' },
       { id: 'view_first_photo_mail', name: 'View First Photo (Mail)', cost: 0, description: 'First photo is free' },
       { id: 'view_following_photo_mail', name: 'View Following Photo (Mail)', cost: 10, description: 'Additional photos' },
