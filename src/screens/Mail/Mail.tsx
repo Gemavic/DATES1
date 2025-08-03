@@ -340,16 +340,27 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
         </div>
 
         {/* Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white border-t border-gray-200 shadow-lg">
+        <div className="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white border-t border-gray-200 shadow-lg sm:max-w-lg md:max-w-xl lg:max-w-2xl">
           <div className="flex justify-around py-2">
             {[
               { id: 'search', icon: Users, label: 'Search', count: 0, color: 'text-gray-600' },
+              { id: 'chat', icon: MessageCircle, label: 'Chat', count: 0, color: 'text-gray-600', isChat: true },
               { id: 'mail', icon: MailIcon, label: 'Mail', count: 29, color: 'text-orange-500' },
               { id: 'newsfeed', icon: Newspaper, label: 'Newsfeed', count: 0, color: 'text-gray-600' },
+              { id: 'feedback', icon: MessageSquare, label: 'Feedback', count: 0, color: 'text-gray-600' },
               { id: 'people', icon: User, label: 'People', count: 0, color: 'text-gray-600' }
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = tab.id === 'mail';
+              
+              if (tab.isChat) {
+                return (
+                  <div key={tab.id} className="flex flex-col items-center py-2 px-3">
+                    <MessageChatBox />
+                    <span className="text-xs font-medium text-gray-600 mt-1">{tab.label}</span>
+                  </div>
+                );
+              }
               
               return (
                 <button
@@ -361,6 +372,8 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
                       onNavigate('discovery');
                     } else if (tab.id === 'search') {
                       onNavigate('discovery');
+                    } else if (tab.id === 'feedback') {
+                      onNavigate('feedback');
                     }
                   }}
                   className={`flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-300 relative ${

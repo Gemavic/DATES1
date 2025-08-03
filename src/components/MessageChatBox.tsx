@@ -544,7 +544,7 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-50 w-80 sm:w-96 h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-50 w-80 sm:w-96 md:w-[420px] h-[500px] sm:h-[550px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
           {activeThread ? renderChatView() : renderThreadList()}
         </div>
       )}

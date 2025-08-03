@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Search, User, Settings, Newspaper, Mail, Users, MessageCircle } from 'lucide-react';
+import { Heart, Search, User, Settings, Newspaper, Mail, Users, MessageCircle, MessageSquare } from 'lucide-react';
 import { MessageChatBox } from './MessageChatBox';
 
 interface FooterProps {
@@ -15,21 +15,22 @@ export const Footer: React.FC<FooterProps> = ({
 }) => {
   const tabs = [
     { id: 'discovery', icon: Search, label: 'Search' },
-    { id: 'chat', icon: MessageCircle, label: 'Chat' },
+    { id: 'chat', icon: MessageCircle, label: 'Chat', isChat: true },
     { id: 'mail', icon: Mail, label: 'Mail' },
     { id: 'newsfeed', icon: Newspaper, label: 'News' },
+    { id: 'feedback', icon: MessageSquare, label: 'Feedback' },
     { id: 'profile', icon: Users, label: 'People' },
   ];
 
   return (
     <>
-      <div className={`fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white/90 backdrop-blur-sm border-t border-gray-200 shadow-2xl z-40 ${className}`}>
+      <div className={`fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white/90 backdrop-blur-sm border-t border-gray-200 shadow-2xl z-40 sm:max-w-lg md:max-w-xl lg:max-w-2xl ${className}`}>
         <div className="flex justify-around py-2">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
             
-            if (tab.id === 'chat') {
+            if (tab.isChat) {
               return (
                 <div key={tab.id} className="flex flex-col items-center py-2 px-3">
                   <MessageChatBox />
@@ -56,7 +57,7 @@ export const Footer: React.FC<FooterProps> = ({
         </div>
         
         {/* Footer Links */}
-        <div className="bg-gray-50 py-2 px-4 border-t border-gray-100">
+        <div className="bg-gray-50 py-2 px-4 border-t border-gray-100 sm:px-6">
           <div className="flex justify-center space-x-3 text-xs text-gray-500">
             <span>© 2025 Dates</span>
             <button 
