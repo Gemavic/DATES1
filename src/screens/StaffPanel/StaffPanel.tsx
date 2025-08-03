@@ -268,88 +268,6 @@ class ModernCreditManager {
     return false;
   }
 
-  // Request credit resettlement
-  requestCreditResettlement(
-    staffId: string, 
-    targetUserId: string, 
-    amount: number, 
-    reason: string, 
-    category: 'dispute' | 'platform_glitch' | 'technical_error' | 'billing_error' | 'other',
-    evidence?: string
-  ): string {
-    if (!this.isStaffMember(staffId)) {
-      throw new Error('Only staff members can request credit resettlement');
-    }
-
-    const requestId = Math.random().toString(36).substring(2);
-    this.creditResettlementRequests.set(requestId, {
-      requestId,
-      staffId,
-      targetUserId,
-      amount,
-      reason,
-      category,
-      timestamp: new Date(),
-      status: 'pending',
-      evidence
-    });
-
-    return requestId;
-  }
-
-  // Approve credit resettlement request
-  approveCreditResettlement(requestId: string, creditManagerId: string): boolean {
-    if (!this.isCreditManager(creditManagerId)) {
-      throw new Error('Only Credit Managers can approve credit resettlement');
-    }
-
-    const request = this.creditResettlementRequests.get(requestId);
-    if (!request) {
-      throw new Error('Resettlement request not found');
-    }
-
-    // Add credits to user account
-    this.addCredits(
-      request.targetUserId, 
-      request.amount, 
-      `Credit Resettlement - ${request.category}: ${request.reason}`, 
-      false
-    );
-
-    request.status = 'approved';
-    request.approvedBy = creditManagerId;
-    return true;
-  }
-
-  // Get pending credit resettlement requests
-  getPendingCreditResettlements(): Array<{
-    requestId: string;
-    staffId: string;
-    targetUserId: string;
-    amount: number;
-    reason: string;
-    category: string;
-    timestamp: Date;
-    evidence?: string;
-  }> {
-    const pending = [];
-    for (const [_, request] of this.creditResettlementRequests) {
-      if (request.status === 'pending') {
-        pending.push({
-          requestId: request.requestId,
-          staffId: request.staffId,
-          targetUserId: request.targetUserId,
-          amount: request.amount,
-          reason: request.reason,
-          category: request.category,
-          timestamp: request.timestamp,
-          evidence: request.evidence
-        });
-      }
-    }
-    return pending;
-  }
-
   // Get user data for staff (with approval check)
   getStaffUserData(staffId: string, targetUserId: string): {
     complimentaryCredits: number;
@@ -405,6 +323,91 @@ class ModernCreditManager {
           targetUserId: request.targetUserId,
           reason: request.reason,
           timestamp: request.timestamp
+        });
+      }
+    }
+    return pending;
+  }
+
+  // Request credit resettlement for disputed or lost credits
+  requestCreditResettlement(
+    staffId: string, 
+    targetUserId: string, 
+    amount: number, 
+    reason: string, 
+    category: 'dispute' | 'platform_glitch' | 'technical_error' | 'billing_error' | 'other',
+    evidence?: string
+  ): string {
+    if (!this.isStaffMember(staffId)) {
+      throw new Error('Only staff members can request credit resettlement');
+    }
+
+    const requestId = 'CR-' + Math.random().toString(36).substring(2).toUpperCase();
+    this.creditResettlementRequests.set(requestId, {
+      requestId,
+      staffId,
+      targetUserId,
+      amount,
+      reason,
+      category,
+      timestamp: new Date(),
+      status: 'pending',
+      evidence
+    });
+
+    console.log(`Credit resettlement request submitted: ${requestId} for ${amount} credits to user ${targetUserId}`);
+    return requestId;
+  }
+
+  // Approve credit resettlement request
+  approveCreditResettlement(requestId: string, creditManagerId: string): boolean {
+    if (!this.isCreditManager(creditManagerId)) {
+      throw new Error('Only Credit Managers can approve credit resettlement');
+    }
+
+    const request = this.creditResettlementRequests.get(requestId);
+    if (!request) {
+      throw new Error('Resettlement request not found');
+    }
+
+    request.status = 'approved';
+    request.approvedBy = creditManagerId;
+
+    // Add credits to user account
+    this.addCredits(
+      request.targetUserId, 
+      request.amount, 
+      `Credit Resettlement: ${request.reason}`,
+      false
+    );
+
+    console.log(`Credit resettlement approved: ${requestId} - ${request.amount} credits added to user ${request.targetUserId}`);
+    return true;
+  }
+
+  // Get pending credit resettlement requests for managers
+  getPendingCreditResettlements(): Array<{
+    requestId: string;
+    staffId: string;
+    targetUserId: string;
+    amount: number;
+    reason: string;
+    category: string;
+    timestamp: Date;
+    evidence?: string;
+  }> {
+    const pending = [];
+    for (const [_, request] of this.creditResettlementRequests) {
+      if (request.status === 'pending') {
+        pending.push({
+          requestId: request.requestId,
+          staffId: request.staffId,
+          targetUserId: request.targetUserId,
+          amount: request.amount,
+          reason: request.reason,
+          category: request.category,
+          timestamp: request.timestamp,
+          evidence: request.evidence
         });
       }
     }

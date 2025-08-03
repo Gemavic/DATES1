@@ -377,6 +377,13 @@ class ModernCreditManager {
     this.addCredits(
       request.targetUserId, 
       request.amount, 
+      `Credit Resettlement: ${request.reason}`,
+      false
+    );
+
+    console.log(`Credit resettlement approved: ${requestId} - ${request.amount} credits added to user ${request.targetUserId}`);
+    return true;
+  }
 
   // Get total available credits
   getTotalCredits(userId: string): number {
