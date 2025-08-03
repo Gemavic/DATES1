@@ -15,7 +15,7 @@ export const Footer: React.FC<FooterProps> = ({
 }) => {
   const tabs = [
     { id: 'discovery', icon: Search, label: 'Discover' },
-    { id: 'matches', icon: MessageCircle, label: 'Matches' },
+    { id: 'matches', icon: MessageCircle, label: 'Messages' },
     { id: 'mail', icon: Mail, label: 'Mail' },
     { id: 'newsfeed', icon: Newspaper, label: 'News' },
     { id: 'profile', icon: User, label: 'Profile' },
@@ -43,12 +43,6 @@ export const Footer: React.FC<FooterProps> = ({
             </button>
           );
         })}
-        
-        {/* Message Chat Box in Footer */}
-        <div className="flex flex-col items-center py-2 px-3">
-          <MessageChatBox />
-          <span className="text-xs font-medium text-gray-600 mt-1">Messages</span>
-        </div>
       </div>
       
       {/* Footer Links */}
