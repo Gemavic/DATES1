@@ -385,24 +385,6 @@ class ModernCreditManager {
     return true;
   }
 
-  // Deny credit resettlement request
-  denyCreditResettlement(requestId: string, creditManagerId: string, denialReason?: string): boolean {
-    if (!this.isCreditManager(creditManagerId)) {
-      throw new Error('Only Credit Managers can deny credit resettlement');
-    }
-
-    const request = this.creditResettlementRequests.get(requestId);
-    if (!request) {
-      throw new Error('Resettlement request not found');
-    }
-
-    request.status = 'denied';
-    request.approvedBy = creditManagerId;
-
-    console.log(`Credit resettlement denied: ${requestId} - Reason: ${denialReason || 'No reason provided'}`);
-    return true;
-  }
-
   // Get pending credit resettlement requests for managers
   getPendingCreditResettlements(): Array<{
     requestId: string;

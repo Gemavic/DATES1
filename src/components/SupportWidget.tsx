@@ -377,13 +377,43 @@ class ModernCreditManager {
     this.addCredits(
       request.targetUserId, 
       request.amount, 
-      `Credit Resettlement: ${request.reason}`,
+      `Credit Resettlement: ${request.reason} (${request.category})`, 
       false
     );
 
-    console.log(`Credit resettlement approved: ${requestId} - ${request.amount} credits added to user ${request.targetUserId}`);
+    console.log(`Credit resettlement approved: ${requestId} - ${request.amount} credits added to ${request.targetUserId}`);
     return true;
   }
+
+  // Get pending credit resettlement requests for managers
+  getPendingCreditResettlements(): Array<{
+    requestId: string;
+    staffId: string;
+    targetUserId: string;
+    amount: number;
+    reason: string;
+    category: string;
+    timestamp: Date;
+    evidence?: string;
+  }> {
+    const pending = [];
+    for (const [requestId, request] of this.creditResettlementRequests) {
+      if (request.status === 'pending') {
+        pending.push({
+          requestId: request.requestId,
+          staffId: request.staffId,
+          targetUserId: request.targetUserId,
+          amount: request.amount,
+          reason: request.reason,
+          category: request.category,
+          timestamp: request.timestamp,
+          evidence: request.evidence
+        });
+      }
+    }
+    return pending;
+  }
+
 
   // Get total available credits
   getTotalCredits(userId: string): number {
