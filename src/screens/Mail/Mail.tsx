@@ -3,7 +3,7 @@ import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Mail as MailIcon, Send, Inbox, Trash2, Star, Search, Plus, Paperclip, MessageCircle, Users, Newspaper, User, MessageSquare } from 'lucide-react';
+import { Mail as MailIcon, Send, Inbox, Trash2, Star, Search, Plus, Paperclip, MessageCircle, Users, Newspaper, User, MessageSquare, Image, Upload } from 'lucide-react';
 import { creditManager, formatCredits } from '@/lib/creditSystem';
 import { sendEmailNotification } from '@/lib/emailNotifications';
 import { MessageChatBox } from '@/components/MessageChatBox';
@@ -34,6 +34,7 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
   const [replyMessage, setReplyMessage] = useState('');
   const [userBalance, setUserBalance] = useState(creditManager.getBalance('current-user'));
   const [showOnlyUnread, setShowOnlyUnread] = useState(false);
+  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
 
   const [mailMessages, setMailMessages] = useState<MailMessage[]>([
     {
@@ -206,6 +207,55 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
       alert(`Need ${formatCredits(sendResult.cost)} to send this reply!`);
     }
   };
+
+  const handlePhotoUpload = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.multiple = true;
+    
+    input.onchange = (e) => {
+      const files = Array.from((e.target as HTMLInputElement).files || []);
+      if (files.length > 0) {
+        const message = mailMessages.find(m => m.id === selectedMail);
+        if (!message) return;
+        
+        const threadId = message.from;
+        const canSendResult = creditManager.canSendPhoto('current-user', threadId, true);
+        
+        if (canSendResult.isFree || creditManager.canAfford('current-user', canSendResult.cost)) {
+          if (!canSendResult.isFree && !creditManager.isStaffMember('current-user')) {
+            const success = creditManager.spendCredits('current-user', canSendResult.cost, `Photo upload to ${message.from}`);
+            if (!success) {
+              alert(`Need ${formatCredits(canSendResult.cost)} to upload photos!`);
+              return;
+            }
+            setUserBalance(creditManager.getBalance('current-user'));
+          }
+          
+          // Add photos to uploaded list
+          const photoUrls = files.map(file => URL.createObjectURL(file));
+          setUploadedPhotos(prev => [...prev, ...photoUrls]);
+          
+          // Show success message
+          const successMessage = document.createElement('div');
+          successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+          successMessage.textContent = `📷 ${files.length} photo(s) uploaded successfully!`;
+          document.body.appendChild(successMessage);
+          setTimeout(() => document.body.removeChild(successMessage), 3000);
+        } else {
+          alert(`Need ${formatCredits(canSendResult.cost)} to upload photos!`);
+        }
+      }
+    };
+    
+    input.click();
+  };
+
+  const removePhoto = (photoUrl: string) => {
+    setUploadedPhotos(prev => prev.filter(url => url !== photoUrl));
+  };
+
   const filteredMessages = showOnlyUnread 
     ? mailMessages.filter(msg => !msg.read)
     : mailMessages;
@@ -284,6 +334,32 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
                 {/* Reply Box */}
                 {showReplyBox && (
                   <div className="space-y-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                    {/* Uploaded Photos Preview */}
+                    {uploadedPhotos.length > 0 && (
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Attached Photos ({uploadedPhotos.length})
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {uploadedPhotos.map((photoUrl, index) => (
+                            <div key={index} className="relative">
+                              <img
+                                src={photoUrl}
+                                alt={`Upload ${index + 1}`}
+                                className="w-full h-20 object-cover rounded-lg border border-gray-200"
+                              />
+                              <button
+                                onClick={() => removePhoto(photoUrl)}
+                                className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Reply to {message.from}
@@ -294,6 +370,19 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
                         placeholder="Type your reply..."
                         className="w-full min-h-[100px] resize-none"
                       />
+                    </div>
+                    
+                    {/* Upload Controls */}
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        onClick={handlePhotoUpload}
+                        className="bg-blue-500 text-white hover:bg-blue-600 flex items-center"
+                        type="button"
+                      >
+                        <Image className="w-4 h-4 mr-2" />
+                        Upload Photos
+                      </Button>
+                      <span className="text-xs text-gray-500">Free in mail</span>
                     </div>
                     
                     <div className="flex items-center justify-between">
@@ -316,7 +405,7 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
                           className="bg-blue-500 text-white hover:bg-blue-600"
                         >
                           <Send className="w-4 h-4 mr-2" />
-                          Send Reply
+                          Send Reply {uploadedPhotos.length > 0 && `(+${uploadedPhotos.length} photos)`}
                         </Button>
                       </div>
                     </div>
@@ -349,7 +438,6 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
                 </button>
               </div>
               <button 
-                onClick={() => onNavigate('profile')}
                 onClick={() => onNavigate('profile')}
                 className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center"
               >
