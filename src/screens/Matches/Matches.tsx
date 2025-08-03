@@ -2,6 +2,7 @@ import React from 'react';
 import { Layout } from '@/components/Layout';
 import { MessageCircle, Heart, Mail as MailIcon, User, Users, Newspaper } from 'lucide-react';
 import { sendMessageNotification } from '@/lib/emailNotifications';
+import { MessageChatBox } from '@/components/MessageChatBox';
 
 interface MatchesProps {
   onNavigate: (screen: string) => void;
