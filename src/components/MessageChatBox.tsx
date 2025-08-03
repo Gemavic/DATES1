@@ -481,6 +481,14 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
           {/* Input Controls */}
           <div className="flex items-end space-x-2">
             
+            <button
+              onClick={() => handleFileUpload('file')}
+              className="bg-gray-500 text-white p-3 rounded-full hover:bg-gray-600 transition-colors flex-shrink-0"
+              title="Upload file"
+            >
+              <Paperclip className="w-5 h-5" />
+            </button>
+            
             <div className="flex-1 relative flex items-center">
               <Textarea
                 value={message}
@@ -524,7 +532,7 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
       {/* Chat Button in Navigation */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg hover:scale-110 transition-all duration-300 flex items-center justify-center ${className}`}
+        className={`relative w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg hover:scale-110 transition-all duration-300 flex items-center justify-center mb-1 ${className}`}
       >
         <MessageCircle className="w-4 h-4 text-white" />
         {totalUnread > 0 && (
@@ -536,7 +544,7 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-20 right-4 z-50 w-80 h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-50 w-80 sm:w-96 h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
           {activeThread ? renderChatView() : renderThreadList()}
         </div>
       )}

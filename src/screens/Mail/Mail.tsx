@@ -344,7 +344,6 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
           <div className="flex justify-around py-2">
             {[
               { id: 'search', icon: Users, label: 'Search', count: 0, color: 'text-gray-600' },
-              { id: 'chat', icon: MessageCircle, label: 'Chat', count: 0, color: 'text-gray-600' },
               { id: 'mail', icon: MailIcon, label: 'Mail', count: 29, color: 'text-orange-500' },
               { id: 'newsfeed', icon: Newspaper, label: 'Newsfeed', count: 0, color: 'text-gray-600' },
               { id: 'people', icon: User, label: 'People', count: 0, color: 'text-gray-600' }
@@ -356,9 +355,7 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
                 <button
                   key={tab.id}
                   onClick={() => {
-                    if (tab.id === 'chat') {
-                      // Chat functionality handled by MessageChatBox component
-                    } else if (tab.id === 'newsfeed') {
+                    if (tab.id === 'newsfeed') {
                       onNavigate('newsfeed');
                     } else if (tab.id === 'people') {
                       onNavigate('discovery');
@@ -384,11 +381,6 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
                 </button>
               );
             })}
-          </div>
-          
-          {/* Message Chat Box in Footer */}
-          <div className="absolute bottom-16 right-4">
-            <MessageChatBox />
           </div>
         </div>
       </div>
