@@ -473,41 +473,23 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
 
           {/* Input Controls */}
           <div className="flex items-end space-x-2">
-            <div className="flex space-x-1">
-              <button
-                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                className="p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
-                title="Add emoji"
-              >
-                <Smile className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => handleFileUpload('image')}
-                className="p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
-                title="Send image (10 credits)"
-                disabled={!creditManager.canAfford('current-user', 10) && !creditManager.isStaffMember('current-user')}
-              >
-                <Image className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => handleFileUpload('file')}
-                className="p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
-                title="Attach file (5 credits)"
-                disabled={!creditManager.canAfford('current-user', 5) && !creditManager.isStaffMember('current-user')}
-              >
-                <Paperclip className="w-5 h-5" />
-              </button>
-            </div>
             
-            <div className="flex-1 relative">
+            <div className="flex-1 relative flex items-center">
               <Textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder={`Message ${thread.participantName}...`}
-                className="w-full min-h-[40px] max-h-[120px] resize-none pr-12 rounded-xl border-gray-300 focus:border-pink-500 focus:ring-pink-500"
+                className="w-full min-h-[40px] max-h-[120px] resize-none pr-12 pl-12 rounded-xl border-gray-300 focus:border-pink-500 focus:ring-pink-500"
                 rows={1}
               />
+              <button
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
+                title="Add emoji"
+              >
+                <Smile className="w-5 h-5" />
+              </button>
             </div>
             
             <Button

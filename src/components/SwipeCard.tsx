@@ -316,21 +316,6 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
             
             {/* Chat Controls */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                  className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
-                  title="Add emoji"
-                >
-                  <Smile className="w-5 h-5" />
-                </button>
-                <button
-                  className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
-                  title="Attach file"
-                >
-                  <Paperclip className="w-5 h-5" />
-                </button>
-              </div>
               <div className="flex space-x-2">
                 <Button
                   onClick={() => setShowMessageBox(false)}
@@ -347,6 +332,23 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
                   Send
                 </Button>
               </div>
+            </div>
+            
+            {/* Message Input with Embedded Emoji */}
+            <div className="relative">
+              <Textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder={`Send a message to ${profile.name}...`}
+                className="w-full min-h-[80px] resize-none pl-12"
+              />
+              <button
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                className="absolute left-3 top-3 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
+                title="Add emoji"
+              >
+                <Smile className="w-4 h-4" />
+              </button>
             </div>
             
             {/* Emoji Picker */}

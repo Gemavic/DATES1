@@ -389,29 +389,24 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
 
           {/* Input Area */}
           <div className={`border-t border-gray-200 p-4 ${showTicketForm ? 'hidden' : ''}`}>
-            <div className="flex space-x-2">
-              <button
-                type="button"
-                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                title="Add emoji"
-              >
-                <Smile className="w-5 h-5" />
-              </button>
-              <button
-                type="button"
-                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                title="Upload file"
-              >
-                <Paperclip className="w-5 h-5" />
-              </button>
-              <Input
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Type your message..."
-                className="flex-1 text-sm"
-              />
+            <div className="flex space-x-2 items-end">
+              <div className="flex-1 relative">
+                <Input
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message..."
+                  className="w-full text-sm pl-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
+                  title="Add emoji"
+                >
+                  <Smile className="w-4 h-4" />
+                </button>
+              </div>
               <Button
                 onClick={() => sendMessage(inputMessage)}
                 disabled={!inputMessage.trim()}
