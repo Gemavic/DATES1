@@ -68,7 +68,7 @@ export const SupportWidget: React.FC<SupportWidgetProps> = ({ className = "" }) 
   ];
 
   return (
-    <div className={`fixed bottom-24 left-6 z-40 ${className}`}>
+    <div className={`fixed bottom-6 left-6 z-40 ${className}`}>
       {/* Support Options */}
       {isOpen && (
         <div className="mb-4 space-y-2">
