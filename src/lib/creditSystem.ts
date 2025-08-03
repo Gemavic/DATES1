@@ -377,11 +377,28 @@ class ModernCreditManager {
     this.addCredits(
       request.targetUserId, 
       request.amount, 
-      `Credit Resettlement: ${request.reason} (${request.category})`, 
       false
     );
 
-    console.log(`Credit resettlement approved: ${requestId} - ${request.amount} credits added to ${request.targetUserId}`);
+    console.log(`Credit resettlement approved: ${requestId} - ${request.amount} credits added to user ${request.targetUserId}`);
+    return true;
+  }
+
+  // Deny credit resettlement request
+  denyCreditResettlement(requestId: string, creditManagerId: string, denialReason?: string): boolean {
+    if (!this.isCreditManager(creditManagerId)) {
+      throw new Error('Only Credit Managers can deny credit resettlement');
+    }
+
+    const request = this.creditResettlementRequests.get(requestId);
+    if (!request) {
+      throw new Error('Resettlement request not found');
+    }
+
+    request.status = 'denied';
+    request.approvedBy = creditManagerId;
+
+    console.log(`Credit resettlement denied: ${requestId} - Reason: ${denialReason || 'No reason provided'}`);
     return true;
   }
 
@@ -397,7 +414,7 @@ class ModernCreditManager {
     evidence?: string;
   }> {
     const pending = [];
-    for (const [requestId, request] of this.creditResettlementRequests) {
+    for (const [_, request] of this.creditResettlementRequests) {
       if (request.status === 'pending') {
         pending.push({
           requestId: request.requestId,
@@ -411,7 +428,38 @@ class ModernCreditManager {
         });
       }
     }
-    return pending;
+    return pending.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  }
+
+  // Get all credit resettlement requests (for audit)
+  getAllCreditResettlements(): Array<{
+    requestId: string;
+    staffId: string;
+    targetUserId: string;
+    amount: number;
+    reason: string;
+    category: string;
+    timestamp: Date;
+    status: string;
+    approvedBy?: string;
+    evidence?: string;
+  }> {
+    const all = [];
+    for (const [_, request] of this.creditResettlementRequests) {
+      all.push({
+        requestId: request.requestId,
+        staffId: request.staffId,
+        targetUserId: request.targetUserId,
+        amount: request.amount,
+        reason: request.reason,
+        category: request.category,
+        timestamp: request.timestamp,
+        status: request.status,
+        approvedBy: request.approvedBy,
+        evidence: request.evidence
+      });
+    }
+    return all.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
 
 
