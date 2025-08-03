@@ -31,6 +31,11 @@ export const useAuth = () => {
     return user.user_metadata.full_name.split(' ')[0];
   };
 
+  const getFullName = () => {
+    if (!user?.user_metadata?.full_name) return 'User';
+    return user.user_metadata.full_name;
+  };
+
   const isReturningUser = () => {
     return localStorage.getItem('hasLoggedInBefore') === 'true';
   };
@@ -44,6 +49,7 @@ export const useAuth = () => {
     loading,
     signOut,
     getFirstName,
+    getFullName,
     isReturningUser,
     markAsReturningUser
   };
