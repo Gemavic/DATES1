@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Mail as MailIcon, Send, Inbox, Trash2, Star, Search, Plus, Paperclip, MessageCircle, Users, Newspaper, User } from 'lucide-react';
 import { creditManager, formatCredits } from '@/lib/creditSystem';
 import { sendEmailNotification } from '@/lib/emailNotifications';
+import { MessageChatBox } from '@/components/MessageChatBox';
 
 interface MailProps {
   onNavigate: (screen: string) => void;
