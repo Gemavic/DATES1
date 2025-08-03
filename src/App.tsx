@@ -25,6 +25,7 @@ import { CheckoutPage } from './screens/Checkout/CheckoutPage';
 import { SuccessPage } from './screens/Success/SuccessPage';
 import { CancelPage } from './screens/Cancel/CancelPage';
 import { Verification } from './screens/Verification/Verification';
+import { Feedback } from './screens/Feedback/Feedback';
 import { useAuth } from './hooks/useAuth';
 import { SubscriptionStatus } from './components/SubscriptionStatus';
 import { ChatBot } from './components/ChatBot';
@@ -246,6 +247,7 @@ type Screen =
   | 'dispute'
   | 'disclaimer'
   | 'verification';
+  | 'feedback';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('welcome');
@@ -390,6 +392,9 @@ function App() {
       
       case 'verification':
         return <Verification onNavigate={navigate} />;
+      
+      case 'feedback':
+        return <Feedback onNavigate={navigate} />;
       
       default:
         return <Welcome onGetStarted={() => navigate('auth-signup')} onNavigate={navigate} />;

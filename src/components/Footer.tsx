@@ -1,6 +1,5 @@
 import React from 'react';
-import { Heart, MessageCircle, Search, User, Settings, Newspaper, Mail } from 'lucide-react';
-import { MessageChatBox } from './MessageChatBox';
+import { Heart, MessageCircle, Search, User, Settings, Newspaper, Mail, Users } from 'lucide-react';
 
 interface FooterProps {
   activeTab?: string;
@@ -14,11 +13,11 @@ export const Footer: React.FC<FooterProps> = ({
   className = ""
 }) => {
   const tabs = [
-    { id: 'discovery', icon: Search, label: 'Discover' },
-    { id: 'matches', icon: MessageCircle, label: 'Messages' },
+    { id: 'discovery', icon: Search, label: 'Search' },
+    { id: 'matches', icon: MessageCircle, label: 'Chat' },
     { id: 'mail', icon: Mail, label: 'Mail' },
     { id: 'newsfeed', icon: Newspaper, label: 'News' },
-    { id: 'profile', icon: User, label: 'Profile' },
+    { id: 'profile', icon: Users, label: 'People' },
   ];
 
   return (

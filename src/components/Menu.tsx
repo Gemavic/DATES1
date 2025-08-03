@@ -75,6 +75,7 @@ export const Menu: React.FC<MenuProps> = ({ onNavigate, currentScreen }) => {
         { id: 'help', icon: HelpCircle, label: 'Help & Support', description: 'Get assistance' },
         { id: 'menu-showcase', icon: MenuIcon, label: 'Menu Overview', description: 'View all navigation options' },
         { id: 'staff-panel', icon: Shield, label: 'Staff Panel', description: 'Staff credit management' },
+        { id: 'feedback', icon: MessageCircle, label: 'Feedback & Suggestions', description: 'Help us improve' },
       ]
     },
     {
