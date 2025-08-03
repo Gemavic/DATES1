@@ -254,8 +254,8 @@ class EmailNotificationManager {
     this.addNotification(
       userId,
       'wink',
-      'Someone Winked at You! 😉',
-      `${fromUser.name} sent you a wink! This is their way of showing interest.`,
+      'Someone Sent You a Blink! 👁️',
+      `${fromUser.name} sent you a blink! This is their way of catching your attention and showing interest. A blink is a quick, playful way to say "I noticed you!" Why not check out their profile and see if you'd like to connect? You could send a blink back or start a conversation!`,
       fromUser
     );
   }

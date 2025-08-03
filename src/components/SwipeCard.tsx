@@ -1,7 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { Heart, X, Star, MapPin, Briefcase, GraduationCap, MoreVertical, Flag, Shield, Zap } from 'lucide-react';
+import { Heart, X, Star, MapPin, Briefcase, GraduationCap, MoreVertical, Flag, Shield, Zap, MessageCircle, Send, Paperclip, Smile } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { sendProfileViewNotification } from '@/lib/emailNotifications';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 interface Profile {
   id: string;
@@ -23,6 +26,8 @@ interface SwipeCardProps {
   onLike: (id: string) => void;
   onPass: (id: string) => void;
   onSuperLike: (id: string) => void;
+  onSendMessage: (id: string, message: string) => void;
+  onBlink: (id: string) => void;
   onReport?: (id: string) => void;
   onBlock?: (id: string) => void;
   className?: string;
@@ -33,12 +38,17 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
   onLike,
   onPass,
   onSuperLike,
+  onSendMessage,
+  onBlink,
   onReport,
   onBlock,
   className = ""
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showMenu, setShowMenu] = useState(false);
+  const [showMessageBox, setShowMessageBox] = useState(false);
+  const [message, setMessage] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -100,6 +110,25 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
     document.addEventListener('mouseup', handleDragEnd);
     document.addEventListener('touchmove', handleDragMove);
     document.addEventListener('touchend', handleDragEnd);
+  };
+  const emojis = ['😊', '😍', '🥰', '😘', '💕', '❤️', '🔥', '✨', '🌹', '💖', '😉', '😎', '🤗', '💋', '🌟', '💫'];
+
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      onSendMessage(profile.id, message);
+      setMessage('');
+      setShowMessageBox(false);
+      setShowEmojiPicker(false);
+    }
+  };
+
+  const addEmoji = (emoji: string) => {
+    setMessage(prev => prev + emoji);
+    setShowEmojiPicker(false);
+  };
+
+  const handleBlink = () => {
+    onBlink(profile.id);
   };
 
   return (
@@ -274,27 +303,101 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
         </div>
       </div>
       
+      {/* Message Box */}
+      {showMessageBox && (
+        <div className="p-4 bg-white border-t border-gray-200">
+          <div className="space-y-3">
+            <Textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder={`Send a message to ${profile.name}...`}
+              className="w-full min-h-[80px] resize-none"
+            />
+            
+            {/* Chat Controls */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
+                  title="Add emoji"
+                >
+                  <Smile className="w-5 h-5" />
+                </button>
+                <button
+                  className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
+                  title="Attach file"
+                >
+                  <Paperclip className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="flex space-x-2">
+                <Button
+                  onClick={() => setShowMessageBox(false)}
+                  className="bg-gray-500 text-white px-4 py-2"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={!message.trim()}
+                  className="bg-pink-500 text-white px-4 py-2 flex items-center"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Send
+                </Button>
+              </div>
+            </div>
+            
+            {/* Emoji Picker */}
+            {showEmojiPicker && (
+              <div className="bg-gray-50 rounded-lg p-3 border">
+                <div className="grid grid-cols-8 gap-2">
+                  {emojis.map((emoji, index) => (
+                    <button
+                      key={index}
+                      onClick={() => addEmoji(emoji)}
+                      className="text-xl hover:bg-gray-200 rounded p-1 transition-colors"
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      
       {/* Action Buttons */}
-      <div className="flex justify-center items-center gap-4 p-6 bg-white">
+      <div className="flex justify-center items-center gap-3 p-6 bg-white">
         <button
           onClick={() => onPass(profile.id)}
-          className="w-14 h-14 bg-gray-500 hover:bg-gray-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
+          className="w-12 h-12 bg-gray-500 hover:bg-gray-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
         >
-          <X className="w-6 h-6 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
+          <X className="w-5 h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
+        </button>
+        
+        <button
+          onClick={handleBlink}
+          className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
+          title="Send a Blink"
+        >
+          <span className="text-white text-lg drop-shadow-sm group-hover:scale-110 transition-transform">👁️</span>
+        </button>
+        
+        <button
+          onClick={() => setShowMessageBox(!showMessageBox)}
+          className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
+        >
+          <MessageCircle className="w-5 h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
         </button>
         
         <button
           onClick={() => onSuperLike(profile.id)}
-          className="w-14 h-14 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
+          className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
         >
-          <Star className="w-6 h-6 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
-        </button>
-        
-        <button
-          onClick={() => onLike(profile.id)}
-          className="w-14 h-14 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
-        >
-          <Heart className="w-6 h-6 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
+          <Star className="w-5 h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
         </button>
       </div>
 

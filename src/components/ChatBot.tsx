@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Bot, User, Phone, Mail, Clock, Zap } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, Phone, Mail, Clock, Zap, Paperclip, Smile } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -17,6 +17,7 @@ interface ChatBotProps {
 
 export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
@@ -29,6 +30,8 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const emojis = ['😊', '😍', '🥰', '😘', '💕', '❤️', '🔥', '✨', '🌹', '💖', '😉', '😎', '🤗', '💋', '🌟', '💫', '👍', '👎', '🤔', '😂'];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -134,6 +137,11 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
 
   const handleQuickReply = (reply: string) => {
     sendMessage(reply);
+  };
+
+  const addEmoji = (emoji: string) => {
+    setInputMessage(prev => prev + emoji);
+    setShowEmojiPicker(false);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -249,12 +257,18 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
             <div className="flex space-x-2">
               <button
                 type="button"
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                title="Add emoji"
+              >
+                <Smile className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
                 className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
                 title="Upload file"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                </svg>
+                <Paperclip className="w-5 h-5" />
               </button>
               <Input
                 value={inputMessage}
@@ -271,6 +285,23 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
                 <Send className="w-4 h-4" />
               </Button>
             </div>
+            
+            {/* Emoji Picker */}
+            {showEmojiPicker && (
+              <div className="mt-3 bg-gray-50 rounded-lg p-3 border">
+                <div className="grid grid-cols-10 gap-1">
+                  {emojis.map((emoji, index) => (
+                    <button
+                      key={index}
+                      onClick={() => addEmoji(emoji)}
+                      className="text-lg hover:bg-gray-200 rounded p-1 transition-colors"
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             
             {/* Contact Options */}
             <div className="mt-3 flex justify-center space-x-4 text-xs">

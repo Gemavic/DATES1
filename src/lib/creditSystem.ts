@@ -516,6 +516,8 @@ class ModernCreditManager {
   getSpendingOptions() {
     return [
       { id: 'live_chat', name: 'Live Chat', cost: 2, description: '2 credits or 1 kobo per minute' },
+      { id: 'send_blink', name: 'Send Blink', cost: 1, description: 'Quick way to show interest' },
+      { id: 'send_message', name: 'Send Message', cost: 5, description: 'Send a personal message' },
       { id: 'chat_stickers', name: 'Chat Stickers', cost: 5, description: 'Express yourself with stickers' },
       { id: 'send_photo_chat', name: 'Send Photo (Chat)', cost: 10, description: 'Share photos in chat' },
       { id: 'open_audio_chat', name: 'Open Audio (Chat)', cost: 10, description: 'Listen to voice messages' },

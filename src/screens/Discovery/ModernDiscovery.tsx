@@ -4,7 +4,7 @@ import { ModernHeader } from '@/components/ModernHeader';
 import { SwipeCard } from '@/components/SwipeCard';
 import { Button } from '@/components/ui/button';
 import { creditManager } from '@/lib/creditSystem';
-import { sendLikeNotification, sendProfileViewNotification } from '@/lib/emailNotifications';
+import { sendLikeNotification, sendProfileViewNotification, sendMessageNotification, sendWinkNotification } from '@/lib/emailNotifications';
 import { 
   Filter,
   Zap,
@@ -126,6 +126,45 @@ export const ModernDiscovery: React.FC<ModernDiscoveryProps> = ({ onNavigate }) 
     nextProfile();
   };
 
+  const handleSendMessage = (profileId: string, message: string) => {
+    console.log('Message sent to:', profileId, message);
+    
+    // Send message notification
+    sendMessageNotification(profileId, {
+      name: 'You',
+      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+      id: 'current-user'
+    });
+    
+    // Show success message
+    const successMessage = document.createElement('div');
+    successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+    successMessage.textContent = `💬 Message sent to ${currentProfile.name}!`;
+    document.body.appendChild(successMessage);
+    setTimeout(() => document.body.removeChild(successMessage), 3000);
+    
+    nextProfile();
+  };
+
+  const handleBlink = (profileId: string) => {
+    console.log('Blink sent to:', profileId);
+    
+    // Send blink notification (using wink notification)
+    sendWinkNotification(profileId, {
+      name: 'You',
+      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+      id: 'current-user'
+    });
+    
+    // Show success message
+    const successMessage = document.createElement('div');
+    successMessage.className = 'fixed top-4 right-4 bg-yellow-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+    successMessage.textContent = `👁️ Blink sent to ${currentProfile.name}!`;
+    document.body.appendChild(successMessage);
+    setTimeout(() => document.body.removeChild(successMessage), 3000);
+    
+    nextProfile();
+  };
   const handleReport = (profileId: string) => {
     console.log('Reported:', profileId);
     alert('User reported. Thank you for keeping our community safe.');
@@ -276,6 +315,10 @@ export const ModernDiscovery: React.FC<ModernDiscoveryProps> = ({ onNavigate }) 
               onLike={handleLike}
               onPass={handlePass}
               onSuperLike={handleSuperLike}
+              onSendMessage={handleSendMessage}
+              onBlink={handleBlink}
+              onSendMessage={handleSendMessage}
+              onBlink={handleBlink}
               onReport={handleReport}
               onBlock={handleBlock}
               className="max-w-sm"
