@@ -12,20 +12,30 @@ interface MailProps {
   onNavigate: (screen: string) => void;
 }
 
-interface EditableMessage {
+interface MailMessage {
   id: string;
+  from: string;
+  age: number;
+  fromImage: string;
+  subject: string;
+  preview: string;
   content: string;
-  sentAt: Date;
-  isEditing: boolean;
+  timestamp: string;
+  read: boolean;
+  starred: boolean;
+  isNew: boolean;
+  online: boolean;
 }
 
 export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState<'inbox' | 'starred' | 'outbox' | 'trash'>('inbox');
   const [selectedMail, setSelectedMail] = useState<string | null>(null);
+  const [showReplyBox, setShowReplyBox] = useState(false);
+  const [replyMessage, setReplyMessage] = useState('');
   const [userBalance, setUserBalance] = useState(creditManager.getBalance('current-user'));
   const [showOnlyUnread, setShowOnlyUnread] = useState(false);
 
-  const mailMessages = [
+  const [mailMessages, setMailMessages] = useState<MailMessage[]>([
     {
       id: '1',
       from: 'Gabriela',
@@ -124,7 +134,7 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
       isNew: true,
       online: true
     }
-  ];
+  ]);
 
   const handleReadMail = (mailId: string) => {
     const mail = mailMessages.find(m => m.id === mailId);
@@ -135,17 +145,67 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
     if (canReadFree) {
       setSelectedMail(mailId);
       creditManager.markFirstMailRead('current-user', threadId);
+      // Mark message as read
+      setMailMessages(prev => prev.map(msg => 
+        msg.id === mailId ? { ...msg, read: true } : msg
+      ));
     } else if (creditManager.canAfford('current-user', 10)) {
       const success = creditManager.spendCredits('current-user', 10, `Read mail from ${threadId}`);
       if (success) {
         setUserBalance(creditManager.getBalance('current-user'));
         setSelectedMail(mailId);
+        // Mark message as read
+        setMailMessages(prev => prev.map(msg => 
+          msg.id === mailId ? { ...msg, read: true } : msg
+        ));
       }
     } else {
       alert(`Need ${formatCredits(10)} to read this message!`);
     }
   };
 
+  const handleSendReply = () => {
+    if (!replyMessage.trim()) return;
+
+    const message = mailMessages.find(m => m.id === selectedMail);
+    if (!message) return;
+
+    const threadId = message.from;
+    const sendResult = creditManager.canSendMail('current-user', threadId);
+    
+    if (sendResult.canSend) {
+      if (!sendResult.isFree) {
+        const success = creditManager.spendCredits('current-user', sendResult.cost, `Reply to ${message.from}`);
+        if (!success) {
+          alert(`Need ${formatCredits(sendResult.cost)} to send this reply!`);
+          return;
+        }
+        setUserBalance(creditManager.getBalance('current-user'));
+      }
+      
+      // Mark first mail as sent for this thread
+      creditManager.markFirstMailSent('current-user', threadId);
+      
+      // Send email notification
+      sendEmailNotification(message.from, {
+        name: 'You',
+        image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+        id: 'current-user'
+      });
+      
+      // Show success message
+      const successMessage = document.createElement('div');
+      successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+      successMessage.textContent = `📧 Reply sent to ${message.from}!`;
+      document.body.appendChild(successMessage);
+      setTimeout(() => document.body.removeChild(successMessage), 3000);
+      
+      setReplyMessage('');
+      setShowReplyBox(false);
+    } else {
+      alert(`Need ${formatCredits(sendResult.cost)} to send this reply!`);
+    }
+  };
   const filteredMessages = showOnlyUnread 
     ? mailMessages.filter(msg => !msg.read)
     : mailMessages;
@@ -170,14 +230,14 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
     if (!message) return null;
 
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gradient-to-br from-pink-500 via-rose-500 to-purple-600">
         <div className="max-w-md mx-auto min-h-screen relative">
           {/* Header */}
-          <div className="bg-white shadow-sm border-b border-gray-100 px-4 py-3">
+          <div className="bg-white/95 backdrop-blur-sm shadow-sm border-b border-white/20 px-4 py-3">
             <div className="flex items-center justify-between">
               <button 
                 onClick={() => setSelectedMail(null)}
-                className="text-blue-500 hover:underline"
+                className="text-blue-600 hover:text-blue-800 font-medium"
               >
                 ← Back to Inbox
               </button>
@@ -188,7 +248,7 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
 
           {/* Message Content */}
           <div className="p-4">
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-lg">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="relative">
                   <img
@@ -210,16 +270,58 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
                 <p className="text-gray-700 leading-relaxed">{message.content}</p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-gray-200">
+              <div className="mt-6 pt-4 border-t border-gray-200 space-y-3">
                 <Button
                   onClick={() => {
-                    setSelectedMail(null);
-                    // Navigate to compose with pre-filled recipient
+                    setShowReplyBox(!showReplyBox);
                   }}
-                  className="w-full bg-pink-500 text-white hover:bg-pink-600"
+                  className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:scale-105 transition-all duration-300"
                 >
-                  Reply
+                  <Send className="w-4 h-4 mr-2" />
+                  {showReplyBox ? 'Cancel Reply' : 'Reply'}
                 </Button>
+                
+                {/* Reply Box */}
+                {showReplyBox && (
+                  <div className="space-y-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Reply to {message.from}
+                      </label>
+                      <Textarea
+                        value={replyMessage}
+                        onChange={(e) => setReplyMessage(e.target.value)}
+                        placeholder="Type your reply..."
+                        className="w-full min-h-[100px] resize-none"
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm text-gray-600">
+                        Cost: {creditManager.canSendMail('current-user', message.from).isFree ? 
+                          'FREE (First mail)' : 
+                          `${formatCredits(creditManager.canSendMail('current-user', message.from).cost)}`
+                        }
+                      </div>
+                      <div className="flex space-x-2">
+                        <Button
+                          onClick={() => setShowReplyBox(false)}
+                          className="bg-gray-500 text-white hover:bg-gray-600"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={handleSendReply}
+                          disabled={!replyMessage.trim()}
+                          className="bg-blue-500 text-white hover:bg-blue-600"
+                        >
+                          <Send className="w-4 h-4 mr-2" />
+                          Send Reply
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -229,10 +331,10 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-rose-500 to-purple-600">
       <div className="max-w-md mx-auto min-h-screen relative">
         {/* Header */}
-        <div className="bg-white shadow-sm border-b border-gray-100 px-4 py-3">
+        <div className="bg-white/95 backdrop-blur-sm shadow-sm border-b border-white/20 px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <h1 className="text-2xl font-bold text-gray-900">Dates</h1>
@@ -248,6 +350,7 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
               </div>
               <button 
                 onClick={() => onNavigate('profile')}
+                onClick={() => onNavigate('profile')}
                 className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center"
               >
                 <User className="w-5 h-5 text-gray-600" />
@@ -257,7 +360,7 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="bg-white border-b border-gray-200">
+        <div className="bg-white/90 backdrop-blur-sm border-b border-white/20">
           <div className="flex">
             {[
               { id: 'inbox', label: 'Inbox', color: 'text-orange-500 border-orange-500' },
@@ -279,7 +382,7 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
         </div>
 
         {/* Filter Option */}
-        <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+        <div className="bg-white/80 backdrop-blur-sm px-4 py-3 border-b border-white/20">
           <label className="flex items-center space-x-2 text-sm text-gray-600">
             <input
               type="checkbox"
@@ -292,12 +395,12 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
         </div>
 
         {/* Message List */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto pb-20">
           {filteredMessages.map((message) => (
             <div
               key={message.id}
               onClick={() => handleReadMail(message.id)}
-              className="border-b border-gray-100 p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+              className="border-b border-white/20 p-4 hover:bg-white/10 cursor-pointer transition-colors backdrop-blur-sm"
             >
               <div className="flex items-start space-x-3">
                 <div className="relative flex-shrink-0">
@@ -314,7 +417,7 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center space-x-2">
-                      <h4 className={`font-medium truncate ${!message.read ? 'text-gray-900' : 'text-gray-700'}`}>
+                      <h4 className={`font-medium truncate ${!message.read ? 'text-white' : 'text-white/80'}`}>
                         {message.from}, {message.age}
                       </h4>
                       {message.isNew && (
@@ -324,13 +427,13 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
                       )}
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="text-xs text-gray-500">{message.timestamp}</span>
-                      <button className="text-gray-300 hover:text-yellow-500 transition-colors">
+                      <span className="text-xs text-white/70">{message.timestamp}</span>
+                      <button className="text-white/50 hover:text-yellow-400 transition-colors">
                         <Star className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
-                  <p className={`text-sm truncate ${!message.read ? 'font-medium text-gray-900' : 'text-gray-600'}`}>
+                  <p className={`text-sm truncate ${!message.read ? 'font-medium text-white' : 'text-white/70'}`}>
                     {message.subject}
                   </p>
                 </div>
@@ -340,7 +443,7 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
         </div>
 
         {/* Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white border-t border-gray-200 shadow-lg sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+        <div className="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white/95 backdrop-blur-sm border-t border-white/20 shadow-lg sm:max-w-lg md:max-w-xl lg:max-w-2xl">
           <div className="flex justify-around py-2">
             {[
               { id: 'search', icon: Users, label: 'Search', count: 0, color: 'text-gray-600' },

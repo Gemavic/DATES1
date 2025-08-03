@@ -22,6 +22,26 @@ export const useAuth = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  const signIn = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    return { data, error };
+  };
+
+  const signUp = async (email: string, password: string, fullName: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+        },
+      },
+    });
+    return { data, error };
+  };
   const signOut = async () => {
     await supabase.auth.signOut();
   };
@@ -47,6 +67,8 @@ export const useAuth = () => {
   return {
     user,
     loading,
+    signIn,
+    signUp,
     signOut,
     getFirstName,
     getFullName,
