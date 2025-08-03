@@ -76,8 +76,8 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
               <div className="relative">
                 <button 
                   onClick={() => onNavigate('mail')}
-                  className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center"
-                className="hover:text-white underline"
+                  className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center hover:text-white underline"
+                >
                   <MailIcon className="w-5 h-5 text-blue-600" />
                 </button>
               </div>
@@ -98,49 +98,51 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
           </div>
           
           <div className="space-y-0">
-          <div className="bg-white/80 backdrop-blur-sm py-2 px-4 border-t border-white/20 sm:px-6">
-              <div
-                key={match.id}
-                onClick={() => {
-                  sendMessageNotification(match.id, {
-                    name: 'You',
-                    image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
-                    id: 'current-user'
-                  });
-                }}
-                className="hover:text-white underline"
-              >
-                <div className="flex items-start space-x-3">
-                  <div className="relative">
-                    <img
-                      src={match.image}
-                      alt={match.name}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="flex items-center space-x-2">
-                        <h4 className={`font-medium truncate ${match.unread ? 'text-gray-900' : 'text-gray-700'}`}>
-                          {match.name}, {match.age}
-                        </h4>
-                        {match.isNew && (
-                          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                            new
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-xs text-gray-500">{match.time}</span>
+            <div className="bg-white/80 backdrop-blur-sm py-2 px-4 border-t border-white/20 sm:px-6">
+              {matches.map((match) => (
+                <div
+                  key={match.id}
+                  onClick={() => {
+                    sendMessageNotification(match.id, {
+                      name: 'You',
+                      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+                      id: 'current-user'
+                    });
+                  }}
+                  className="hover:text-white underline"
+                >
+                  <div className="flex items-start space-x-3">
+                    <div className="relative">
+                      <img
+                        src={match.image}
+                        alt={match.name}
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                     </div>
-                    <p className={`text-sm truncate ${match.unread ? 'font-medium text-gray-900' : 'text-gray-600'}`}>
-                      {match.lastMessage}
-                    </p>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center space-x-2">
+                          <h4 className={`font-medium truncate ${match.unread ? 'text-gray-900' : 'text-gray-700'}`}>
+                            {match.name}, {match.age}
+                          </h4>
+                          {match.isNew && (
+                            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                              new
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-xs text-gray-500">{match.time}</span>
+                      </div>
+                      <p className={`text-sm truncate ${match.unread ? 'font-medium text-gray-900' : 'text-gray-600'}`}>
+                        {match.lastMessage}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
