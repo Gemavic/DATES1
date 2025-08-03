@@ -64,10 +64,10 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-rose-500 to-purple-600">
       <div className="max-w-md mx-auto min-h-screen relative">
         {/* Header */}
-        <div className="bg-white shadow-sm border-b border-gray-100 px-4 py-3">
+        <div className="bg-white/95 backdrop-blur-sm shadow-sm border-b border-white/20 px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <h1 className="text-2xl font-bold text-gray-900">Dates</h1>
@@ -77,13 +77,13 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
                 <button 
                   onClick={() => onNavigate('mail')}
                   className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center"
-                >
+                className="hover:text-white underline"
                   <MailIcon className="w-5 h-5 text-blue-600" />
                 </button>
               </div>
               <button 
                 onClick={() => onNavigate('profile')}
-                className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center"
+                className="hover:text-white underline"
               >
                 <User className="w-5 h-5 text-gray-600" />
               </button>
@@ -98,7 +98,7 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
           </div>
           
           <div className="space-y-0">
-            {matches.map((match) => (
+          <div className="bg-white/80 backdrop-blur-sm py-2 px-4 border-t border-white/20 sm:px-6">
               <div
                 key={match.id}
                 onClick={() => {
@@ -108,7 +108,7 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
                     id: 'current-user'
                   });
                 }}
-                className="border-b border-gray-100 p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                className="hover:text-white underline"
               >
                 <div className="flex items-start space-x-3">
                   <div className="relative">
@@ -145,7 +145,7 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
         </div>
 
         {/* Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white border-t border-gray-200 shadow-lg sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+        <div className="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white/95 backdrop-blur-sm border-t border-white/20 shadow-lg sm:max-w-lg md:max-w-xl lg:max-w-2xl">
           <div className="flex justify-around py-2">
             {[
               { id: 'search', icon: Users, label: 'Search', count: 0, color: 'text-gray-600' },
