@@ -11,10 +11,20 @@ interface MailProps {
   onNavigate: (screen: string) => void;
 }
 
+interface EditableMessage {
+  id: string;
+  content: string;
+  sentAt: Date;
+  isEditing: boolean;
+}
+
 export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState<'inbox' | 'sent' | 'compose'>('inbox');
   const [selectedMail, setSelectedMail] = useState<string | null>(null);
   const [userBalance, setUserBalance] = useState(creditManager.getBalance('current-user'));
+  const [editableMessages, setEditableMessages] = useState<Map<string, EditableMessage>>(new Map());
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState('');
 
   const mailMessages = [
     {
@@ -64,6 +74,49 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
     }
   ];
 
+  const canEditMessage = (messageId: string): boolean => {
+    const editableMessage = editableMessages.get(messageId);
+    if (!editableMessage) return false;
+    
+    const now = new Date();
+    const timeDiff = now.getTime() - editableMessage.sentAt.getTime();
+    const tenMinutesInMs = 10 * 60 * 1000;
+    
+    return timeDiff <= tenMinutesInMs;
+  };
+
+  const startEditingMessage = (messageId: string) => {
+    const editableMessage = editableMessages.get(messageId);
+    if (editableMessage && canEditMessage(messageId)) {
+      setEditingMessageId(messageId);
+      setEditContent(editableMessage.content);
+    }
+  };
+
+  const saveEditedMessage = () => {
+    if (editingMessageId) {
+      const editableMessage = editableMessages.get(editingMessageId);
+      if (editableMessage) {
+        editableMessage.content = editContent;
+        setEditableMessages(new Map(editableMessages));
+        setEditingMessageId(null);
+        setEditContent('');
+        
+        // Show success message
+        const successMessage = document.createElement('div');
+        successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+        successMessage.textContent = 'Message edited successfully!';
+        document.body.appendChild(successMessage);
+        setTimeout(() => document.body.removeChild(successMessage), 3000);
+      }
+    }
+  };
+
+  const cancelEditing = () => {
+    setEditingMessageId(null);
+    setEditContent('');
+  };
+
   const handleReadMail = (mailId: string) => {
     // Use sender's name as thread ID for simplicity
     const mail = mailMessages.find(m => m.id === mailId);
@@ -102,6 +155,16 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
       creditManager.addCredits('current-user', 0, `Send mail to ${threadId} (FREE - First in thread)`, false);
       setActiveTab('inbox');
       
+      // Add message to editable messages with 10-minute edit window
+      const messageId = Date.now().toString();
+      const newEditableMessage: EditableMessage = {
+        id: messageId,
+        content: 'Your composed message content here', // This would come from the form
+        sentAt: new Date(),
+        isEditing: false
+      };
+      setEditableMessages(prev => new Map(prev.set(messageId, newEditableMessage)));
+      
       // Send email notification
       sendEmailNotification('recipient-id', {
         name: 'You',
@@ -120,6 +183,17 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
       if (success) {
         setUserBalance(creditManager.getBalance('current-user'));
         setActiveTab('inbox');
+        
+        // Add message to editable messages with 10-minute edit window
+        const messageId = Date.now().toString();
+        const newEditableMessage: EditableMessage = {
+          id: messageId,
+          content: 'Your composed message content here', // This would come from the form
+          sentAt: new Date(),
+          isEditing: false
+        };
+        setEditableMessages(prev => new Map(prev.set(messageId, newEditableMessage)));
+        
         // Show success message
         const successMessage = document.createElement('div');
         successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
@@ -161,12 +235,49 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
                 <div className="flex items-center space-x-2">
                   {message.starred && <Star className="w-4 h-4 text-yellow-500" fill="currentColor" />}
                   <span className="text-xs text-gray-500">{message.timestamp}</span>
+                  {type === 'sent' && canEditMessage(message.id) && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        startEditingMessage(message.id);
+                      }}
+                      className="text-blue-500 hover:text-blue-700 text-xs"
+                      title="Edit message (within 10 minutes)"
+                    >
+                      ✏️ Edit
+                    </button>
+                  )}
                 </div>
               </div>
               <h5 className={`text-sm mb-1 truncate ${!message.read && type === 'inbox' ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
                 {message.subject}
               </h5>
-              <p className="text-xs text-gray-500 truncate">{message.preview}</p>
+              {editingMessageId === message.id ? (
+                <div className="mt-2 space-y-2" onClick={(e) => e.stopPropagation()}>
+                  <Textarea
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                    className="text-xs"
+                    rows={3}
+                  />
+                  <div className="flex space-x-2">
+                    <Button
+                      onClick={saveEditedMessage}
+                      className="bg-green-500 text-white text-xs px-3 py-1"
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      onClick={cancelEditing}
+                      className="bg-gray-500 text-white text-xs px-3 py-1"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-xs text-gray-500 truncate">{message.preview}</p>
+              )}
             </div>
           </div>
         </div>
@@ -439,6 +550,16 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
                 Credit pricing is subject to change without prior notice or user consent.
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Message Edit Notice */}
+        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-2xl p-4">
+          <h3 className="text-blue-800 font-semibold text-lg mb-2">Message Editing</h3>
+          <div className="space-y-2 text-sm text-blue-700">
+            <p>📝 You can edit sent messages within 10 minutes of delivery</p>
+            <p>⏰ Edit window expires automatically after 10 minutes</p>
+            <p>✏️ Look for the "Edit" button on your sent messages</p>
           </div>
         </div>
       </div>

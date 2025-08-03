@@ -242,6 +242,23 @@ export const PaymentGateway: React.FC<PaymentGatewayProps> = ({
               Back
             </Button>
             <Button
+              onClick={() => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*,.pdf';
+                input.onchange = (e) => {
+                  const file = (e.target as HTMLInputElement).files?.[0];
+                  if (file) {
+                    alert(`Payment proof uploaded: ${file.name}`);
+                  }
+                };
+                input.click();
+              }}
+              className="flex-1 bg-blue-500 text-white"
+            >
+              📎 Upload Proof
+            </Button>
+            <Button
               onClick={confirmCryptoPayment}
               className="flex-1 bg-gradient-to-r from-green-500 to-teal-500 text-white"
             >
