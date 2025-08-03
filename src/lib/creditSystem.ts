@@ -204,6 +204,20 @@ class ModernCreditManager {
     approvedBy?: string;
   }> = new Map();
 
+  // Credit resettlement requests for disputed or lost credits
+  private creditResettlementRequests: Map<string, {
+    requestId: string;
+    staffId: string;
+    targetUserId: string;
+    amount: number;
+    reason: string;
+    category: 'dispute' | 'platform_glitch' | 'technical_error' | 'billing_error' | 'other';
+    timestamp: Date;
+    status: 'pending' | 'approved' | 'denied';
+    approvedBy?: string;
+    evidence?: string;
+  }> = new Map();
+
   // Request credit access for staff
   requestCreditAccess(staffId: string, targetUserId: string, reason: string): string {
     if (!this.isStaffMember(staffId)) {

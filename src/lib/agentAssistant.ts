@@ -269,7 +269,7 @@ class AgentAssistantManager {
         id: 'kb-company-001',
         category: 'company',
         question: 'How can I contact Dates.care?',
-        answer: 'Contact us: Phone: +1 (613) 861-5799, Email: info@dates.care, Support: supports@dates.care, Technical: tech@dates.care, Address: 5515 Eglinton Ave, Etobicoke, ON, Canada. We offer 24/7 support for urgent matters.',
+        answer: 'Contact us: Phone: +1 424 488 7950, Email: info@dates.care, Support: supports@dates.care, Technical: tech@dates.care, Address: 5515 Eglinton Ave, Etobicoke, ON, Canada. We offer 24/7 support for urgent matters.',
         tags: ['contact', 'support', 'phone', 'email'],
         lastUpdated: new Date(),
         helpful: 345,
@@ -445,6 +445,7 @@ class AgentAssistantManager {
     // Low confidence fallback
     return {
       response: 'I understand you need assistance. For the best help, please contact our human support team at supports@dates.care or call +1 (613) 861-5799. You can also create a support ticket for detailed assistance. Our team responds within 24 hours.',
+      message: 'I understand you need assistance. For the best help, please contact our human support team at supports@dates.care or call +1 424 488 7950. You can also create a support ticket for detailed assistance. Our team responds within 24 hours.',
       confidence: 0.40,
       suggestedActions: ['Contact human support', 'Create support ticket', 'Browse help articles']
     };

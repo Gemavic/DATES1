@@ -143,7 +143,7 @@ export const COMPANY_INFO = {
   director: 'Support Team',
   paypalWallet: 'histogm@gmail.com',
   address: '5515 Eglinton Ave, Etobicoke, ON, Canada',
-  phone: '+1 (613) 861-5799',
+  phone: '+1 424 488 7950',
   email: 'info@dates.care'
 };
 

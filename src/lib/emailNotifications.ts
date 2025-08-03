@@ -185,7 +185,7 @@ class EmailNotificationManager {
       
       © 2025 Dates.care
       5515 Eglinton Ave, Etobicoke, ON, Canada
-      Phone: +1 (613) 861-5799 | Email: info@dates.care
+      Phone: +1 424 488 7950 | Email: info@dates.care
     `;
 
     return { subject, html, text };
