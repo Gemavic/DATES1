@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronLeft, Settings, Bell, Search, Menu, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { MessageChatBox } from './MessageChatBox';
 
 interface ModernHeaderProps {
   title?: string;
@@ -86,6 +87,8 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
 
         {/* Right Section */}
         <div className="flex items-center space-x-2">
+          {/* Message Chat Box */}
+          <MessageChatBox />
           {showSearch && (
             <button 
               onClick={onSearch}

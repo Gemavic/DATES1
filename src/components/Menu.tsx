@@ -22,6 +22,7 @@ import {
   Shield,
   AlertTriangle
 } from 'lucide-react';
+import { MessageChatBox } from './MessageChatBox';
 
 interface MenuProps {
   onNavigate: (screen: any) => void;
@@ -110,6 +111,10 @@ export const Menu: React.FC<MenuProps> = ({ onNavigate, currentScreen }) => {
         )}
       </button>
 
+      {/* Message Chat Box */}
+      <div className="fixed top-6 right-20 z-50">
+        <MessageChatBox />
+      </div>
       {/* Menu Overlay */}
       {isOpen && (
         <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" onClick={toggleMenu} />
