@@ -33,6 +33,33 @@ import { creditManager } from './lib/creditSystem';
 import { emailNotificationManager } from './lib/emailNotifications';
 import { Shield, AlertTriangle } from 'lucide-react';
 
+// Welcome back message component
+const WelcomeBackMessage = ({ firstName }: { firstName: string }) => {
+  const [isVisible, setIsVisible] = React.useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isVisible) return null;
+
+  return (
+    <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-teal-500 text-white px-8 py-4 rounded-2xl shadow-2xl z-50 animate-slide-up">
+      <div className="flex items-center space-x-3">
+        <span className="text-3xl">👋</span>
+        <div>
+          <div className="font-bold text-lg">Welcome back, {firstName}!</div>
+          <div className="text-sm opacity-90">Great to see you again. Ready to find your perfect match?</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Simple legal components
 const TermsOfService = ({ onNavigate }: { onNavigate: (screen: string) => void }) => (
   <div className="min-h-screen bg-gradient-to-br from-pink-500 to-purple-600 p-4">
@@ -222,6 +249,7 @@ type Screen =
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('welcome');
+  const [showWelcomeBack, setShowWelcomeBack] = useState(false);
   const { user, loading } = useAuth();
   
   // Initialize credit system on app start
@@ -229,6 +257,16 @@ function App() {
     if (user) {
       creditManager.initializeUser(user.id);
       emailNotificationManager.initializeEmailSettings(user.id, user.email || '');
+      
+      // Show welcome back message for returning users (not on first signup)
+      const isReturningUser = localStorage.getItem('dates_returning_user');
+      if (isReturningUser && currentScreen === 'discovery') {
+        setShowWelcomeBack(true);
+        setTimeout(() => setShowWelcomeBack(false), 5000);
+      }
+      
+      // Mark user as returning for future logins
+      localStorage.setItem('dates_returning_user', 'true');
     }
   }, [user]);
 
@@ -370,6 +408,11 @@ function App() {
           <div className="fixed top-20 right-4 z-40">
             <SubscriptionStatus />
           </div>
+        )}
+        
+        {/* Welcome back message */}
+        {showWelcomeBack && user && (
+          <WelcomeBackMessage firstName={user.user_metadata?.full_name?.split(' ')[0] || 'Friend'} />
         )}
         
         {renderScreen()}

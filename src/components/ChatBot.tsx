@@ -3,6 +3,7 @@ import { MessageCircle, X, Send, Bot, User, Phone, Mail, Clock, Zap, Paperclip, 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { agentAssistant, getAIResponse, createSupportTicket } from '@/lib/agentAssistant';
+import { useAuth } from '@/hooks/useAuth';
 
 interface ChatMessage {
   id: string;
@@ -25,11 +26,12 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
     subject: '',
     description: ''
   });
+  const { getFirstName } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
       type: 'bot',
-      message: 'Hi! I\'m your Dates.care AI assistant. I\'m here 24/7 to help you with questions about our dating platform, credits, features, payments, verification, safety, and technical support. I have access to our complete knowledge base and can connect you with human agents when needed. How can I assist you today?',
+      message: `Hi ${getFirstName()}! 👋 I'm your Dates.care AI assistant. I'm here 24/7 to help you with questions about our dating platform, credits, features, payments, verification, safety, and technical support. I have access to our complete knowledge base and can connect you with human agents when needed. How can I assist you today?`,
       timestamp: new Date(),
       quickReplies: ['How do credits work?', 'Payment methods', 'Account verification', 'Safety & security', 'Technical support', 'Talk to human agent']
     }

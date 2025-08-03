@@ -3,6 +3,7 @@ import { Layout } from '@/components/Layout';
 import { Camera, Edit, Heart, MapPin, Briefcase, GraduationCap, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getVerificationStatus } from '@/lib/verification';
+import { useAuth } from '@/hooks/useAuth';
 
 interface ProfileProps {
   onNavigate: (screen: string) => void;
@@ -10,9 +11,11 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
   const verificationStatus = getVerificationStatus('current-user');
+  const { getFirstName, getFullName } = useAuth();
   
   const userProfile = {
-    name: 'You',
+    name: getFirstName(),
+    fullName: getFullName(),
     age: 25,
     location: 'New York, NY',
     occupation: 'Software Developer',

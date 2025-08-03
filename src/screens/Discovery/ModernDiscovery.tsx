@@ -5,6 +5,7 @@ import { SwipeCard } from '@/components/SwipeCard';
 import { Button } from '@/components/ui/button';
 import { creditManager } from '@/lib/creditSystem';
 import { sendLikeNotification, sendProfileViewNotification, sendMessageNotification, sendWinkNotification } from '@/lib/emailNotifications';
+import { useAuth } from '@/hooks/useAuth';
 import { 
   Filter,
   Zap,
@@ -25,6 +26,7 @@ interface ModernDiscoveryProps {
 export const ModernDiscovery: React.FC<ModernDiscoveryProps> = ({ onNavigate }) => {
   const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
+  const { getFirstName, user } = useAuth();
 
   const profiles = [
     {

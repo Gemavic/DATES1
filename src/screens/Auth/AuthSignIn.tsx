@@ -19,7 +19,7 @@ export const AuthSignIn: React.FC<AuthSignInProps> = ({ onNavigate }) => {
     password: ''
   });
 
-  const { signIn } = useAuth();
+  const { signIn, getFirstName } = useAuth();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,14 +51,33 @@ export const AuthSignIn: React.FC<AuthSignInProps> = ({ onNavigate }) => {
           description: errorMessage
         });
       } else {
-        toast({
-          variant: 'success',
-          title: 'Welcome back!',
-          description: 'You have successfully signed in.'
-        });
-        
         // Initialize email notifications
         emailNotificationManager.initializeEmailSettings('current-user', formData.email);
+        
+        // Show personalized welcome back message after navigation
+        setTimeout(() => {
+          const firstName = getFirstName();
+          const welcomeMessage = document.createElement('div');
+          welcomeMessage.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-teal-500 text-white px-8 py-4 rounded-2xl shadow-2xl z-50 animate-slide-up';
+          welcomeMessage.innerHTML = `
+            <div class="flex items-center space-x-3">
+              <span class="text-3xl">👋</span>
+              <div>
+                <div class="font-bold text-lg">Welcome back, ${firstName}!</div>
+                <div class="text-sm opacity-90">Great to see you again. Ready to find your perfect match?</div>
+              </div>
+            </div>
+          `;
+          document.body.appendChild(welcomeMessage);
+          
+          // Auto-remove after 5 seconds
+          setTimeout(() => {
+            if (document.body.contains(welcomeMessage)) {
+              welcomeMessage.style.animation = 'fadeOut 0.5s ease-out forwards';
+              setTimeout(() => document.body.removeChild(welcomeMessage), 500);
+            }
+          }, 5000);
+        }, 1000);
         
         onNavigate('discovery');
       }

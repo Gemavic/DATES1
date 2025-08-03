@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { creditManager, formatCredits } from '@/lib/creditSystem';
 import { sendMessageNotification } from '@/lib/emailNotifications';
+import { useAuth } from '@/hooks/useAuth';
 
 interface ChatMessage {
   id: string;
@@ -41,6 +42,7 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
   const [isTyping, setIsTyping] = useState(false);
   const [userBalance, setUserBalance] = useState(creditManager.getTotalCredits('current-user'));
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { getFirstName } = useAuth();
 
   // Sample chat threads
   const [chatThreads, setChatThreads] = useState<ChatThread[]>([
@@ -54,7 +56,7 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
         senderId: 'emma-id',
         senderName: 'Emma',
         senderImage: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=400',
-        message: 'Hey! How was your weekend? 😊',
+        message: `Hey ${getFirstName()}! How was your weekend? 😊`,
         timestamp: new Date(Date.now() - 2 * 60 * 1000),
         type: 'text'
       },
@@ -172,7 +174,8 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
       senderImage: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
       message: message.trim(),
       timestamp: new Date(),
-      type: 'text'
+      documents: [],
+      responses: []
     };
 
     setMessages(prev => [...prev, newMessage]);

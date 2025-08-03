@@ -84,7 +84,7 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
     }
 
     try {
-      const { error } = await signUp(formData.email, formData.password);
+      const { error } = await signUp(formData.email, formData.password, formData.name);
       
       if (error) {
         let errorMessage = error.message;
