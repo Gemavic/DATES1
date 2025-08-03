@@ -149,6 +149,7 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
           <div className="flex justify-around py-2">
             {[
               { id: 'search', icon: Users, label: 'Search', count: 0, color: 'text-gray-600' },
+              { id: 'chat', icon: MessageCircle, label: 'Chat', count: 0, color: 'text-gray-600' },
               { id: 'mail', icon: MailIcon, label: 'Mail', count: 29, color: 'text-gray-600' },
               { id: 'newsfeed', icon: Newspaper, label: 'Newsfeed', count: 0, color: 'text-gray-600' },
               { id: 'people', icon: User, label: 'People', count: 0, color: 'text-gray-600' }
@@ -160,7 +161,9 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
                 <button
                   key={tab.id}
                   onClick={() => {
-                    if (tab.id === 'mail') {
+                    if (tab.id === 'chat') {
+                      // Chat functionality handled by MessageChatBox component
+                    } else if (tab.id === 'mail') {
                       onNavigate('newsfeed');
                     } else if (tab.id === 'people') {
                       onNavigate('discovery');
@@ -186,8 +189,11 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
                 </button>
               );
             })}
-            
-            {/* Message Chat Box in Footer */}
+          </div>
+          
+          {/* Message Chat Box in Footer */}
+          <div className="absolute bottom-16 right-4">
+            <MessageChatBox />
           </div>
         </div>
       </div>
