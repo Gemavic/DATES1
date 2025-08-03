@@ -229,7 +229,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
       {/* Chat Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-32 right-6 z-50 w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center ${className}`}
+        className={`fixed bottom-32 left-6 z-50 w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center ${className}`}
       >
         {isOpen ? (
           <X className="w-6 h-6 text-white" />
@@ -243,7 +243,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-48 right-6 z-50 w-80 h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+        <div className="fixed bottom-48 left-6 z-50 w-80 h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
           {/* Chat Header */}
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 text-white">
             <div className="flex items-center space-x-3">

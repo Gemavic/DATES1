@@ -191,10 +191,6 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
             })}
             
             {/* Message Chat Box in Footer */}
-            <div className="flex flex-col items-center py-2 px-3">
-              <MessageChatBox />
-              <span className="text-xs font-medium text-gray-600 mt-1">Chat</span>
-            </div>
           </div>
         </div>
       </div>

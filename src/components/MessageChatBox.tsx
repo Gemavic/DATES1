@@ -297,6 +297,13 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
                   </div>
                 )}
               </div>
+              <button
+                onClick={() => handleFileUpload('file')}
+                className="bg-gray-500 text-white p-3 rounded-full hover:bg-gray-600 transition-colors flex-shrink-0"
+                title="Upload file"
+              >
+                <Paperclip className="w-5 h-5" />
+              </button>
               
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1">
