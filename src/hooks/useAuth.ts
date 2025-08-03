@@ -25,16 +25,22 @@ export function useAuth() {
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    // Trim whitespace from email to prevent common input errors
+    const trimmedEmail = email.trim().toLowerCase();
+    
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+      email: trimmedEmail,
       password,
     });
     return { data, error };
   };
 
   const signUp = async (email: string, password: string) => {
+    // Trim whitespace from email to prevent common input errors
+    const trimmedEmail = email.trim().toLowerCase();
+    
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: trimmedEmail,
       password,
     });
     return { data, error };

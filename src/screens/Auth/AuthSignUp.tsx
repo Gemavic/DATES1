@@ -87,10 +87,25 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
       const { error } = await signUp(formData.email, formData.password);
       
       if (error) {
+        let errorMessage = error.message;
+        let errorTitle = 'Sign Up Failed';
+        
+        // Handle specific error cases
+        if (error.message === 'User already registered') {
+          errorTitle = 'Account Already Exists';
+          errorMessage = 'An account with this email already exists. Please sign in instead or use a different email address.';
+        } else if (error.message.includes('Password should be at least')) {
+          errorTitle = 'Password Too Weak';
+          errorMessage = 'Your password does not meet the minimum requirements. Please choose a stronger password.';
+        } else if (error.message.includes('Invalid email')) {
+          errorTitle = 'Invalid Email';
+          errorMessage = 'Please enter a valid email address.';
+        }
+        
         toast({
           variant: 'destructive',
-          title: 'Sign Up Failed',
-          description: error.message
+          title: errorTitle,
+          description: errorMessage
         });
       } else {
         // Give new user 10 complimentary credits + 10 kobos (updated bonus)

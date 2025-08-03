@@ -30,12 +30,25 @@ export const AuthSignIn: React.FC<AuthSignInProps> = ({ onNavigate }) => {
       const { error } = await signIn(formData.email, formData.password);
       
       if (error) {
+        let errorMessage = error.message;
+        let errorTitle = 'Sign In Failed';
+        
+        // Handle specific error cases
+        if (error.message === 'Invalid login credentials') {
+          errorTitle = 'Invalid Credentials';
+          errorMessage = 'The email or password you entered is incorrect. Please check your credentials and try again.';
+        } else if (error.message === 'Email not confirmed') {
+          errorTitle = 'Email Not Confirmed';
+          errorMessage = 'Please check your email and click the confirmation link before signing in.';
+        } else if (error.message === 'Too many requests') {
+          errorTitle = 'Too Many Attempts';
+          errorMessage = 'Too many sign-in attempts. Please wait a few minutes before trying again.';
+        }
+        
         toast({
           variant: 'destructive',
-          title: 'Sign In Failed',
-          description: error.message === 'Email not confirmed' 
-            ? 'Please check your email and click the confirmation link before signing in.'
-            : error.message
+          title: errorTitle,
+          description: errorMessage
         });
       } else {
         toast({
