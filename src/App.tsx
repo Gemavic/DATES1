@@ -246,7 +246,7 @@ type Screen =
   | 'privacy'
   | 'dispute'
   | 'disclaimer'
-  | 'verification';
+  | 'verification'
   | 'feedback';
 
 function App() {
