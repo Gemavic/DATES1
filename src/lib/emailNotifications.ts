@@ -255,7 +255,7 @@ class EmailNotificationManager {
       userId,
       'wink',
       'Someone Sent You a Blink! 👁️',
-      `${fromUser.name} sent you a blink! This is their way of catching your attention and showing interest. A blink is a quick, playful way to say "I noticed you!" Why not check out their profile and see if you'd like to connect? You could send a blink back or start a conversation!`,
+      `${fromUser.name} sent you a blink! This is their way of showing interest. Check out their profile and see if you'd like to connect!`,
       fromUser
     );
   }
@@ -275,7 +275,7 @@ class EmailNotificationManager {
       userId,
       'view',
       `${fromUser.name} Viewed Your Profile! 👀`,
-      `Someone's interested! ${fromUser.name} just checked out your profile. This could be the start of something special. Take a look at their profile and see if you'd like to connect. If you're interested, send them a like or a message!`,
+      `${fromUser.name} just viewed your profile! Take a look at their profile and see if you'd like to connect.`,
       fromUser
     );
   }

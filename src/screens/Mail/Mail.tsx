@@ -234,15 +234,16 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
         <div className="bg-white shadow-sm border-b border-gray-100 px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <h1 className="text-2xl font-bold text-gray-900">La-Date</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Dates</h1>
             </div>
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
-                  <div className="w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">💕</span>
-                  </div>
-                </div>
+                <button 
+                  onClick={() => onNavigate('matches')}
+                  className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center"
+                >
+                  <MessageCircle className="w-5 h-5 text-blue-600" />
+                </button>
               </div>
               <button 
                 onClick={() => onNavigate('profile')}

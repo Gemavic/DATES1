@@ -56,7 +56,7 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
         senderId: 'gabriela-id',
         senderName: 'Gabriela',
         senderImage: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=400',
-        message: `I believe in love that is nourished by everyday moments... 💕`,
+        message: `Hey! How's your day going? Would love to chat more 😊`,
         timestamp: new Date(Date.now() - 2 * 60 * 1000),
         type: 'text'
       },
@@ -74,7 +74,7 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
         senderId: 'astrid-id',
         senderName: 'Astrid',
         senderImage: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
-        message: 'The city\'s asleep. I\'m not. And you should know... 🌙',
+        message: 'Thanks for the great conversation yesterday! 🌟',
         timestamp: new Date(Date.now() - 60 * 60 * 1000),
         type: 'text'
       },
@@ -92,7 +92,7 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
         senderId: 'jessica-id',
         senderName: 'Jessica',
         senderImage: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=400',
-        message: 'I\'m glad to meet you. I am a woman discovering... ✨',
+        message: 'Looking forward to our coffee date this weekend! ☕',
         timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
         type: 'text'
       },
@@ -102,14 +102,14 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
     }
   ]);
 
-  // Sample messages for active thread matching La-Date style
+  // Sample messages for active thread
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'msg-gabriela-1',
       senderId: 'gabriela-id',
       senderName: 'Gabriela',
       senderImage: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=400',
-      message: 'I believe in love that is nourished by everyday moments and shared dreams 💕',
+      message: 'Hey! How are you doing today? Hope you\'re having a great day! 😊',
       timestamp: new Date(Date.now() - 2 * 60 * 1000),
       type: 'text'
     },
@@ -118,7 +118,7 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
       senderId: 'current-user',
       senderName: 'You',
       senderImage: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
-      message: 'That\'s beautiful, Gabriela. I feel the same way about meaningful connections ✨',
+      message: 'I\'m doing well, thanks for asking! How about you? 😄',
       timestamp: new Date(Date.now() - 1 * 60 * 1000),
       type: 'text'
     }

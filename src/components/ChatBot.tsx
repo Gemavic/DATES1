@@ -52,7 +52,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
 
   const botResponses: Record<string, { message: string; quickReplies?: string[] }> = {
     'credits': {
-      message: 'Our credit system works like this:\n\n💳 Credits are used for ALL features:\n• Live Chat: 2 credits/minute or 1 kobo/minute\n• Send Photos: 10 credits\n• Video Calls: 60 credits/minute\n• Audio Calls: 50 credits/minute\n• First Mail: 10 credits\n• Following Mail: 30 credits\n• Read Mail: 10 credits (first in thread is FREE)\n• Virtual Gifts: varies\n\n💖 Kobos are priority chat credits (1 kobo = 1 minute)\n\n🎁 New users get 10 complimentary credits + 10 kobos!\n\n⚠️ NO FREE SERVICES - All features require credits\n⚠️ Pricing subject to change without notice',
+      message: 'Our credit system works like this:\n\n💳 Credits are used for premium features:\n• Live Chat: 2 credits/minute or 1 kobo/minute\n• Send Photos: 10 credits\n• Video Calls: 60 credits/minute\n• Audio Calls: 50 credits/minute\n• Mail: 10-30 credits\n• Virtual Gifts: varies\n\n💖 Kobos are priority chat credits (1 kobo = 1 minute)\n\n🎁 New users get 10 complimentary credits + 10 kobos!',
       quickReplies: ['Buy more credits', 'Kobo vs Credits', 'Payment methods', 'Staff unlimited access']
     },
     'payment': {

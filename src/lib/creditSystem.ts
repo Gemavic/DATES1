@@ -1,4 +1,4 @@
-// Modern Credit System Based on La-Date Pricing Structure
+// Modern Credit System for Dates Platform
 export interface CreditTransaction {
   type: 'spend' | 'earn';
   amount: number;
@@ -100,7 +100,7 @@ export interface PricingStructure {
 class ModernCreditManager {
   private users: Map<string, UserCreditData> = new Map();
   
-  // Exact pricing structure from La-Date screenshots
+  // Pricing structure for Dates platform
   private pricing: PricingStructure = {
     chat: {
       liveChat: { credits: 2, kobos: 1, perMinute: true },
