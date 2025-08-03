@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout } from '@/components/Layout';
-import { MessageCircle, Heart } from 'lucide-react';
+import { MessageCircle, Heart, User, Users, Mail as MailIcon, Newspaper } from 'lucide-react';
 import { sendMessageNotification } from '@/lib/emailNotifications';
 
 interface MatchesProps {
