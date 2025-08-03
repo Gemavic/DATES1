@@ -44,81 +44,81 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { getFirstName } = useAuth();
 
-  // Sample chat threads
+  // Sample chat threads matching La-Date style
   const [chatThreads, setChatThreads] = useState<ChatThread[]>([
     {
-      id: 'thread-1',
-      participantId: 'emma-id',
-      participantName: 'Emma',
+      id: 'thread-gabriela',
+      participantId: 'gabriela-id',
+      participantName: 'Gabriela',
       participantImage: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=400',
       lastMessage: {
-        id: 'msg-1',
-        senderId: 'emma-id',
-        senderName: 'Emma',
+        id: 'msg-gabriela',
+        senderId: 'gabriela-id',
+        senderName: 'Gabriela',
         senderImage: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=400',
-        message: `Hey ${getFirstName()}! How was your weekend? 😊`,
+        message: `I believe in love that is nourished by everyday moments... 💕`,
         timestamp: new Date(Date.now() - 2 * 60 * 1000),
         type: 'text'
       },
-      unreadCount: 2,
+      unreadCount: 1,
       isOnline: true,
       isTyping: false
     },
     {
-      id: 'thread-2',
-      participantId: 'sarah-id',
-      participantName: 'Sarah',
+      id: 'thread-astrid',
+      participantId: 'astrid-id',
+      participantName: 'Astrid',
       participantImage: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
       lastMessage: {
-        id: 'msg-2',
-        senderId: 'sarah-id',
-        senderName: 'Sarah',
+        id: 'msg-astrid',
+        senderId: 'astrid-id',
+        senderName: 'Astrid',
         senderImage: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
-        message: 'That restaurant looks amazing! 🍽️',
+        message: 'The city\'s asleep. I\'m not. And you should know... 🌙',
         timestamp: new Date(Date.now() - 60 * 60 * 1000),
         type: 'text'
       },
-      unreadCount: 0,
-      isOnline: false,
+      unreadCount: 1,
+      isOnline: true,
       isTyping: false
     },
     {
-      id: 'thread-3',
+      id: 'thread-jessica',
       participantId: 'jessica-id',
       participantName: 'Jessica',
       participantImage: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=400',
       lastMessage: {
-        id: 'msg-3',
+        id: 'msg-jessica',
         senderId: 'jessica-id',
         senderName: 'Jessica',
         senderImage: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=400',
-        message: 'Thanks for the coffee recommendation ☕',
+        message: 'I\'m glad to meet you. I am a woman discovering... ✨',
         timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
         type: 'text'
       },
       unreadCount: 1,
       isOnline: true,
-      isTyping: true
+      isTyping: false
     }
   ]);
 
-  // Sample messages for active thread
+  // Sample messages for active thread matching La-Date style
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
-      id: 'msg-1',
-      senderId: 'emma-id',
-      senderName: 'Emma',
+      id: 'msg-gabriela-1',
+      senderId: 'gabriela-id',
+      senderName: 'Gabriela',
       senderImage: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=400',
-      message: 'Hey! How was your weekend? 😊',
+      message: 'I believe in love that is nourished by everyday moments and shared dreams 💕',
       timestamp: new Date(Date.now() - 2 * 60 * 1000),
       type: 'text'
     },
     {
-      id: 'msg-2',
+      id: 'msg-user-1',
       senderId: 'current-user',
       senderName: 'You',
       senderImage: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
-      message: 'It was great! Went hiking and tried that new café downtown ☕',
+      message: 'That\'s beautiful, Gabriela. I feel the same way about meaningful connections ✨',
       timestamp: new Date(Date.now() - 1 * 60 * 1000),
       type: 'text'
     }
