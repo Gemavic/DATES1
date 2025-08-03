@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, MessageCircle, Search, User, Settings, Newspaper, Mail, Users } from 'lucide-react';
+import { Heart, Search, User, Settings, Newspaper, Mail, Users } from 'lucide-react';
 
 interface FooterProps {
   activeTab?: string;
@@ -14,7 +14,6 @@ export const Footer: React.FC<FooterProps> = ({
 }) => {
   const tabs = [
     { id: 'discovery', icon: Search, label: 'Search' },
-    { id: 'matches', icon: MessageCircle, label: 'Chat' },
     { id: 'mail', icon: Mail, label: 'Mail' },
     { id: 'newsfeed', icon: Newspaper, label: 'News' },
     { id: 'profile', icon: Users, label: 'People' },
