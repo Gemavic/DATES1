@@ -34,6 +34,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           className
         )}
         ref={ref}
+        style={{ cursor: 'pointer', touchAction: 'manipulation' }}
         {...props}
       />
     );

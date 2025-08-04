@@ -106,9 +106,10 @@ export const Menu: React.FC<MenuProps> = ({ onNavigate, currentScreen }) => {
         onClick={toggleMenu}
         className={cn(
           "fixed top-6 left-4 z-50 p-3 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full shadow-2xl",
-          "hover:scale-110 active:scale-95 transition-all duration-300 border-2 border-white/20",
+          "hover:scale-110 active:scale-95 transition-all duration-300 border-2 border-white/20 cursor-pointer",
           "touch-manipulation safe-area-inset-top"
         )}
+        type="button"
       >
         {isOpen ? (
           <X className="w-6 h-6 text-white flex-shrink-0" />
@@ -163,11 +164,12 @@ export const Menu: React.FC<MenuProps> = ({ onNavigate, currentScreen }) => {
                         onClick={() => handleNavigation(item.id)}
                         className={cn(
                           "w-full flex items-center space-x-3 p-3 sm:p-4 rounded-xl transition-all duration-200",
-                          "touch-manipulation active:scale-95 hover:scale-[1.02]",
+                          "touch-manipulation active:scale-95 hover:scale-[1.02] cursor-pointer",
                           isActive 
                             ? 'bg-white/30 text-white shadow-lg' 
                             : 'text-white/80 hover:bg-white/20 hover:text-white'
                         )}
+                        type="button"
                       >
                         <Icon className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
                         <div className="flex-1 text-left">

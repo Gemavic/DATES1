@@ -48,7 +48,8 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
           {showBack && (
             <button 
               onClick={onBack}
-              className="p-2 sm:p-3 hover:bg-gray-100 rounded-full transition-colors touch-manipulation active:scale-95"
+              className="p-2 sm:p-3 hover:bg-gray-100 rounded-full transition-colors touch-manipulation active:scale-95 cursor-pointer"
+              type="button"
             >
               <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 flex-shrink-0" />
             </button>
@@ -57,7 +58,8 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
           {showMenu && !showBack && (
             <button 
               onClick={onMenu}
-              className="p-2 sm:p-3 hover:bg-gray-100 rounded-full transition-colors touch-manipulation active:scale-95"
+              className="p-2 sm:p-3 hover:bg-gray-100 rounded-full transition-colors touch-manipulation active:scale-95 cursor-pointer"
+              type="button"
             >
               <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 flex-shrink-0" />
             </button>
@@ -90,7 +92,8 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
           {showSearch && (
             <button 
               onClick={onSearch}
-              className="p-2 sm:p-3 hover:bg-gray-100 rounded-full transition-colors touch-manipulation active:scale-95"
+              className="p-2 sm:p-3 hover:bg-gray-100 rounded-full transition-colors touch-manipulation active:scale-95 cursor-pointer"
+              type="button"
             >
               <Search className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 flex-shrink-0" />
             </button>
@@ -99,7 +102,8 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
           {showNotifications && (
             <button 
               onClick={onNotifications}
-              className="p-2 sm:p-3 hover:bg-gray-100 rounded-full transition-colors touch-manipulation active:scale-95 relative"
+              className="p-2 sm:p-3 hover:bg-gray-100 rounded-full transition-colors touch-manipulation active:scale-95 cursor-pointer relative"
+              type="button"
             >
               <Bell className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 flex-shrink-0" />
               <div className="absolute top-1 right-1 sm:top-1.5 sm:right-1.5 w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full animate-pulse"></div>
@@ -109,7 +113,8 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
           {showSettings && (
             <button 
               onClick={onSettings}
-              className="p-2 sm:p-3 hover:bg-gray-100 rounded-full transition-colors touch-manipulation active:scale-95"
+              className="p-2 sm:p-3 hover:bg-gray-100 rounded-full transition-colors touch-manipulation active:scale-95 cursor-pointer"
+              type="button"
             >
               <Settings className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 flex-shrink-0" />
             </button>

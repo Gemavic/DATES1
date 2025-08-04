@@ -50,13 +50,27 @@ export const Footer: React.FC<FooterProps> = ({
             return (
               <button
                 key={tab.id}
-                onClick={() => onNavigate(tab.id)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  console.log('Footer tab clicked:', tab.id);
+                  
+                  if (tab.id === 'mail') {
+                    onNavigate('mail');
+                  } else if (tab.id === 'newsfeed') {
+                    onNavigate('newsfeed');
+                  } else {
+                    onNavigate(tab.id);
+                  }
+                }}
                 className={cn(
                   "flex flex-col items-center py-2 px-1 sm:px-3 rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation min-w-0",
+                  "cursor-pointer select-none",
                   isActive 
                     ? 'text-white bg-pink-500 shadow-lg' 
                     : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50'
                 )}
+                type="button"
               >
                 <Icon className={cn(
                   "w-5 h-5 sm:w-6 sm:h-6 mb-1 drop-shadow-sm flex-shrink-0",

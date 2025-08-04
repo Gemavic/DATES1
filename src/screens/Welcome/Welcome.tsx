@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Heart, Users, MessageCircle, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface WelcomeProps {
   onGetStarted?: () => void;
@@ -8,11 +9,38 @@ interface WelcomeProps {
 }
 
 export const Welcome: React.FC<WelcomeProps> = ({ onGetStarted, onNavigate = () => {} }) => {
+  const navigate = useNavigate();
+
   const handleGetStarted = () => {
+    console.log('Get Started button clicked'); // Debug log
+    
     if (onGetStarted) {
+      console.log('Calling onGetStarted prop');
       onGetStarted();
-    } else {
-      onNavigate('auth-signin');
+      return;
+    }
+    
+    // Try multiple navigation methods
+    try {
+      console.log('Attempting navigation to signin');
+      
+      // Method 1: Use onNavigate prop
+      if (onNavigate) {
+        onNavigate('signin');
+      }
+      
+      // Method 2: Use React Router navigate
+      navigate('/signin');
+      
+      // Method 3: Fallback to window.location
+      setTimeout(() => {
+        window.location.href = '/signin';
+      }, 100);
+      
+    } catch (error) {
+      console.error('Navigation error:', error);
+      // Final fallback
+      window.location.href = '/signin';
     }
   };
 
@@ -129,7 +157,8 @@ export const Welcome: React.FC<WelcomeProps> = ({ onGetStarted, onNavigate = () 
         <div className="px-4 sm:px-6 pb-6 sm:pb-8 relative z-10">
           <Button
             onClick={handleGetStarted}
-            className="w-full h-12 sm:h-14 bg-white text-pink-600 hover:scale-105 text-base sm:text-lg font-semibold rounded-2xl shadow-2xl transition-all duration-300"
+            className="w-full h-12 sm:h-14 bg-white text-pink-600 hover:scale-105 active:scale-95 text-base sm:text-lg font-semibold rounded-2xl shadow-2xl transition-all duration-300 cursor-pointer touch-manipulation"
+            type="button"
           >
             Get Started
           </Button>
@@ -137,7 +166,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onGetStarted, onNavigate = () 
             By continuing, you agree to our{' '}
             <button 
               onClick={() => onNavigate?.('terms')}
-              className="underline hover:text-white"
+              className="underline hover:text-white cursor-pointer touch-manipulation"
             >
               Terms of Service
             </button>

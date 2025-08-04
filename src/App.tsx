@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ResponsiveLayout } from './components/ResponsiveLayout';
 import { Welcome } from './screens/Welcome/Welcome';
-import { AuthSignIn } from './screens/Auth/AuthSignIn';
-import { AuthSignUp } from './screens/Auth/AuthSignUp';
+import { SignIn } from './screens/Auth/SignIn';
+import { SignUp } from './screens/Auth/SignUp';
 import { Discovery } from './screens/Discovery/Discovery';
 import { ModernDiscovery } from './screens/Discovery/ModernDiscovery';
 import { Matches } from './screens/Matches/Matches';
@@ -31,7 +31,6 @@ import { useAuth } from './hooks/useAuth';
 
 function App() {
   const { user, loading } = useAuth();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   if (loading) {
     return (
@@ -49,12 +48,42 @@ function App() {
       <div className="App">
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<Welcome />} />
-          <Route path="/welcome" element={<Welcome onNavigate={(screen) => window.location.href = `/${screen}`} />} />
-          <Route path="/signin" element={<AuthSignIn />} />
-          <Route path="/auth-signin" element={<AuthSignIn onNavigate={(screen) => window.location.href = `/${screen}`} />} />
-          <Route path="/signup" element={<AuthSignUp />} />
-          <Route path="/auth-signup" element={<AuthSignUp onNavigate={(screen) => window.location.href = `/${screen}`} />} />
+          <Route path="/" element={<Welcome onNavigate={(screen) => {
+            console.log('Welcome onNavigate called with:', screen);
+            if (screen === 'signin' || screen === 'auth-signin') {
+              window.location.href = '/signin';
+            } else if (screen === 'signup' || screen === 'auth-signup') {
+              window.location.href = '/signup';
+            } else {
+              window.location.href = `/${screen}`;
+            }
+          }} />} />
+          <Route path="/welcome" element={<Welcome onNavigate={(screen) => {
+            console.log('Welcome onNavigate called with:', screen);
+            if (screen === 'signin' || screen === 'auth-signin') {
+              window.location.href = '/signin';
+            } else if (screen === 'signup' || screen === 'auth-signup') {
+              window.location.href = '/signup';
+            } else {
+              window.location.href = `/${screen}`;
+            }
+          }} />} />
+          <Route path="/signin" element={<SignIn onNavigate={(screen) => {
+            console.log('SignIn onNavigate called with:', screen);
+            window.location.href = `/${screen}`;
+          }} />} />
+          <Route path="/auth-signin" element={<SignIn onNavigate={(screen) => {
+            console.log('SignIn onNavigate called with:', screen);
+            window.location.href = `/${screen}`;
+          }} />} />
+          <Route path="/signup" element={<SignUp onNavigate={(screen) => {
+            console.log('SignUp onNavigate called with:', screen);
+            window.location.href = `/${screen}`;
+          }} />} />
+          <Route path="/auth-signup" element={<SignUp onNavigate={(screen) => {
+            console.log('SignUp onNavigate called with:', screen);
+            window.location.href = `/${screen}`;
+          }} />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/cancel" element={<CancelPage />} />
