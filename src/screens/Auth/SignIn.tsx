@@ -19,7 +19,7 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
     password: ''
   });
 
-  const { signIn, getFirstName } = useAuth();
+  const { signIn } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
