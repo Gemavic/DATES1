@@ -20,7 +20,7 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
     password: ''
   });
 
-  const { signIn, signInWithGoogle, signInWithFacebook } = useAuth();
+  const { signIn, getFirstName } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,79 +66,6 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    setIsSocialLoading(true);
-    try {
-      const { error } = await signInWithGoogle();
-      if (error) {
-        setErrors([error.message]);
-      }
-    } catch (error) {
-      setErrors(['Failed to sign in with Google. Please try again.']);
-    } finally {
-      setIsSocialLoading(false);
-    }
-  };
-
-  const handleFacebookSignIn = async () => {
-    setIsSocialLoading(true);
-    try {
-      const { error } = await signInWithFacebook();
-      if (error) {
-        setErrors([error.message]);
-      }
-    } catch (error) {
-      setErrors(['Failed to sign in with Facebook. Please try again.']);
-    } finally {
-      setIsSocialLoading(false);
-    }
-  };
-
-  return (
-    <Layout
-      title="Sign In"
-      onBack={() => onNavigate('welcome')}
-      showClose={true}
-      onClose={() => onNavigate('welcome')}
-    >
-      <div className="px-6 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center">
-            <Heart className="w-10 h-10 text-white" fill="currentColor" />
-          </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Welcome Back!</h2>
-          <p className="text-white/80">Sign in to continue your dating journey</p>
-        </div>
-
-        {/* Security Notice */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6">
-          <div className="flex items-center text-blue-600 text-sm">
-            <Shield className="w-4 h-4 mr-2" />
-            Your data is protected with end-to-end encryption
-          </div>
-        </div>
-
-        {/* Error Messages */}
-        {errors.length > 0 && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-6">
-            {errors.map((error, index) => (
-              <div key={index} className="flex items-center text-red-600 text-sm">
-                <AlertTriangle className="w-4 h-4 mr-2" />
-                {error}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Sign In Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-white font-medium mb-2">Email</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <Input
-                type="email"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                 placeholder="Enter your email"
@@ -148,43 +75,6 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
             </div>
           </div>
 
-          <div>
-            <label className="block text-white font-medium mb-2">Password</label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <Input
-                type={showPassword ? 'text' : 'password'}
-                value={formData.password}
-                onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                placeholder="Enter your password"
-                className="pl-10 pr-10 bg-white/90"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              </button>
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full h-12 bg-pink-500 text-white font-semibold rounded-xl hover:bg-pink-600 transition-all duration-300"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Signing In...' : 'Sign In'}
-          </Button>
-        </form>
-
-        {/* Additional Options */}
-        <div className="mt-6 space-y-4">
-          <button className="w-full text-center text-white/80 hover:text-white">
-            Forgot your password?
-          </button>
-          
           <div className="text-center">
             <span className="text-white/80">Don't have an account? </span>
             <button

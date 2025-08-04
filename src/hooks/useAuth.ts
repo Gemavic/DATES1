@@ -43,25 +43,6 @@ export const useAuth = () => {
     return { data, error };
   };
 
-  const signInWithGoogle = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/app`,
-      },
-    });
-    return { data, error };
-  };
-
-  const signInWithFacebook = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'facebook',
-      options: {
-        redirectTo: `${window.location.origin}/app`,
-      },
-    });
-    return { data, error };
-  };
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -90,8 +71,6 @@ export const useAuth = () => {
     loading,
     signIn,
     signUp,
-    signInWithGoogle,
-    signInWithFacebook,
     signOut,
     getFirstName,
     getFullName,
