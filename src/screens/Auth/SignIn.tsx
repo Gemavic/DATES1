@@ -75,6 +75,10 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
         showClose={true}
         onClose={() => onNavigate?.('welcome') || (window.location.href = '/')}
       >
+        <div className="px-4 sm:px-6 py-6 sm:py-8">
+          {/* Header Section */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center mb-4">
               <Heart className="w-8 h-8 text-white mr-2" />
               <h1 className="text-3xl font-bold text-white">Welcome Back</h1>
             </div>
@@ -167,7 +171,6 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
             </button>
           </div>
         </div>
-      </div>
       </Layout>
     </>
   );
