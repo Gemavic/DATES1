@@ -135,7 +135,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
     <div
       ref={cardRef}
       className={cn(
-        "relative w-full max-w-sm mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden",
+        "relative w-full max-w-sm mx-auto bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden",
         "transform transition-transform duration-200",
         isDragging && "cursor-grabbing",
         className
@@ -147,17 +147,17 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
       onTouchStart={handleDragStart}
     >
       {/* Safety Menu */}
-      <div className="absolute top-4 right-4 z-20">
+      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20">
         <div className="relative">
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="w-8 h-8 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-black/70 transition-colors"
+            className="w-7 h-7 sm:w-8 sm:h-8 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-black/70 transition-colors"
           >
-            <MoreVertical className="w-4 h-4 text-white" />
+            <MoreVertical className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
           </button>
           
           {showMenu && (
-            <div className="absolute top-10 right-0 bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-[120px] z-30">
+            <div className="absolute top-8 sm:top-10 right-0 bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-[120px] z-30">
               <button
                 onClick={() => {
                   onReport?.(profile.id);
@@ -196,28 +196,28 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
       </div>
 
       {/* Status Indicators */}
-      <div className="absolute top-4 left-4 flex flex-col space-y-2 z-10">
+      <div className="absolute top-3 left-3 sm:top-4 sm:left-4 flex flex-col space-y-1 sm:space-y-2 z-10">
         {profile.online && (
-          <div className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center">
+          <div className="bg-green-500 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-xs font-medium flex items-center">
             <div className="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></div>
             Online
           </div>
         )}
         {profile.verified && (
-          <div className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+          <div className="bg-blue-500 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-xs font-medium">
             ✓ Verified
           </div>
         )}
         {profile.premium && (
-          <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center">
-            <Zap className="w-3 h-3 mr-1" />
+          <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-xs font-medium flex items-center">
+            <Zap className="w-2 h-2 sm:w-3 sm:h-3 mr-1" />
             Premium
           </div>
         )}
       </div>
 
       {/* Profile Image */}
-      <div className="relative h-96 md:h-[500px] overflow-hidden">
+      <div className="relative h-80 sm:h-96 md:h-[500px] overflow-hidden">
         <img
           src={profile.images[currentImageIndex]}
           alt={profile.name}
@@ -229,26 +229,26 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
           <>
             <button
               onClick={() => handleImageClick('prev')}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-black/70 transition-colors"
+              className="absolute left-1 sm:left-2 top-1/2 transform -translate-y-1/2 w-7 h-7 sm:w-8 sm:h-8 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-black/70 transition-colors"
               disabled={currentImageIndex === 0}
             >
-              <span className="text-white text-lg">‹</span>
+              <span className="text-white text-base sm:text-lg">‹</span>
             </button>
             <button
               onClick={() => handleImageClick('next')}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-black/70 transition-colors"
+              className="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 w-7 h-7 sm:w-8 sm:h-8 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-black/70 transition-colors"
               disabled={currentImageIndex === profile.images.length - 1}
             >
-              <span className="text-white text-lg">›</span>
+              <span className="text-white text-base sm:text-lg">›</span>
             </button>
             
             {/* Image Indicators */}
-            <div className="absolute top-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+            <div className="absolute top-1.5 sm:top-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
               {profile.images.map((_, index) => (
                 <div
                   key={index}
                   className={cn(
-                    "w-2 h-2 rounded-full transition-colors",
+                    "w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-colors",
                     index === currentImageIndex ? "bg-white" : "bg-white/50"
                   )}
                 />
@@ -261,23 +261,23 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         
         {/* Profile Info Overlay */}
-        <div className="absolute bottom-4 left-4 right-4 text-white">
+        <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 text-white">
           <h2 className="text-2xl font-bold mb-2 drop-shadow-lg">
             {profile.name}, {profile.age}
           </h2>
-          <div className="flex items-center mb-2">
-            <MapPin className="w-4 h-4 mr-1 drop-shadow-sm" />
+          <div className="flex items-center mb-1 sm:mb-2">
+            <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1 drop-shadow-sm" />
             <span className="text-sm drop-shadow-sm">{profile.location}</span>
           </div>
           {profile.occupation && (
             <div className="flex items-center mb-1">
-              <Briefcase className="w-4 h-4 mr-1 drop-shadow-sm" />
+              <Briefcase className="w-3 h-3 sm:w-4 sm:h-4 mr-1 drop-shadow-sm" />
               <span className="text-sm drop-shadow-sm">{profile.occupation}</span>
             </div>
           )}
           {profile.education && (
             <div className="flex items-center">
-              <GraduationCap className="w-4 h-4 mr-1 drop-shadow-sm" />
+              <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 mr-1 drop-shadow-sm" />
               <span className="text-sm drop-shadow-sm">{profile.education}</span>
             </div>
           )}
@@ -285,17 +285,17 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
       </div>
       
       {/* Bio and Interests */}
-      <div className="p-6 bg-gradient-to-b from-white to-gray-50">
-        <p className="text-gray-800 text-sm mb-4 leading-relaxed">
+      <div className="p-4 sm:p-6 bg-gradient-to-b from-white to-gray-50">
+        <p className="text-gray-800 text-sm mb-3 sm:mb-4 leading-relaxed">
           {profile.bio}
         </p>
         
         {/* Interests */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
           {profile.interests.map((interest, index) => (
             <span
               key={index}
-              className="px-3 py-1 bg-gradient-to-r from-pink-100 to-rose-100 text-pink-700 text-xs rounded-full border border-pink-200 hover:from-pink-200 hover:to-rose-200 transition-colors"
+              className="px-2 sm:px-3 py-0.5 sm:py-1 bg-gradient-to-r from-pink-100 to-rose-100 text-pink-700 text-xs rounded-full border border-pink-200 hover:from-pink-200 hover:to-rose-200 transition-colors"
             >
               {interest}
             </span>
@@ -305,13 +305,13 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
       
       {/* Message Box */}
       {showMessageBox && (
-        <div className="p-4 bg-white border-t border-gray-200">
+        <div className="p-3 sm:p-4 bg-white border-t border-gray-200">
           <div className="space-y-3">
             <Textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder={`Send a message to ${profile.name}...`}
-              className="w-full min-h-[80px] resize-none"
+              className="w-full min-h-[60px] sm:min-h-[80px] resize-none text-sm"
             />
             
             {/* Chat Controls */}
@@ -319,16 +319,16 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
               <div className="flex space-x-2">
                 <Button
                   onClick={() => setShowMessageBox(false)}
-                  className="bg-gray-500 text-white px-4 py-2"
+                  className="bg-gray-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 text-sm"
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleSendMessage}
                   disabled={!message.trim()}
-                  className="bg-pink-500 text-white px-4 py-2 flex items-center"
+                  className="bg-pink-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 flex items-center text-sm"
                 >
-                  <Send className="w-4 h-4 mr-2" />
+                  <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                   Send
                 </Button>
               </div>
@@ -340,26 +340,26 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder={`Send a message to ${profile.name}...`}
-                className="w-full min-h-[80px] resize-none pl-12"
+                className="w-full min-h-[60px] sm:min-h-[80px] resize-none pl-10 sm:pl-12 text-sm"
               />
               <button
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                className="absolute left-3 top-3 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
+                className="absolute left-2 sm:left-3 top-2 sm:top-3 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
                 title="Add emoji"
               >
-                <Smile className="w-4 h-4" />
+                <Smile className="w-3 h-3 sm:w-4 sm:h-4" />
               </button>
             </div>
             
             {/* Emoji Picker */}
             {showEmojiPicker && (
-              <div className="bg-gray-50 rounded-lg p-3 border">
-                <div className="grid grid-cols-8 gap-2">
+              <div className="bg-gray-50 rounded-lg p-2 sm:p-3 border">
+                <div className="grid grid-cols-6 sm:grid-cols-8 gap-1 sm:gap-2">
                   {emojis.map((emoji, index) => (
                     <button
                       key={index}
                       onClick={() => addEmoji(emoji)}
-                      className="text-xl hover:bg-gray-200 rounded p-1 transition-colors"
+                      className="text-lg sm:text-xl hover:bg-gray-200 rounded p-0.5 sm:p-1 transition-colors"
                     >
                       {emoji}
                     </button>
@@ -372,34 +372,34 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
       )}
       
       {/* Action Buttons */}
-      <div className="flex justify-center items-center gap-3 p-6 bg-white">
+      <div className="flex justify-center items-center gap-2 sm:gap-3 p-4 sm:p-6 bg-white">
         <button
           onClick={() => onPass(profile.id)}
-          className="w-12 h-12 bg-gray-500 hover:bg-gray-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
+          className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-500 hover:bg-gray-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
         >
-          <X className="w-5 h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
+          <X className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
         </button>
         
         <button
           onClick={handleBlink}
-          className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
+          className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
           title="Send a Blink"
         >
-          <span className="text-white text-lg drop-shadow-sm group-hover:scale-110 transition-transform">👁️</span>
+          <span className="text-white text-base sm:text-lg drop-shadow-sm group-hover:scale-110 transition-transform">👁️</span>
         </button>
         
         <button
           onClick={() => setShowMessageBox(!showMessageBox)}
-          className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
+          className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
         >
-          <MessageCircle className="w-5 h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
+          <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
         </button>
         
         <button
           onClick={() => onSuperLike(profile.id)}
-          className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
+          className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
         >
-          <Star className="w-5 h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
+          <Star className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
         </button>
       </div>
 
@@ -407,17 +407,17 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
       {isDragging && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           {dragOffset.x > 50 && (
-            <div className="bg-green-500 text-white px-4 py-2 rounded-full font-bold text-lg shadow-lg">
+            <div className="bg-green-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-bold text-base sm:text-lg shadow-lg">
               LIKE
             </div>
           )}
           {dragOffset.x < -50 && (
-            <div className="bg-red-500 text-white px-4 py-2 rounded-full font-bold text-lg shadow-lg">
+            <div className="bg-red-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-bold text-base sm:text-lg shadow-lg">
               PASS
             </div>
           )}
           {dragOffset.y < -50 && (
-            <div className="bg-blue-500 text-white px-4 py-2 rounded-full font-bold text-lg shadow-lg">
+            <div className="bg-blue-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-bold text-base sm:text-lg shadow-lg">
               SUPER LIKE
             </div>
           )}

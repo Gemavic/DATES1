@@ -479,14 +479,14 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
           )}
 
           {/* Input Controls */}
-          <div className="flex items-end space-x-2">
+          <div className="flex items-end space-x-1 sm:space-x-2">
             
             <button
               onClick={() => handleFileUpload('file')}
-              className="bg-gray-500 text-white p-3 rounded-full hover:bg-gray-600 transition-colors flex-shrink-0"
+              className="bg-gray-500 text-white p-2 sm:p-3 rounded-full hover:bg-gray-600 transition-colors flex-shrink-0"
               title="Upload file"
             >
-              <Paperclip className="w-5 h-5" />
+              <Paperclip className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             
             <div className="flex-1 relative flex items-center">
@@ -495,30 +495,30 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder={`Message ${thread.participantName}...`}
-                className="w-full min-h-[40px] max-h-[120px] resize-none pr-12 pl-12 rounded-xl border-gray-300 focus:border-pink-500 focus:ring-pink-500"
+                className="w-full min-h-[36px] sm:min-h-[40px] max-h-[100px] sm:max-h-[120px] resize-none pr-10 sm:pr-12 pl-10 sm:pl-12 rounded-xl border-gray-300 focus:border-pink-500 focus:ring-pink-500 text-sm"
                 rows={1}
               />
               <button
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
+                className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 p-0.5 sm:p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
                 title="Add emoji"
               >
-                <Smile className="w-5 h-5" />
+                <Smile className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
             
             <Button
               onClick={handleSendMessage}
               disabled={!message.trim() || (!creditManager.canAfford('current-user', 2) && creditManager.getKobos('current-user') === 0 && !creditManager.isStaffMember('current-user'))}
-              className="bg-pink-500 text-white p-3 rounded-full hover:bg-pink-600 transition-all duration-300 hover:scale-105"
+              className="bg-pink-500 text-white p-2 sm:p-3 rounded-full hover:bg-pink-600 transition-all duration-300 hover:scale-105"
             >
-              <Send className="w-5 h-5" />
+              <Send className="w-4 h-4 sm:w-5 sm:h-5" />
             </Button>
           </div>
 
           {/* Cost Info */}
           <div className="mt-2 text-center">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 px-2">
               💬 2 credits or 1 kobo per minute • 📷 10 credits per image • 📎 5 credits per file
             </p>
           </div>
@@ -544,7 +544,7 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-50 w-80 sm:w-96 md:w-[420px] h-[500px] sm:h-[550px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+        <div className="fixed bottom-16 sm:bottom-20 left-1/2 transform -translate-x-1/2 z-50 w-[90vw] max-w-sm sm:w-80 sm:max-w-96 md:w-[420px] h-[400px] sm:h-[500px] md:h-[550px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
           {activeThread ? renderChatView() : renderThreadList()}
         </div>
       )}

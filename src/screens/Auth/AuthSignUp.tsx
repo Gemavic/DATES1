@@ -143,18 +143,18 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
       showClose={true}
       onClose={() => onNavigate('welcome')}
     >
-      <div className="px-6 py-8">
+      <div className="px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center">
-            <Heart className="w-10 h-10 text-white" fill="currentColor" />
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center">
+            <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="currentColor" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Join Dates!</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Join Dates!</h2>
           <p className="text-white/80">Create your account to find love</p>
         </div>
 
         {/* Security Features */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-6">
+        <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4 sm:mb-6">
           <div className="flex items-center text-green-600 text-sm mb-2">
             <Shield className="w-4 h-4 mr-2" />
             <strong>Your Security Matters</strong>
@@ -168,17 +168,17 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
         </div>
 
         {/* Sign Up Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           <div>
             <label className="block text-white font-medium mb-2">Full Name</label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
               <Input
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 placeholder="Enter your full name"
-                className="pl-10 bg-white/90"
+                className="pl-9 sm:pl-10 bg-white/90 h-11 sm:h-12"
                 required
               />
             </div>
@@ -187,13 +187,13 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
           <div>
             <label className="block text-white font-medium mb-2">Email</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
               <Input
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                 placeholder="Enter your email"
-                className="pl-10 bg-white/90"
+                className="pl-9 sm:pl-10 bg-white/90 h-11 sm:h-12"
                 required
               />
             </div>
@@ -202,13 +202,13 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
           <div>
             <label className="block text-white font-medium mb-2">Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
               <Input
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                 placeholder="Create a password"
-                className="pl-10 pr-10 bg-white/90"
+                className="pl-9 sm:pl-10 pr-9 sm:pr-10 bg-white/90 h-11 sm:h-12"
                 required
               />
               <button
@@ -216,14 +216,14 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
               </button>
             </div>
           </div>
 
           {/* Password Strength Indicator */}
           {formData.password && (
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-2 sm:p-3">
               <div className="flex items-center mb-2">
                 {passwordValidation.isValid ? (
                   <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -247,13 +247,13 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
           <div>
             <label className="block text-white font-medium mb-2">Confirm Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
               <Input
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
                 placeholder="Confirm your password"
-                className="pl-10 pr-10 bg-white/90"
+                className="pl-9 sm:pl-10 pr-9 sm:pr-10 bg-white/90 h-11 sm:h-12"
                 required
               />
               <button
@@ -261,14 +261,14 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showConfirmPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
               </button>
             </div>
           </div>
 
           <Button
             type="submit"
-            className="w-full h-12 bg-pink-500 text-white font-semibold rounded-xl hover:bg-pink-600 transition-all duration-300"
+            className="w-full h-11 sm:h-12 bg-pink-500 text-white font-semibold rounded-xl hover:bg-pink-600 transition-all duration-300"
             disabled={isLoading || !passwordValidation.isValid}
           >
             {isLoading ? 'Creating Account...' : 'Create Account'}
@@ -276,8 +276,8 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
         </form>
 
         {/* Terms */}
-        <div className="mt-6 text-center">
-          <p className="text-white/70 text-sm">
+        <div className="mt-4 sm:mt-6 text-center">
+          <p className="text-white/70 text-xs sm:text-sm px-2">
             By signing up, you agree to our{' '}
             <button 
               onClick={() => onNavigate('terms')}
@@ -296,7 +296,7 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
         </div>
 
         {/* Sign In Link */}
-        <div className="mt-6 text-center">
+        <div className="mt-4 sm:mt-6 text-center">
           <span className="text-white/80">Already have an account? </span>
           <button
             onClick={() => onNavigate('auth-signin')}
