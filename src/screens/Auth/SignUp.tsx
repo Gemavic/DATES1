@@ -311,7 +311,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onNavigate }) => {
               Google
             </Button>
             <Button 
-              onClick={handleFacebookSignUp}
+              onClick={handleFacebookSignIn}
               disabled={isSocialLoading}
               className="bg-white/20 text-white hover:bg-white/30 transition-all duration-300 hover:scale-105 active:scale-95"
             >
