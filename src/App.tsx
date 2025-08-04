@@ -80,6 +80,10 @@ function App() {
             console.log('SignUp onNavigate called with:', screen);
             window.location.href = `/${screen}`;
           }} />} />
+          <Route path="/signup" element={<AuthSignUp onNavigate={(screen) => {
+            console.log('AuthSignUp onNavigate called with:', screen);
+            window.location.href = `/${screen}`;
+          }} />} />
           <Route path="/auth-signup" element={<AuthSignUp onNavigate={(screen) => {
             console.log('AuthSignUp onNavigate called with:', screen);
             window.location.href = `/${screen}`;
