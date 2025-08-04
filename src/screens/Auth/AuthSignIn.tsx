@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
+import { Menu } from '@/components/Menu';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Eye, EyeOff, Heart, Mail, Lock, Shield } from 'lucide-react';
@@ -95,12 +96,14 @@ export const AuthSignIn: React.FC<AuthSignInProps> = ({ onNavigate = () => {} })
   };
 
   return (
-    <Layout
-      title="Sign In"
-      onBack={() => onNavigate?.('welcome') || (window.location.href = '/')}
-      showClose={true}
-      onClose={() => onNavigate?.('welcome') || (window.location.href = '/')}
-    >
+    <>
+      <Menu onNavigate={onNavigate} currentScreen="auth-signin" />
+      <Layout
+        title="Sign In"
+        onBack={() => onNavigate?.('welcome') || (window.location.href = '/')}
+        showClose={true}
+        onClose={() => onNavigate?.('welcome') || (window.location.href = '/')}
+      >
       <div className="px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
@@ -188,6 +191,7 @@ export const AuthSignIn: React.FC<AuthSignInProps> = ({ onNavigate = () => {} })
           </div>
         </div>
       </div>
-    </Layout>
+      </Layout>
+    </>
   );
 };
