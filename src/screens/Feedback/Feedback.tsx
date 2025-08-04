@@ -128,7 +128,8 @@ export const Feedback: React.FC<FeedbackProps> = ({ onNavigate }) => {
                   selectedCategory === category.id
                     ? 'border-white bg-white/20 text-white'
                     : 'border-white/30 bg-white/10 text-white/80 hover:bg-white/15'
-                }`}
+                } cursor-pointer touch-manipulation active:scale-95`}
+                type="button"
               >
                 <div className="text-center">
                   <div className="text-2xl mb-2">{category.icon}</div>
@@ -202,7 +203,8 @@ export const Feedback: React.FC<FeedbackProps> = ({ onNavigate }) => {
       <Button
         onClick={handleSubmit}
         disabled={isSubmitting || !selectedCategory || !formData.title || !formData.description || rating === 0}
-        className="w-full bg-gradient-to-r from-green-500 to-teal-500 text-white font-semibold hover:scale-105 transition-all duration-300"
+        className="w-full bg-gradient-to-r from-green-500 to-teal-500 text-white font-semibold hover:scale-105 transition-all duration-300 cursor-pointer touch-manipulation active:scale-95"
+        type="button"
       >
         {isSubmitting ? (
           'Submitting...'

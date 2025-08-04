@@ -114,12 +114,15 @@ export const Newsfeed: React.FC<NewsfeedProps> = ({ onNavigate }) => {
                 successMessage.textContent = 'Story shared successfully!';
                 document.body.appendChild(successMessage);
                 setTimeout(() => document.body.removeChild(successMessage), 3000);
-              }}>
+              }}
+              type="button"
+              className="bg-pink-500 text-white text-sm px-4 py-2 cursor-pointer touch-manipulation active:scale-95"
+            >
               <Camera className="w-4 h-4 mr-2" />
               Photo (10 Credits)
             </Button>
             <Button 
-              className="bg-blue-500 text-white text-sm px-4 py-2"
+              className="bg-blue-500 text-white text-sm px-4 py-2 cursor-pointer touch-manipulation active:scale-95"
               onClick={() => {
                 const successMessage = document.createElement('div');
                 successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
@@ -127,7 +130,7 @@ export const Newsfeed: React.FC<NewsfeedProps> = ({ onNavigate }) => {
                 document.body.appendChild(successMessage);
                 setTimeout(() => document.body.removeChild(successMessage), 3000);
               }}
-              disabled={false}
+              type="button"
             >
               Share Story
             </Button>
@@ -239,6 +242,8 @@ export const Newsfeed: React.FC<NewsfeedProps> = ({ onNavigate }) => {
               document.body.appendChild(successMessage);
               setTimeout(() => document.body.removeChild(successMessage), 2000);
             }}
+            type="button"
+            className="bg-pink-500 text-white px-8 py-3 rounded-xl cursor-pointer touch-manipulation active:scale-95"
           >
             Load More Stories
           </Button>

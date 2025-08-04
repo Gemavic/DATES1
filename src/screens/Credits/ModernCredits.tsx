@@ -199,7 +199,8 @@ export const ModernCredits: React.FC<ModernCreditsProps> = ({ onNavigate }) => {
                   <Button
                     onClick={() => handlePurchase(pkg.id)}
                     disabled={isLoading}
-                    className={`w-full bg-gradient-to-r ${gradient} text-white font-semibold hover:scale-105 transition-all duration-300`}
+                    className={`w-full bg-gradient-to-r ${gradient} text-white font-semibold hover:scale-105 transition-all duration-300 cursor-pointer touch-manipulation active:scale-95`}
+                    type="button"
                   >
                     {isLoading ? 'Processing...' : 'Purchase Now'}
                   </Button>

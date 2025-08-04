@@ -260,7 +260,8 @@ export const Settings: React.FC<SettingsProps> = ({ onNavigate }) => {
         <div className="mt-8">
           <Button
             onClick={() => onNavigate('welcome')}
-            className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-2xl"
+            className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-2xl cursor-pointer touch-manipulation active:scale-95"
+            type="button"
           >
             <LogOut className="w-5 h-5 mr-2" />
             Log Out

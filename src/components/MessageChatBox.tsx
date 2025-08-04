@@ -280,7 +280,8 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
           <button
             key={thread.id}
             onClick={() => setActiveThread(thread.id)}
-            className="w-full p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors text-left"
+            className="w-full p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors text-left cursor-pointer touch-manipulation active:scale-95"
+            type="button"
           >
             <div className="flex items-center space-x-3">
               <div className="relative">
@@ -507,7 +508,8 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
             <Button
               onClick={handleSendMessage}
               disabled={!message.trim() || (!creditManager.canAfford('current-user', 2) && creditManager.getKobos('current-user') === 0 && !creditManager.isStaffMember('current-user'))}
-              className="bg-pink-500 text-white p-2 sm:p-3 rounded-full hover:bg-pink-600 transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation flex-shrink-0"
+              className="bg-pink-500 text-white p-2 sm:p-3 rounded-full hover:bg-pink-600 transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation flex-shrink-0 cursor-pointer"
+              type="button"
             >
               <Send className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
             </Button>
@@ -532,9 +534,10 @@ export const MessageChatBox: React.FC<MessageChatBoxProps> = ({ className = "" }
         className={cn(
           "relative w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg",
           "hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center",
-          "touch-manipulation flex-shrink-0",
+          "touch-manipulation flex-shrink-0 cursor-pointer select-none",
           className
         )}
+        type="button"
       >
         <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white flex-shrink-0" />
         {totalUnread > 0 && (

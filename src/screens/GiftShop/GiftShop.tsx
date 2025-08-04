@@ -168,9 +168,10 @@ export const GiftShop: React.FC<GiftShopProps> = ({ onNavigate }) => {
                     disabled={!creditManager.canAfford('current-user', gift.price)}
                     className={`w-full text-xs py-2 transition-all duration-300 ${
                       creditManager.canAfford('current-user', gift.price)
-                        ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:scale-105 cursor-pointer'
+                        ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:scale-105 cursor-pointer touch-manipulation active:scale-95'
                         : 'bg-gray-400 text-gray-200 cursor-not-allowed'
                     }`}
+                    type="button"
                   >
                     {creditManager.canAfford('current-user', gift.price) ? 'Send Gift' : 'Need Credits'}
                   </Button>
