@@ -14,7 +14,6 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSocialLoading, setIsSocialLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -66,18 +65,6 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    setIsSocialLoading(true);
-    // Google sign in logic
-    setIsSocialLoading(false);
-  };
-
-  const handleFacebookSignIn = async () => {
-    setIsSocialLoading(true);
-    // Facebook sign in logic
-    setIsSocialLoading(false);
-  };
-
   return (
     <Layout>
       <div className="min-h-screen flex items-center justify-center p-4">
@@ -94,7 +81,80 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
           {/* Error Messages */}
           {errors.length > 0 && (
             <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
-          <div className="text-center">
+              <div className="flex items-center text-red-300 mb-2">
+                <AlertTriangle className="w-4 h-4 mr-2" />
+                <span className="font-medium">Sign In Failed</span>
+              </div>
+              {errors.map((error, index) => (
+                <p key={index} className="text-red-200 text-sm">{error}</p>
+              ))}
+            </div>
+          )}
+
+          {/* Security Features */}
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+            <div className="flex items-center text-green-600 text-sm mb-2">
+              <Shield className="w-4 h-4 mr-2" />
+              <strong>Your Security Matters</strong>
+            </div>
+            <ul className="text-green-600 text-xs space-y-1 ml-6">
+              <li>• End-to-end encryption</li>
+              <li>• Secure data storage</li>
+              <li>• Content moderation</li>
+              <li>• Safe reporting system</li>
+            </ul>
+          </div>
+
+          {/* Sign In Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-white font-medium mb-2">Email</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="Enter your email"
+                  className="pl-10 bg-white/90"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-white font-medium mb-2">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  value={formData.password}
+                  onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                  placeholder="Enter your password"
+                  className="pl-10 pr-10 bg-white/90"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full bg-pink-500 text-white font-semibold py-3 rounded-xl hover:bg-pink-600 transition-all duration-300"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Signing In...' : 'Sign In'}
+            </Button>
+          </form>
+
+          {/* Sign Up Link */}
+          <div className="mt-6 text-center">
             <span className="text-white/80">Don't have an account? </span>
             <button
               onClick={() => onNavigate('signup')}
@@ -104,12 +164,6 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
             </button>
           </div>
         </div>
-      </div>
-    )
-    }
-    </Layout>
-  );
-};
       </div>
     </Layout>
   );
