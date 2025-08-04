@@ -378,8 +378,9 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
           className={cn(
             "w-12 h-12 sm:w-14 sm:h-14 bg-gray-500 hover:bg-gray-600 rounded-full shadow-xl",
             "flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300",
-            "hover:shadow-2xl group touch-manipulation"
+            "hover:shadow-2xl group touch-manipulation cursor-pointer select-none"
           )}
+          type="button"
         >
           <X className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow-sm group-hover:scale-110 transition-transform flex-shrink-0" />
         </button>
@@ -390,9 +391,10 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
             "w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-yellow-400 to-orange-500",
             "hover:from-yellow-500 hover:to-orange-600 rounded-full shadow-xl",
             "flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300",
-            "hover:shadow-2xl group touch-manipulation"
+            "hover:shadow-2xl group touch-manipulation cursor-pointer select-none"
           )}
           title="Send a Blink"
+          type="button"
         >
           <span className="text-white text-lg sm:text-xl drop-shadow-sm group-hover:scale-110 transition-transform">👁️</span>
         </button>
@@ -403,8 +405,9 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
             "w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-blue-500 to-cyan-500",
             "hover:from-blue-600 hover:to-cyan-600 rounded-full shadow-xl",
             "flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300",
-            "hover:shadow-2xl group touch-manipulation"
+            "hover:shadow-2xl group touch-manipulation cursor-pointer select-none"
           )}
+          type="button"
         >
           <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow-sm group-hover:scale-110 transition-transform flex-shrink-0" />
         </button>
@@ -415,8 +418,9 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
             "w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-purple-500 to-pink-500",
             "hover:from-purple-600 hover:to-pink-600 rounded-full shadow-xl",
             "flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300",
-            "hover:shadow-2xl group touch-manipulation"
+            "hover:shadow-2xl group touch-manipulation cursor-pointer select-none"
           )}
+          type="button"
         >
           <Star className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow-sm group-hover:scale-110 transition-transform flex-shrink-0" />
         </button>

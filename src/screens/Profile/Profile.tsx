@@ -72,7 +72,8 @@ export const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
               </div>
               <Button
                 onClick={() => onNavigate('edit-profile')}
-                className="bg-white/20 text-white hover:bg-white/30 text-sm px-4 py-2"
+                className="bg-white/20 text-white hover:bg-white/30 text-sm px-4 py-2 cursor-pointer touch-manipulation active:scale-95"
+                type="button"
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Profile
@@ -159,7 +160,8 @@ export const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
               {!verificationStatus.isVerified && (
                 <Button
                   onClick={() => onNavigate('verification')}
-                  className="w-full bg-blue-500 text-white hover:bg-blue-600"
+                  className="w-full bg-blue-500 text-white hover:bg-blue-600 cursor-pointer touch-manipulation active:scale-95"
+                  type="button"
                 >
                   {verificationStatus.status === 'not_started' ? 'Start Verification' : 'Continue Verification'}
                 </Button>
@@ -177,7 +179,8 @@ export const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4">
             <button
               onClick={() => onNavigate('settings')}
-              className="w-full flex items-center justify-between text-white hover:text-white/80 transition-colors"
+              className="w-full flex items-center justify-between text-white hover:text-white/80 transition-colors cursor-pointer touch-manipulation active:scale-95"
+              type="button"
             >
               <div className="flex items-center">
                 <Settings className="w-5 h-5 mr-3" />
@@ -190,19 +193,22 @@ export const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
               <div className="flex justify-center space-x-4 text-xs">
                 <button 
                   onClick={() => onNavigate('terms')}
-                  className="text-white/70 hover:text-white underline"
+                  className="text-white/70 hover:text-white underline cursor-pointer touch-manipulation"
+                  type="button"
                 >
                   Terms
                 </button>
                 <button 
                   onClick={() => onNavigate('privacy')}
-                  className="text-white/70 hover:text-white underline"
+                  className="text-white/70 hover:text-white underline cursor-pointer touch-manipulation"
+                  type="button"
                 >
                   Privacy
                 </button>
                 <button 
                   onClick={() => onNavigate('disclaimer')}
-                  className="text-white/70 hover:text-white underline"
+                  className="text-white/70 hover:text-white underline cursor-pointer touch-manipulation"
+                  type="button"
                 >
                   Disclaimer
                 </button>

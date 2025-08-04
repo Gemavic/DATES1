@@ -182,13 +182,16 @@ export const Matches: React.FC<MatchesProps> = ({ onNavigate }) => {
                       onNavigate('discovery');
                     } else if (tab.id === 'feedback') {
                       onNavigate('feedback');
+                    } else {
+                      onNavigate(tab.id);
                     }
                   }}
-                  className={`flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-300 relative ${
+                  className={`flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-300 relative cursor-pointer touch-manipulation active:scale-95 ${
                     isActive 
                       ? tab.color
                       : 'text-gray-600 hover:text-gray-800'
                   }`}
+                  type="button"
                 >
                   <div className="relative">
                     <Icon className="w-6 h-6" />
