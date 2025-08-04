@@ -24,17 +24,18 @@ export const Footer: React.FC<FooterProps> = ({
 
   return (
     <>
-      <div className={`fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white/90 backdrop-blur-sm border-t border-gray-200 shadow-2xl z-40 sm:max-w-lg md:max-w-xl lg:max-w-2xl ${className}`}>
-        <div className="flex justify-around py-2">
+      <div className={`fixed bottom-0 left-0 right-0 w-full bg-white/90 backdrop-blur-sm border-t border-gray-200 shadow-2xl z-40 ${className}`}>
+        <div className="max-w-md mx-auto lg:max-w-full">
+          <div className="flex justify-around py-2 px-4">
           {tabs.map((tab) => {
-            const Icon = tab.icon;
+                  className={`flex flex-col items-center py-2 px-2 lg:px-3 rounded-lg transition-all duration-300 hover:scale-105 ${
             const isActive = activeTab === tab.id;
             
             if (tab.isChat) {
               return (
                 <div key={tab.id} className="flex flex-col items-center py-2 px-3">
-                  <MessageChatBox />
-                  <span className="text-xs font-medium text-gray-600 mt-1">{tab.label}</span>
+                  <Icon className={`w-5 h-5 lg:w-6 lg:h-6 mb-1 drop-shadow-sm ${isActive ? 'fill-current' : ''}`} />
+                  <span className="text-xs font-medium drop-shadow-sm hidden sm:block">{tab.label}</span>
                 </div>
               );
             }
@@ -54,10 +55,11 @@ export const Footer: React.FC<FooterProps> = ({
               </button>
             );
           })}
+          </div>
         </div>
         
         {/* Footer Links */}
-        <div className="bg-gray-50 py-2 px-4 border-t border-gray-100 sm:px-6">
+        <div className="bg-gray-50 py-2 px-4 border-t border-gray-100 sm:px-6 lg:hidden">
           <div className="flex justify-center space-x-3 text-xs text-gray-500">
             <span>© 2025 Dates</span>
             <button 

@@ -1,14 +1,24 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Menu } from './Menu';
+import { Footer } from './Footer';
 
 interface ResponsiveLayoutProps {
   children: React.ReactNode;
   className?: string;
+  showMenu?: boolean;
+  showFooter?: boolean;
+  currentScreen?: string;
+  onNavigate?: (screen: string) => void;
 }
 
 export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ 
   children, 
-  className = "" 
+  className = "",
+  showMenu = true,
+  showFooter = true,
+  currentScreen = 'discovery',
+  onNavigate = () => {}
 }) => {
   return (
     <div className={cn(
@@ -16,72 +26,125 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
       "relative overflow-hidden",
       className
     )}>
-      {/* Desktop/Tablet Container */}
-      <div className="hidden md:flex min-h-screen">
-        {/* Left Sidebar - Desktop Only */}
-        <div className="hidden lg:block w-80 bg-white/10 backdrop-blur-sm border-r border-white/20">
-          <div className="p-6">
-            <div className="flex items-center space-x-3 mb-8">
-              <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">D</span>
-              </div>
-              <h1 className="text-2xl font-bold text-white">Dates</h1>
-            </div>
-            
-            {/* Quick Stats */}
-            <div className="space-y-4">
-              <div className="bg-white/10 rounded-2xl p-4">
-                <h3 className="text-white font-semibold mb-2">Your Activity</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/80">Profile Views</span>
-                    <span className="text-white font-medium">124</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/80">Matches</span>
-                    <span className="text-white font-medium">8</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/80">Messages</span>
-                    <span className="text-white font-medium">23</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col max-w-4xl mx-auto">
-          {children}
-        </div>
-
-        {/* Right Sidebar - Desktop Only */}
-        <div className="hidden xl:block w-80 bg-white/10 backdrop-blur-sm border-l border-white/20">
-          <div className="p-6">
-            <h3 className="text-white font-semibold mb-4">Online Now</h3>
-            <div className="space-y-3">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="flex items-center space-x-3">
-                  <div className="relative">
-                    <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-                  </div>
-                  <div>
-                    <p className="text-white font-medium text-sm">User {i}</p>
-                    <p className="text-white/70 text-xs">Online now</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute top-32 right-16 w-24 h-24 bg-pink-300/20 rounded-full blur-lg animate-bounce"></div>
+        <div className="absolute bottom-32 left-16 w-28 h-28 bg-purple-300/20 rounded-full blur-xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-16 right-10 w-20 h-20 bg-rose-300/20 rounded-full blur-lg animate-bounce delay-500"></div>
       </div>
 
-      {/* Mobile Container */}
-      <div className="md:hidden min-h-screen">
-        <div className="max-w-md mx-auto min-h-screen relative">
-          {children}
+      {/* Menu Component */}
+      {showMenu && (
+        <Menu onNavigate={onNavigate} currentScreen={currentScreen} />
+      )}
+
+      {/* Main Content Container */}
+      <div className="relative z-10 min-h-screen">
+        {/* Mobile Layout (default) */}
+        <div className="lg:hidden">
+          <div className="max-w-md mx-auto min-h-screen relative">
+            <div className={cn(
+              "relative z-10",
+              showFooter ? "pb-24" : "pb-8"
+            )}>
+              {children}
+            </div>
+            
+            {/* Footer for mobile */}
+            {showFooter && (
+              <Footer
+                activeTab={currentScreen}
+                onNavigate={onNavigate}
+                className="lg:hidden"
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden lg:flex min-h-screen">
+          {/* Left Sidebar */}
+          <div className="w-80 bg-white/10 backdrop-blur-sm border-r border-white/20 flex-shrink-0">
+            <div className="p-6">
+              <div className="flex items-center space-x-3 mb-8">
+                <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">D</span>
+                </div>
+                <h1 className="text-2xl font-bold text-white">Dates</h1>
+              </div>
+              
+              {/* Quick Stats */}
+              <div className="space-y-4">
+                <div className="bg-white/10 rounded-2xl p-4">
+                  <h3 className="text-white font-semibold mb-2">Your Activity</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-white/80">Profile Views</span>
+                      <span className="text-white font-medium">124</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-white/80">Matches</span>
+                      <span className="text-white font-medium">8</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-white/80">Messages</span>
+                      <span className="text-white font-medium">23</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content Area */}
+          <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
+            <div className={cn(
+              "flex-1 overflow-y-auto",
+              showFooter ? "pb-24" : "pb-8"
+            )}>
+              {children}
+            </div>
+            
+            {/* Footer for desktop */}
+            {showFooter && (
+              <Footer
+                activeTab={currentScreen}
+                onNavigate={onNavigate}
+                className="hidden lg:block"
+              />
+            )}
+          </div>
+
+          {/* Right Sidebar */}
+          <div className="hidden xl:block w-80 bg-white/10 backdrop-blur-sm border-l border-white/20 flex-shrink-0">
+            <div className="p-6">
+              <h3 className="text-white font-semibold mb-4">Online Now</h3>
+              <div className="space-y-3">
+                {[
+                  { name: 'Emma', image: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=100' },
+                  { name: 'Sarah', image: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100' },
+                  { name: 'Jessica', image: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=100' },
+                  { name: 'Alex', image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=100' }
+                ].map((user, i) => (
+                  <div key={i} className="flex items-center space-x-3">
+                    <div className="relative">
+                      <img
+                        src={user.image}
+                        alt={user.name}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                    </div>
+                    <div>
+                      <p className="text-white font-medium text-sm">{user.name}</p>
+                      <p className="text-white/70 text-xs">Online now</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

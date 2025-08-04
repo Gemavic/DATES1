@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ModernLayout } from './components/ModernLayout';
+import { ResponsiveLayout } from './components/ResponsiveLayout';
 import { Welcome } from './screens/Welcome/Welcome';
 import { AuthSignIn } from './screens/Auth/AuthSignIn';
 import { AuthSignUp } from './screens/Auth/AuthSignUp';
@@ -59,9 +59,9 @@ function App() {
           {/* Protected Routes */}
           <Route path="/app" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <ModernDiscovery />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -69,9 +69,9 @@ function App() {
           
           <Route path="/discovery" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <Discovery />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -79,9 +79,9 @@ function App() {
           
           <Route path="/matches" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <Matches />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -89,9 +89,9 @@ function App() {
           
           <Route path="/likes" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <Likes />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -99,9 +99,9 @@ function App() {
           
           <Route path="/profile" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <Profile />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -109,9 +109,9 @@ function App() {
           
           <Route path="/settings" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <Settings />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -119,9 +119,9 @@ function App() {
           
           <Route path="/credits" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <ModernCredits />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -129,9 +129,9 @@ function App() {
           
           <Route path="/gifts" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <GiftShop />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -139,9 +139,9 @@ function App() {
           
           <Route path="/mail" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <Mail />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -149,9 +149,9 @@ function App() {
           
           <Route path="/audio-chat" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <AudioChat />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -159,9 +159,9 @@ function App() {
           
           <Route path="/video-chat" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <VideoChat />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -169,9 +169,9 @@ function App() {
           
           <Route path="/counselling" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <Counselling />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -179,9 +179,9 @@ function App() {
           
           <Route path="/couple-therapy" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <CoupleTherapy />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -189,9 +189,9 @@ function App() {
           
           <Route path="/verification" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <Verification />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -199,9 +199,9 @@ function App() {
           
           <Route path="/onboarding" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <Onboarding />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -209,9 +209,9 @@ function App() {
           
           <Route path="/match-suitor" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <MatchSuitor />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -219,9 +219,9 @@ function App() {
           
           <Route path="/newsfeed" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <Newsfeed />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -229,9 +229,9 @@ function App() {
           
           <Route path="/menu" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <MenuShowcase />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -239,9 +239,9 @@ function App() {
           
           <Route path="/staff" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <StaffPanel />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
@@ -249,9 +249,9 @@ function App() {
           
           <Route path="/feedback" element={
             user ? (
-              <ModernLayout>
+              <ResponsiveLayout>
                 <Feedback />
-              </ModernLayout>
+              </ResponsiveLayout>
             ) : (
               <Navigate to="/signin" replace />
             )
