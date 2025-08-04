@@ -40,8 +40,6 @@ export const Footer: React.FC<FooterProps> = ({
               );
             }
             
-            const Icon = tab.icon;
-            
             return (
               <button
                 key={tab.id}
