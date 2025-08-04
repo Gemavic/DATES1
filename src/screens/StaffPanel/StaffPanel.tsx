@@ -1,945 +1,445 @@
-// Modern Credit System for Dates Platform
-export interface CreditTransaction {
-  type: 'spend' | 'earn';
-  amount: number;
-  description: string;
-  timestamp: Date;
-  category: 'chat' | 'mail' | 'media' | 'gifts' | 'premium';
-}
+import React, { useState } from 'react';
+import { Shield, Users, CreditCard, Settings, Search, AlertTriangle, CheckCircle, Clock, DollarSign } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { creditManager, formatCredits } from '@/lib/creditSystem';
 
-export interface ChatGem {
-  id: string;
-  value: number; // 1 gem = 1 minute of chat
-  purchaseDate: Date;
-  used: boolean;
-}
-
-export interface ChatKobo {
-  id: string;
-  value: number; // 1 kobo = 1 minute of chat
-  purchaseDate: Date;
-  used: boolean;
-}
-
-export interface UserCreditData {
-  complimentaryCredits: number;
-  purchasedCredits: number;
-  kobos: ChatKobo[];
-  transactions: CreditTransaction[];
-  dailyBonusLastClaimed: Date | null;
-  mailThreads: Map<string, { 
-    firstMailSent: boolean; 
-    firstMailRead: boolean; 
-    firstPhotoSent: boolean;
-    firstPhotoViewed: boolean;
-  }>;
-  chatThreads: Map<string, {
-    firstChatFree: boolean;
-    totalMinutesUsed: number;
-  }>;
-}
-
-export interface CreditPackage {
+interface StaffMember {
   id: string;
   name: string;
-  credits: number;
-  price: number;
-  bonus?: number;
-  popular?: boolean;
-  savings?: string;
-  type: 'credits' | 'kobos' | 'combo';
-  features: string[];
-  originalPrice?: number;
-  discount?: number;
+  email: string;
+  role: 'admin' | 'support' | 'moderator' | 'credit_manager';
+  status: 'active' | 'inactive';
 }
 
-export interface GiftItem {
-  id: string;
-  name: string;
-  emoji: string;
-  price: number;
-  category: 'romantic' | 'luxury' | 'fun' | 'seasonal' | 'casual';
-  description: string;
-  popularity: number;
-}
+export const StaffPanel: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'credits' | 'requests'>('overview');
+  const [searchUserId, setSearchUserId] = useState('');
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [accessReason, setAccessReason] = useState('');
+  const [resettlementAmount, setResettlementAmount] = useState('');
+  const [resettlementReason, setResettlementReason] = useState('');
+  const [resettlementCategory, setResettlementCategory] = useState<'dispute' | 'platform_glitch' | 'technical_error' | 'billing_error' | 'other'>('dispute');
+  const [resettlementEvidence, setResettlementEvidence] = useState('');
 
-// Exact pricing structure from La-Date
-export interface PricingStructure {
-  chat: {
-    liveChat: { credits: number; kobos: number; perMinute: boolean };
-    stickers: number;
-    sendingPhotos: number;
-    openingAudios: number;
-    openingVideos: number;
-    exclusivePost: number;
-    videoCall: number;
-    audioCall: number;
-    videoMessage: number;
-    audioMessage: number;
-  };
-  mail: {
-    firstLetterCost: number;
-    followingLetterCost: number;
-    firstLetterFree: boolean; // First letter to read is free
-    followingLetterReadCost: number;
-    sendingPhotos: number; // Free of charge
-    firstPhotoFree: boolean;
-    followingPhotoCost: number;
-    openingVideos: number;
-  };
-  media: {
-    profileVideos: number;
-    photoViewing: number;
-  };
-  gifts: {
-    virtualGifts: string;
-    presents: string;
-  };
-}
+  const currentStaffId = 'admin@dates.care'; // Simulated current staff member
 
-class ModernCreditManager {
-  private users: Map<string, UserCreditData> = new Map();
-  
-  // Pricing structure for Dates platform
-  private pricing: PricingStructure = {
-    chat: {
-      liveChat: { credits: 2, kobos: 1, perMinute: true },
-      stickers: 5,
-      sendingPhotos: 10,
-      openingAudios: 10,
-      openingVideos: 50,
-      exclusivePost: 50,
-      videoCall: 60,
-      audioCall: 50,
-      videoMessage: 50,
-      audioMessage: 30
-    },
-    mail: {
-      firstLetterCost: 10, // First letter in thread costs 10 credits
-      followingLetterCost: 30, // Following letters cost 30 credits
-      firstLetterFree: true, // First letter to READ is free
-      followingLetterReadCost: 10, // Following letters to read cost 10 credits
-      sendingPhotos: 0, // Free of charge
-      firstPhotoFree: true, // First photo in thread is free
-      followingPhotoCost: 10, // Following photos cost 10 credits
-      openingVideos: 50 // 50 credits per video
-    },
-    media: {
-      profileVideos: 50,
-      photoViewing: 10
-    },
-    gifts: {
-      virtualGifts: 'See gift catalog',
-      presents: 'See presents catalog'
+  const staffMembers: StaffMember[] = [
+    { id: '1', name: 'Admin User', email: 'admin@dates.care', role: 'admin', status: 'active' },
+    { id: '2', name: 'Support Agent', email: 'support@dates.care', role: 'support', status: 'active' },
+    { id: '3', name: 'Credit Manager', email: 'creditmanager@dates.care', role: 'credit_manager', status: 'active' },
+    { id: '4', name: 'Moderator', email: 'moderator@dates.care', role: 'moderator', status: 'active' }
+  ];
+
+  const handleRequestAccess = () => {
+    if (!searchUserId || !accessReason) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    try {
+      const requestId = creditManager.requestCreditAccess(currentStaffId, searchUserId, accessReason);
+      alert(`Credit access request submitted: ${requestId}`);
+      setAccessReason('');
+    } catch (error) {
+      alert(`Error: ${(error as Error).message}`);
     }
   };
 
-  // Initialize user with welcome bonus
-  initializeUser(userId: string): void {
-    if (!this.users.has(userId)) {
-      this.users.set(userId, {
-        complimentaryCredits: 10, // Welcome bonus - 10 complimentary credits
-        purchasedCredits: 0,
-        kobos: this.generateKobos(10), // Welcome bonus - 10 kobos
-        transactions: [],
-        dailyBonusLastClaimed: null,
-        mailThreads: new Map(),
-        chatThreads: new Map()
-      });
-      
-      this.addTransaction(userId, {
-        type: 'earn',
-        amount: 10,
-        description: 'New User Bonus - 10 Complimentary Credits',
-        timestamp: new Date(),
-        category: 'premium'
-      });
-      
-      this.addTransaction(userId, {
-        type: 'earn',
-        amount: 10,
-        description: 'New User Bonus - 10 Kobos for Chat',
-        timestamp: new Date(),
-        category: 'premium'
-      });
-      
-      console.log(`Initialized user ${userId} with welcome bonus`);
-    }
-  }
-
-  // Staff member check
-  isStaffMember(userId: string): boolean {
-    const staffEmails = [
-      'admin@dates.care',
-      'support@dates.care',
-      'supports@dates.care',
-      'info@dates.care',
-      'tech@dates.care',
-      'help@dates.care',
-      'moderator@dates.care',
-      'staff@dates.care',
-      'manager@dates.care',
-      'creditmanager@dates.care'
-    ];
-    return staffEmails.includes(userId.toLowerCase());
-  }
-
-  // Credit Manager check
-  isCreditManager(userId: string): boolean {
-    const creditManagerEmails = [
-      'admin@dates.care',
-      'creditmanager@dates.care',
-      'manager@dates.care'
-    ];
-    return creditManagerEmails.includes(userId.toLowerCase());
-  }
-
-  // Staff credit access requests
-  private creditAccessRequests: Map<string, {
-    staffId: string;
-    targetUserId: string;
-    reason: string;
-    timestamp: Date;
-    status: 'pending' | 'approved' | 'denied';
-    approvedBy?: string;
-  }> = new Map();
-
-  // Credit resettlement requests for disputed or lost credits
-  private creditResettlementRequests: Map<string, {
-    requestId: string;
-    staffId: string;
-    targetUserId: string;
-    amount: number;
-    reason: string;
-    category: 'dispute' | 'platform_glitch' | 'technical_error' | 'billing_error' | 'other';
-    timestamp: Date;
-    status: 'pending' | 'approved' | 'denied';
-    approvedBy?: string;
-    evidence?: string;
-  }> = new Map();
-
-  // Request credit access for staff
-  requestCreditAccess(staffId: string, targetUserId: string, reason: string): string {
-    if (!this.isStaffMember(staffId)) {
-      throw new Error('Only staff members can request credit access');
+  const handleRequestResettlement = () => {
+    if (!searchUserId || !resettlementAmount || !resettlementReason) {
+      alert('Please fill in all required fields');
+      return;
     }
 
-    const requestId = Math.random().toString(36).substring(2);
-    this.creditAccessRequests.set(requestId, {
-      staffId,
-      targetUserId,
-      reason,
-      timestamp: new Date(),
-      status: 'pending'
-    });
-
-    return requestId;
-  }
-
-  // Approve credit access request
-  approveCreditAccess(requestId: string, creditManagerId: string): boolean {
-    if (!this.isCreditManager(creditManagerId)) {
-      throw new Error('Only Credit Managers can approve credit access');
+    const amount = parseInt(resettlementAmount);
+    if (isNaN(amount) || amount <= 0) {
+      alert('Please enter a valid amount');
+      return;
     }
 
-    const request = this.creditAccessRequests.get(requestId);
-    if (!request) {
-      throw new Error('Request not found');
-    }
-
-    request.status = 'approved';
-    request.approvedBy = creditManagerId;
-    return true;
-  }
-
-  // Check if staff has approved access to user credits
-  hasApprovedCreditAccess(staffId: string, targetUserId: string): boolean {
-    if (this.isCreditManager(staffId)) {
-      return true; // Credit managers have automatic access
-    }
-
-    for (const [_, request] of this.creditAccessRequests) {
-      if (request.staffId === staffId && 
-          request.targetUserId === targetUserId && 
-          request.status === 'approved') {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  // Get user data for staff (with approval check)
-  getStaffUserData(staffId: string, targetUserId: string): {
-    complimentaryCredits: number;
-    purchasedCredits: number;
-    totalCredits: number;
-    kobos: number;
-    transactions: CreditTransaction[];
-    accessApproved: boolean;
-  } {
-    if (!this.isStaffMember(staffId)) {
-      throw new Error('Access denied: Not a staff member');
-    }
-
-    const hasAccess = this.hasApprovedCreditAccess(staffId, targetUserId);
-    if (!hasAccess) {
-      return {
-        complimentaryCredits: 0,
-        purchasedCredits: 0,
-        totalCredits: 0,
-        kobos: 0,
-        transactions: [],
-        accessApproved: false
-      };
-    }
-
-    this.initializeUser(targetUserId);
-    const user = this.users.get(targetUserId)!;
-    
-    return {
-      complimentaryCredits: user.complimentaryCredits,
-      purchasedCredits: user.purchasedCredits,
-      totalCredits: user.complimentaryCredits + user.purchasedCredits,
-      kobos: this.getKobos(targetUserId),
-      transactions: user.transactions,
-      accessApproved: true
-    };
-  }
-
-  // Get pending credit access requests for managers
-  getPendingCreditRequests(): Array<{
-    requestId: string;
-    staffId: string;
-    targetUserId: string;
-    reason: string;
-    timestamp: Date;
-  }> {
-    const pending = [];
-    for (const [requestId, request] of this.creditAccessRequests) {
-      if (request.status === 'pending') {
-        pending.push({
-          requestId,
-          staffId: request.staffId,
-          targetUserId: request.targetUserId,
-          reason: request.reason,
-          timestamp: request.timestamp
-        });
-      }
-    }
-    return pending;
-  }
-
-  // Request credit resettlement for disputed or lost credits
-  requestCreditResettlement(
-    staffId: string, 
-    targetUserId: string, 
-    amount: number, 
-    reason: string, 
-    category: 'dispute' | 'platform_glitch' | 'technical_error' | 'billing_error' | 'other',
-    evidence?: string
-  ): string {
-    if (!this.isStaffMember(staffId)) {
-      throw new Error('Only staff members can request credit resettlement');
-    }
-
-    const requestId = 'CR-' + Math.random().toString(36).substring(2).toUpperCase();
-    this.creditResettlementRequests.set(requestId, {
-      requestId,
-      staffId,
-      targetUserId,
-      amount,
-      reason,
-      category,
-      timestamp: new Date(),
-      status: 'pending',
-      evidence
-    });
-
-    console.log(`Credit resettlement request submitted: ${requestId} for ${amount} credits to user ${targetUserId}`);
-    return requestId;
-  }
-
-  // Approve credit resettlement request
-  approveCreditResettlement(requestId: string, creditManagerId: string): boolean {
-    if (!this.isCreditManager(creditManagerId)) {
-      throw new Error('Only Credit Managers can approve credit resettlement');
-    }
-
-    const request = this.creditResettlementRequests.get(requestId);
-    if (!request) {
-      throw new Error('Resettlement request not found');
-    }
-
-    request.status = 'approved';
-    request.approvedBy = creditManagerId;
-
-    // Add credits to user account
-    this.addCredits(
-      request.targetUserId, 
-      request.amount, 
-      `Credit Resettlement: ${request.reason} (${request.category})`, 
-      false
-    );
-
-    console.log(`Credit resettlement approved: ${requestId} - ${request.amount} credits added to ${request.targetUserId}`);
-    return true;
-  }
-
-  // Get pending credit resettlement requests for managers
-  getPendingCreditResettlements(): Array<{
-    requestId: string;
-    staffId: string;
-    targetUserId: string;
-    amount: number;
-    reason: string;
-    category: string;
-    timestamp: Date;
-    evidence?: string;
-  }> {
-    const pending = [];
-    for (const [requestId, request] of this.creditResettlementRequests) {
-      if (request.status === 'pending') {
-        pending.push({
-          requestId: request.requestId,
-          staffId: request.staffId,
-          targetUserId: request.targetUserId,
-          amount: request.amount,
-          reason: request.reason,
-          category: request.category,
-          timestamp: request.timestamp,
-          evidence: request.evidence
-        });
-      }
-    }
-    return pending;
-  }
-
-
-  // Get total available credits
-  getTotalCredits(userId: string): number {
-    this.initializeUser(userId);
-    const user = this.users.get(userId)!;
-    return user.complimentaryCredits + user.purchasedCredits;
-  }
-
-  // Generate kobos
-  private generateKobos(count: number): ChatKobo[] {
-    const kobos: ChatKobo[] = [];
-    for (let i = 0; i < count; i++) {
-      kobos.push({
-        id: Math.random().toString(36).substring(2),
-        value: 1,
-        purchaseDate: new Date(),
-        used: false
-      });
-    }
-    return kobos;
-  }
-
-  // Get kobos count
-  getKobos(userId: string): number {
-    this.initializeUser(userId);
-    const user = this.users.get(userId)!;
-    return user.kobos.filter(kobo => !kobo.used).length;
-  }
-
-  // Mail functionality with La-Date pricing
-  canSendMail(userId: string, threadId: string): { canSend: boolean; cost: number; isFree: boolean } {
-    const user = this.users.get(userId);
-    if (this.isStaffMember(userId)) return { canSend: true, cost: 0, isFree: true };
-    if (!user) return { canSend: false, cost: 10, isFree: false };
-
-    const threadData = user.mailThreads.get(threadId);
-    const isFirstMail = !threadData || !threadData.firstMailSent;
-
-    if (isFirstMail) {
-      return { canSend: true, cost: this.pricing.mail.firstLetterCost, isFree: false };
-    }
-
-    const cost = this.pricing.mail.followingLetterCost;
-    const totalCredits = this.getTotalCredits(userId);
-
-    return {
-      canSend: totalCredits >= cost,
-      cost: cost,
-      isFree: false
-    };
-  }
-
-  // Read mail functionality
-  canReadMail(userId: string, threadId: string): { canRead: boolean; cost: number; isFree: boolean } {
-    const user = this.users.get(userId);
-    if (this.isStaffMember(userId)) return { canRead: true, cost: 0, isFree: true };
-    if (!user) return { canRead: false, cost: 10, isFree: false };
-
-    const threadData = user.mailThreads.get(threadId);
-    const isFirstRead = !threadData || !threadData.firstMailRead;
-
-    if (isFirstRead) {
-      return { canRead: true, cost: 0, isFree: true }; // First letter to read is free
-    }
-
-    const cost = this.pricing.mail.followingLetterReadCost;
-    const totalCredits = this.getTotalCredits(userId);
-
-    return {
-      canRead: totalCredits >= cost,
-      cost: cost,
-      isFree: false
-    };
-  }
-
-  // Photo functionality with La-Date pricing
-  canSendPhoto(userId: string, threadId: string, isInMail: boolean = false): { canSend: boolean; cost: number; isFree: boolean } {
-    const user = this.users.get(userId);
-    if (this.isStaffMember(userId)) return { canSend: true, cost: 0, isFree: true };
-    if (!user) return { canSend: false, cost: 10, isFree: false };
-
-    if (isInMail) {
-      return { canSend: true, cost: 0, isFree: true }; // Sending photos in mail is free
-    }
-
-    const cost = this.pricing.chat.sendingPhotos;
-    const totalCredits = this.getTotalCredits(userId);
-
-    return {
-      canSend: totalCredits >= cost,
-      cost: cost,
-      isFree: false
-    };
-  }
-
-  // View photo functionality
-  canViewPhoto(userId: string, threadId: string, isInMail: boolean = false): { canView: boolean; cost: number; isFree: boolean } {
-    const user = this.users.get(userId);
-    if (this.isStaffMember(userId)) return { canView: true, cost: 0, isFree: true };
-    if (!user) return { canView: false, cost: 10, isFree: false };
-
-    if (isInMail) {
-      const threadData = user.mailThreads.get(threadId);
-      const isFirstPhoto = !threadData || !threadData.firstPhotoViewed;
-      
-      if (isFirstPhoto) {
-        return { canView: true, cost: 0, isFree: true }; // First photo in thread is free
-      }
-      
-      const cost = this.pricing.mail.followingPhotoCost;
-      const totalCredits = this.getTotalCredits(userId);
-      
-      return {
-        canView: totalCredits >= cost,
-        cost: cost,
-        isFree: false
-      };
-    }
-
-    const cost = this.pricing.media.photoViewing;
-    const totalCredits = this.getTotalCredits(userId);
-
-    return {
-      canView: totalCredits >= cost,
-      cost: cost,
-      isFree: false
-    };
-  }
-
-  // Get credit packages with modern pricing
-  getCreditPackages(): CreditPackage[] {
-    return [
-      {
-        id: 'starter',
-        name: 'Starter Pack',
-        credits: 50,
-        price: 9.99,
-        bonus: 10,
-        type: 'credits',
-        features: ['50 Credits', '10 Bonus Credits', 'Chat & Mail Access', 'Photo Sharing']
-      },
-      {
-        id: 'popular',
-        name: 'Popular Pack',
-        credits: 150,
-        price: 24.99,
-        originalPrice: 34.99,
-        discount: 29,
-        bonus: 50,
-        popular: true,
-        savings: 'Save $10',
-        type: 'credits',
-        features: ['150 Credits', '50 Bonus Credits', 'Priority Support', 'Advanced Features', 'Video Access']
-      },
-      {
-        id: 'premium',
-        name: 'Premium Pack',
-        credits: 300,
-        price: 44.99,
-        originalPrice: 64.99,
-        discount: 31,
-        bonus: 100,
-        savings: 'Save $20',
-        type: 'credits',
-        features: ['300 Credits', '100 Bonus Credits', 'VIP Status', 'Exclusive Features', 'Unlimited Photos']
-      },
-      {
-        id: 'kobos-small',
-        name: 'Chat Kobos - Small',
-        credits: 30,
-        price: 14.99,
-        type: 'kobos',
-        features: ['30 Chat Kobos', '30 Minutes of Chat', 'Premium Chat Features', 'Sticker Access']
-      },
-      {
-        id: 'kobos-large',
-        name: 'Chat Kobos - Large',
-        credits: 100,
-        price: 39.99,
-        bonus: 20,
-        type: 'kobos',
-        features: ['100 Chat Kobos', '20 Bonus Kobos', '120 Minutes of Chat', 'VIP Chat Status', 'Priority Matching']
-      },
-      {
-        id: 'ultimate',
-        name: 'Ultimate Combo',
-        credits: 500,
-        price: 79.99,
-        originalPrice: 119.99,
-        discount: 33,
-        bonus: 200,
-        savings: 'Save $40',
-        type: 'combo',
-        features: ['500 Credits', '200 Bonus Credits', '50 Chat Kobos', 'All Premium Features', 'Priority Support', 'VIP Status']
-      }
-    ];
-  }
-
-  // Get spending options with La-Date pricing
-  getSpendingOptions() {
-    return [
-      { id: 'live_chat', name: 'Live Chat', cost: 2, description: '2 credits or 1 kobo per minute' },
-      { id: 'send_blink', name: 'Send Blink', cost: 1, description: 'Quick way to show interest' },
-      { id: 'send_message', name: 'Send Message', cost: 5, description: 'Send a personal message' },
-      { id: 'chat_stickers', name: 'Chat Stickers', cost: 5, description: 'Express yourself with stickers' },
-      { id: 'send_photo_chat', name: 'Send Photo (Chat)', cost: 10, description: 'Share photos in chat' },
-      { id: 'open_audio_chat', name: 'Open Audio (Chat)', cost: 10, description: 'Listen to voice messages' },
-      { id: 'open_video_chat', name: 'Open Video (Chat)', cost: 50, description: 'Watch video messages' },
-      { id: 'exclusive_post', name: 'Exclusive Post', cost: 50, description: 'Access exclusive content' },
-      { id: 'video_call', name: 'Video Call', cost: 60, description: 'Per minute video calling' },
-      { id: 'audio_call', name: 'Audio Call', cost: 50, description: 'Per minute audio calling' },
-      { id: 'video_message', name: 'Video Message', cost: 50, description: 'Send video messages' },
-      { id: 'audio_message', name: 'Audio Message', cost: 30, description: 'Send audio messages' },
-      { id: 'send_first_mail', name: 'Send First Mail', cost: 10, description: 'First letter in thread' },
-      { id: 'send_following_mail', name: 'Send Following Mail', cost: 30, description: 'Additional letters' },
-      { id: 'read_first_mail', name: 'Read First Mail', cost: 0, description: 'First letter is free' },
-      { id: 'read_following_mail', name: 'Read Following Mail', cost: 10, description: 'Additional letters' },
-      { id: 'send_blink', name: 'Send Blink', cost: 1, description: 'Quick way to show interest' },
-      { id: 'send_photo_mail', name: 'Send Photo (Mail)', cost: 0, description: 'Free of charge' },
-      { id: 'view_first_photo_mail', name: 'View First Photo (Mail)', cost: 0, description: 'First photo is free' },
-      { id: 'view_following_photo_mail', name: 'View Following Photo (Mail)', cost: 10, description: 'Additional photos' },
-      { id: 'open_video_mail', name: 'Open Video (Mail)', cost: 50, description: 'Per video' },
-      { id: 'profile_videos', name: 'Profile Videos', cost: 50, description: 'View profile videos' },
-      { id: 'virtual_gifts', name: 'Virtual Gifts', cost: 'varies', description: 'See gift catalog' },
-      { id: 'presents', name: 'Presents', cost: 'varies', description: 'See presents catalog' }
-    ];
-  }
-
-  // Get gift catalog
-  getGiftCatalog(): GiftItem[] {
-    return [
-      // Romantic Gifts
-      { id: 'red_rose', name: 'Red Rose', emoji: '🌹', price: 5, category: 'romantic', description: 'Classic symbol of love', popularity: 95 },
-      { id: 'bouquet', name: 'Rose Bouquet', emoji: '💐', price: 15, category: 'romantic', description: 'Beautiful flower arrangement', popularity: 88 },
-      { id: 'love_heart', name: 'Love Heart', emoji: '💖', price: 3, category: 'romantic', description: 'Express your feelings', popularity: 92 },
-      { id: 'love_letter', name: 'Love Letter', emoji: '💌', price: 8, category: 'romantic', description: 'Romantic message', popularity: 85 },
-      { id: 'kiss', name: 'Kiss', emoji: '💋', price: 2, category: 'romantic', description: 'Sweet kiss', popularity: 90 },
-      { id: 'promise_ring', name: 'Promise Ring', emoji: '💍', price: 25, category: 'romantic', description: 'Symbol of commitment', popularity: 78 },
-      { id: 'chocolate_box', name: 'Chocolate Box', emoji: '🍫', price: 12, category: 'romantic', description: 'Sweet treats', popularity: 87 },
-      { id: 'romantic_candle', name: 'Romantic Candle', emoji: '🕯️', price: 7, category: 'romantic', description: 'Set the mood', popularity: 82 },
-      { id: 'champagne_romantic', name: 'Champagne & Roses', emoji: '🥂', price: 35, category: 'romantic', description: 'Celebrate your love', popularity: 89 },
-      { id: 'love_poem', name: 'Love Poem', emoji: '📜', price: 6, category: 'romantic', description: 'Heartfelt poetry', popularity: 84 },
-      { id: 'romantic_dinner', name: 'Romantic Dinner', emoji: '🍽️', price: 45, category: 'romantic', description: 'Candlelit dinner for two', popularity: 91 },
-      { id: 'love_song', name: 'Love Song', emoji: '🎵', price: 18, category: 'romantic', description: 'Personalized love song', popularity: 86 },
-      { id: 'sunset_date', name: 'Sunset Date', emoji: '🌅', price: 30, category: 'romantic', description: 'Romantic sunset experience', popularity: 88 },
-      
-      // Luxury Gifts
-      { id: 'diamond', name: 'Diamond', emoji: '💎', price: 100, category: 'luxury', description: 'Ultimate luxury gift', popularity: 95 },
-      { id: 'emerald', name: 'Emerald', emoji: '💚', price: 80, category: 'luxury', description: 'Precious green gem', popularity: 75 },
-      { id: 'sapphire', name: 'Sapphire', emoji: '💙', price: 85, category: 'luxury', description: 'Royal blue gem', popularity: 78 },
-      { id: 'crown', name: 'Crown', emoji: '👑', price: 50, category: 'luxury', description: 'Treat them like royalty', popularity: 88 },
-      { id: 'champagne', name: 'Champagne', emoji: '🍾', price: 35, category: 'luxury', description: 'Celebrate in style', popularity: 85 },
-      { id: 'luxury_watch', name: 'Luxury Watch', emoji: '⌚', price: 75, category: 'luxury', description: 'Timeless elegance', popularity: 72 },
-      { id: 'sports_car', name: 'Sports Car', emoji: '🏎️', price: 200, category: 'luxury', description: 'Ultimate dream gift', popularity: 90 },
-      { id: 'yacht', name: 'Luxury Yacht', emoji: '🛥️', price: 300, category: 'luxury', description: 'Sail away together', popularity: 85 },
-      { id: 'private_jet', name: 'Private Jet', emoji: '✈️', price: 500, category: 'luxury', description: 'Fly in style', popularity: 92 },
-      { id: 'mansion', name: 'Dream Mansion', emoji: '🏰', price: 1000, category: 'luxury', description: 'Live like royalty', popularity: 88 },
-      { id: 'golden_necklace', name: 'Golden Necklace', emoji: '📿', price: 120, category: 'luxury', description: 'Elegant gold jewelry', popularity: 83 },
-      { id: 'designer_bag', name: 'Designer Bag', emoji: '👜', price: 150, category: 'luxury', description: 'Luxury fashion accessory', popularity: 79 },
-      { id: 'spa_weekend', name: 'Spa Weekend', emoji: '🧖‍♀️', price: 180, category: 'luxury', description: 'Relaxing spa getaway', popularity: 87 },
-      
-      // Fun & Cute Gifts
-      { id: 'teddy_bear', name: 'Teddy Bear', emoji: '🧸', price: 8, category: 'fun', description: 'Cuddly companion', popularity: 92 },
-      { id: 'cute_puppy', name: 'Cute Puppy', emoji: '🐶', price: 12, category: 'fun', description: 'Adorable furry friend', popularity: 95 },
-      { id: 'kitten', name: 'Adorable Kitten', emoji: '🐱', price: 12, category: 'fun', description: 'Sweet little cat', popularity: 94 },
-      { id: 'birthday_cake', name: 'Birthday Cake', emoji: '🎂', price: 10, category: 'fun', description: 'Celebrate special moments', popularity: 88 },
-      { id: 'cupcake', name: 'Cupcake', emoji: '🧁', price: 4, category: 'fun', description: 'Sweet little treat', popularity: 85 },
-      { id: 'balloons', name: 'Balloons', emoji: '🎈', price: 6, category: 'fun', description: 'Party atmosphere', popularity: 80 },
-      { id: 'unicorn', name: 'Unicorn', emoji: '🦄', price: 18, category: 'fun', description: 'Magical creature', popularity: 87 },
-      { id: 'rainbow', name: 'Rainbow', emoji: '🌈', price: 8, category: 'fun', description: 'Colorful happiness', popularity: 83 },
-      { id: 'panda', name: 'Cute Panda', emoji: '🐼', price: 14, category: 'fun', description: 'Adorable bamboo lover', popularity: 91 },
-      { id: 'butterfly', name: 'Butterfly', emoji: '🦋', price: 5, category: 'fun', description: 'Beautiful transformation', popularity: 86 },
-      { id: 'shooting_star', name: 'Shooting Star', emoji: '🌠', price: 9, category: 'fun', description: 'Make a wish', popularity: 89 },
-      { id: 'funny_meme', name: 'Funny Meme', emoji: '😂', price: 3, category: 'fun', description: 'Share a laugh', popularity: 93 },
-      { id: 'magic_wand', name: 'Magic Wand', emoji: '🪄', price: 11, category: 'fun', description: 'Make magic happen', popularity: 84 },
-      { id: 'party_hat', name: 'Party Hat', emoji: '🎉', price: 5, category: 'fun', description: 'Celebration time', popularity: 82 },
-      
-      // Casual Gifts
-      { id: 'coffee', name: 'Coffee', emoji: '☕', price: 3, category: 'casual', description: 'Morning energy boost', popularity: 90 },
-      { id: 'pizza_slice', name: 'Pizza Slice', emoji: '🍕', price: 5, category: 'casual', description: 'Delicious comfort food', popularity: 92 },
-      { id: 'burger', name: 'Gourmet Burger', emoji: '🍔', price: 7, category: 'casual', description: 'Tasty meal', popularity: 88 },
-      { id: 'beer', name: 'Beer', emoji: '🍺', price: 6, category: 'casual', description: 'Refreshing drink', popularity: 85 },
-      { id: 'wine_glass', name: 'Wine Glass', emoji: '🍷', price: 8, category: 'casual', description: 'Elegant drink', popularity: 87 },
-      { id: 'ice_cream', name: 'Ice Cream', emoji: '🍦', price: 4, category: 'casual', description: 'Cool sweet treat', popularity: 89 },
-      { id: 'donut', name: 'Donut', emoji: '🍩', price: 3, category: 'casual', description: 'Sweet snack', popularity: 86 },
-      { id: 'taco', name: 'Delicious Taco', emoji: '🌮', price: 4, category: 'casual', description: 'Spicy and tasty', popularity: 87 },
-      { id: 'sushi', name: 'Sushi Roll', emoji: '🍣', price: 9, category: 'casual', description: 'Fresh and elegant', popularity: 85 },
-      { id: 'smoothie', name: 'Fruit Smoothie', emoji: '🥤', price: 5, category: 'casual', description: 'Healthy and refreshing', popularity: 83 },
-      { id: 'popcorn', name: 'Popcorn', emoji: '🍿', price: 4, category: 'casual', description: 'Movie night snack', popularity: 84 },
-      { id: 'hot_chocolate', name: 'Hot Chocolate', emoji: '☕', price: 6, category: 'casual', description: 'Warm and cozy', popularity: 88 },
-      { id: 'sandwich', name: 'Sandwich', emoji: '🥪', price: 5, category: 'casual', description: 'Quick and tasty', popularity: 81 },
-      
-      // Seasonal Gifts
-      { id: 'christmas_tree', name: 'Christmas Tree', emoji: '🎄', price: 15, category: 'seasonal', description: 'Holiday spirit', popularity: 85 },
-      { id: 'valentine_card', name: 'Valentine Card', emoji: '💝', price: 6, category: 'seasonal', description: 'Love day special', popularity: 90 },
-      { id: 'easter_egg', name: 'Easter Egg', emoji: '🥚', price: 5, category: 'seasonal', description: 'Spring celebration', popularity: 75 },
-      { id: 'halloween_pumpkin', name: 'Halloween Pumpkin', emoji: '🎃', price: 8, category: 'seasonal', description: 'Spooky fun', popularity: 80 },
-      { id: 'fireworks', name: 'Fireworks', emoji: '🎆', price: 12, category: 'seasonal', description: 'Celebration spectacular', popularity: 88 },
-      { id: 'snowman', name: 'Snowman', emoji: '⛄', price: 10, category: 'seasonal', description: 'Winter fun', popularity: 82 },
-      { id: 'beach_umbrella', name: 'Beach Umbrella', emoji: '🏖️', price: 11, category: 'seasonal', description: 'Summer vibes', popularity: 84 },
-      { id: 'autumn_leaves', name: 'Autumn Leaves', emoji: '🍂', price: 7, category: 'seasonal', description: 'Fall beauty', popularity: 81 },
-      { id: 'new_year_party', name: 'New Year Party', emoji: '🎊', price: 13, category: 'seasonal', description: 'Celebrate new beginnings', popularity: 86 },
-      { id: 'mothers_day', name: "Mother's Day Flowers", emoji: '🌺', price: 16, category: 'seasonal', description: 'Honor special mothers', popularity: 89 },
-      { id: 'fathers_day', name: "Father's Day Gift", emoji: '👔', price: 14, category: 'seasonal', description: 'Appreciate fathers', popularity: 85 },
-      { id: 'graduation_cap', name: 'Graduation Cap', emoji: '🎓', price: 12, category: 'seasonal', description: 'Celebrate achievements', popularity: 83 }
-    ];
-  }
-
-  // Get pricing structure
-  getPricingStructure(): PricingStructure {
-    return this.pricing;
-  }
-
-  // Add credits (complimentary or purchased)
-  addCredits(userId: string, amount: number, description: string, isPurchased: boolean = false): boolean {
-    this.initializeUser(userId);
-    const user = this.users.get(userId)!;
-    
-    if (isPurchased) {
-      user.purchasedCredits += amount;
-    } else {
-      user.complimentaryCredits += amount;
-    }
-
-    this.addTransaction(userId, {
-      type: 'earn',
-      amount,
-      description,
-      timestamp: new Date(),
-      category: isPurchased ? 'premium' : 'premium'
-    });
-    return true;
-  }
-
-  // Spend credits (purchased first, then complimentary)
-  spendCredits(userId: string, amount: number, description: string): boolean {
-    this.initializeUser(userId);
-    
-    if (this.isStaffMember(userId)) {
-      this.addTransaction(userId, {
-        type: 'spend',
+    try {
+      const requestId = creditManager.requestCreditResettlement(
+        currentStaffId,
+        searchUserId,
         amount,
-        description: `${description} (Staff - Free)`,
-        timestamp: new Date(),
-        category: 'premium'
-      });
-      return true;
+        resettlementReason,
+        resettlementCategory,
+        resettlementEvidence || undefined
+      );
+      alert(`Credit resettlement request submitted: ${requestId}`);
+      setResettlementAmount('');
+      setResettlementReason('');
+      setResettlementEvidence('');
+    } catch (error) {
+      alert(`Error: ${(error as Error).message}`);
     }
+  };
 
-    const user = this.users.get(userId)!;
-    const totalCredits = user.complimentaryCredits + user.purchasedCredits;
-
-    if (totalCredits >= amount) {
-      // Spend purchased credits first
-      if (user.purchasedCredits >= amount) {
-        user.purchasedCredits -= amount;
-      } else {
-        const remainingAmount = amount - user.purchasedCredits;
-        user.purchasedCredits = 0;
-        user.complimentaryCredits -= remainingAmount;
-      }
-
-      this.addTransaction(userId, {
-        type: 'spend',
-        amount,
-        description,
-        timestamp: new Date(),
-        category: 'premium'
-      });
-      return true;
+  const handleApproveAccess = (requestId: string) => {
+    try {
+      creditManager.approveCreditAccess(requestId, currentStaffId);
+      alert('Credit access approved');
+    } catch (error) {
+      alert(`Error: ${(error as Error).message}`);
     }
-    return false;
-  }
+  };
 
-  // Get user statistics
-  getUserStats(userId: string) {
-    this.initializeUser(userId);
-    const user = this.users.get(userId)!;
-    
-    const totalEarned = user.transactions
-      .filter(t => t.type === 'earn')
-      .reduce((sum, t) => sum + t.amount, 0);
-    
-    const totalSpent = user.transactions
-      .filter(t => t.type === 'spend')
-      .reduce((sum, t) => sum + t.amount, 0);
-
-    return {
-      totalEarned,
-      totalSpent,
-      transactionCount: user.transactions.length,
-      currentBalance: user.complimentaryCredits + user.purchasedCredits,
-      chatKobos: this.getKobos(userId)
-    };
-  }
-
-  // Get balance
-  getBalance(userId: string): number {
-    return this.getTotalCredits(userId);
-  }
-
-  // Can afford check
-  canAfford(userId: string, amount: number): boolean {
-    if (this.isStaffMember(userId)) return true;
-    return this.getTotalCredits(userId) >= amount;
-  }
-
-  // Mark first mail as read in thread
-  markFirstMailRead(userId: string, threadId: string): void {
-    this.initializeUser(userId);
-    const user = this.users.get(userId)!;
-    
-    if (!user.mailThreads.has(threadId)) {
-      user.mailThreads.set(threadId, {
-        firstMailSent: false,
-        firstMailRead: false,
-        firstPhotoSent: false,
-        firstPhotoViewed: false
-      });
+  const handleApproveResettlement = (requestId: string) => {
+    try {
+      creditManager.approveCreditResettlement(requestId, currentStaffId);
+      alert('Credit resettlement approved and processed');
+    } catch (error) {
+      alert(`Error: ${(error as Error).message}`);
     }
-    
-    const threadData = user.mailThreads.get(threadId)!;
-    threadData.firstMailRead = true;
-  }
+  };
 
-  // Mark first mail as sent in thread
-  markFirstMailSent(userId: string, threadId: string): void {
-    this.initializeUser(userId);
-    const user = this.users.get(userId)!;
-    
-    if (!user.mailThreads.has(threadId)) {
-      user.mailThreads.set(threadId, {
-        firstMailSent: false,
-        firstMailRead: false,
-        firstPhotoSent: false,
-        firstPhotoViewed: false
-      });
+  const getUserData = () => {
+    if (!searchUserId) return null;
+    try {
+      return creditManager.getStaffUserData(currentStaffId, searchUserId);
+    } catch (error) {
+      return null;
     }
-    
-    const threadData = user.mailThreads.get(threadId)!;
-    threadData.firstMailSent = true;
-  }
+  };
 
-  // Check if user can send attachment for free
-  canSendAttachmentFree(userId: string, threadId: string = 'default'): boolean {
-    return this.isStaffMember(userId); // Only staff get free attachments
-  }
+  const userData = getUserData();
+  const pendingRequests = creditManager.getPendingCreditRequests();
+  const pendingResettlements = creditManager.getPendingCreditResettlements();
 
-  // Claim daily bonus
-  claimDailyBonus(userId: string): boolean {
-    this.initializeUser(userId);
-    const user = this.users.get(userId)!;
-    
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    if (user.dailyBonusLastClaimed) {
-      const lastClaimed = new Date(user.dailyBonusLastClaimed);
-      lastClaimed.setHours(0, 0, 0, 0);
-      
-      if (lastClaimed.getTime() === today.getTime()) {
-        return false; // Already claimed today
-      }
-    }
-    
-    // Give random bonus between 1-3 credits
-    const bonusAmount = Math.floor(Math.random() * 3) + 1;
-    user.complimentaryCredits += bonusAmount;
-    user.dailyBonusLastClaimed = new Date();
-    
-    this.addTransaction(userId, {
-      type: 'earn',
-      amount: bonusAmount,
-      description: `Daily Bonus - ${bonusAmount} Credits`,
-      timestamp: new Date(),
-      category: 'premium'
-    });
-    
-    return true;
-  }
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500">
+      <div className="max-w-4xl mx-auto min-h-screen relative">
+        {/* Header */}
+        <div className="bg-white/95 backdrop-blur-sm shadow-sm border-b border-white/20 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-gray-900 flex items-center">
+              <Shield className="w-8 h-8 mr-3 text-blue-600" />
+              Staff Panel
+            </h1>
+            <div className="text-sm text-gray-600">
+              Logged in as: {currentStaffId}
+            </div>
+          </div>
+        </div>
 
-  // Private helper methods
-  private addTransaction(userId: string, transaction: CreditTransaction): void {
-    const user = this.users.get(userId);
-    if (user) {
-      user.transactions.push(transaction);
-    }
-  }
+        {/* Tab Navigation */}
+        <div className="bg-white/90 backdrop-blur-sm border-b border-white/20">
+          <div className="flex">
+            {[
+              { id: 'overview', label: 'Overview', icon: Settings },
+              { id: 'users', label: 'User Management', icon: Users },
+              { id: 'credits', label: 'Credit Management', icon: CreditCard },
+              { id: 'requests', label: 'Pending Requests', icon: Clock }
+            ].map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`flex-1 py-4 px-6 text-sm font-medium border-b-2 transition-colors flex items-center justify-center space-x-2 ${
+                    activeTab === tab.id 
+                      ? 'text-blue-600 border-blue-600' 
+                      : 'text-gray-500 border-transparent hover:text-gray-700'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-  // Get user data for display
-  getUserData(userId: string): {
-    complimentaryCredits: number;
-    purchasedCredits: number;
-    totalCredits: number;
-    kobos: number;
-    transactions: CreditTransaction[];
-  } {
-    this.initializeUser(userId);
-    const user = this.users.get(userId)!;
-    
-    return {
-      complimentaryCredits: user.complimentaryCredits,
-      purchasedCredits: user.purchasedCredits,
-      totalCredits: user.complimentaryCredits + user.purchasedCredits,
-      kobos: this.getKobos(userId),
-      transactions: user.transactions
-    };
-  }
-}
+        {/* Content */}
+        <div className="p-6">
+          {activeTab === 'overview' && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Total Users</p>
+                      <p className="text-2xl font-bold text-gray-900">1,247</p>
+                    </div>
+                    <Users className="w-8 h-8 text-blue-500" />
+                  </div>
+                </div>
+                
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Active Staff</p>
+                      <p className="text-2xl font-bold text-gray-900">{staffMembers.filter(s => s.status === 'active').length}</p>
+                    </div>
+                    <Shield className="w-8 h-8 text-green-500" />
+                  </div>
+                </div>
+                
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Pending Requests</p>
+                      <p className="text-2xl font-bold text-gray-900">{pendingRequests.length + pendingResettlements.length}</p>
+                    </div>
+                    <AlertTriangle className="w-8 h-8 text-orange-500" />
+                  </div>
+                </div>
+              </div>
 
-// Create singleton instance
-export const creditManager = new ModernCreditManager();
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Staff Members</h3>
+                <div className="space-y-3">
+                  {staffMembers.map((member) => (
+                    <div key={member.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">{member.name}</p>
+                        <p className="text-sm text-gray-600">{member.email}</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          member.role === 'admin' ? 'bg-red-100 text-red-800' :
+                          member.role === 'credit_manager' ? 'bg-purple-100 text-purple-800' :
+                          member.role === 'support' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {member.role.replace('_', ' ')}
+                        </span>
+                        <span className={`w-2 h-2 rounded-full ${
+                          member.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
+                        }`}></span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
-// Utility functions
-export const formatCredits = (amount: number): string => {
-  return `${amount.toLocaleString()} Credits`;
-};
+          {activeTab === 'users' && (
+            <div className="space-y-6">
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">User Search</h3>
+                <div className="flex space-x-3">
+                  <Input
+                    placeholder="Enter user email or ID"
+                    value={searchUserId}
+                    onChange={(e) => setSearchUserId(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button 
+                    onClick={() => setSelectedUser(searchUserId)}
+                    className="bg-blue-500 text-white hover:bg-blue-600"
+                  >
+                    <Search className="w-4 h-4 mr-2" />
+                    Search
+                  </Button>
+                </div>
+              </div>
 
-export const formatKobos = (amount: number): string => {
-  return `${amount.toLocaleString()} Kobos 💖`;
-};
+              {userData && (
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-lg">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">User Credit Information</h3>
+                  {userData.accessApproved ? (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="p-4 bg-blue-50 rounded-lg">
+                        <p className="text-sm text-gray-600">Complimentary Credits</p>
+                        <p className="text-xl font-bold text-blue-600">{userData.complimentaryCredits}</p>
+                      </div>
+                      <div className="p-4 bg-green-50 rounded-lg">
+                        <p className="text-sm text-gray-600">Purchased Credits</p>
+                        <p className="text-xl font-bold text-green-600">{userData.purchasedCredits}</p>
+                      </div>
+                      <div className="p-4 bg-purple-50 rounded-lg">
+                        <p className="text-sm text-gray-600">Total Credits</p>
+                        <p className="text-xl font-bold text-purple-600">{userData.totalCredits}</p>
+                      </div>
+                      <div className="p-4 bg-pink-50 rounded-lg">
+                        <p className="text-sm text-gray-600">Chat Kobos</p>
+                        <p className="text-xl font-bold text-pink-600">{userData.kobos}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <AlertTriangle className="w-12 h-12 text-orange-500 mx-auto mb-4" />
+                      <p className="text-gray-600 mb-4">Access to user credit data requires approval</p>
+                      <div className="space-y-3">
+                        <Textarea
+                          placeholder="Reason for accessing user credit data..."
+                          value={accessReason}
+                          onChange={(e) => setAccessReason(e.target.value)}
+                          className="w-full"
+                        />
+                        <Button onClick={handleRequestAccess} className="bg-orange-500 text-white hover:bg-orange-600">
+                          Request Access
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
-export const formatPrice = (price: number): string => {
-  return `$${price.toFixed(2)}`;
-};
+          {activeTab === 'credits' && (
+            <div className="space-y-6">
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Credit Resettlement Request</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">User ID/Email</label>
+                    <Input
+                      placeholder="Enter user email or ID"
+                      value={searchUserId}
+                      onChange={(e) => setSearchUserId(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Credit Amount</label>
+                    <Input
+                      type="number"
+                      placeholder="Enter credit amount to compensate"
+                      value={resettlementAmount}
+                      onChange={(e) => setResettlementAmount(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <select
+                      value={resettlementCategory}
+                      onChange={(e) => setResettlementCategory(e.target.value as any)}
+                      className="w-full p-2 border border-gray-300 rounded-lg"
+                    >
+                      <option value="dispute">User Dispute</option>
+                      <option value="platform_glitch">Platform Glitch</option>
+                      <option value="technical_error">Technical Error</option>
+                      <option value="billing_error">Billing Error</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Reason</label>
+                    <Textarea
+                      placeholder="Brief explanation for credit resettlement..."
+                      value={resettlementReason}
+                      onChange={(e) => setResettlementReason(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Evidence (Optional)</label>
+                    <Textarea
+                      placeholder="Additional notes or evidence..."
+                      value={resettlementEvidence}
+                      onChange={(e) => setResettlementEvidence(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                  
+                  <Button 
+                    onClick={handleRequestResettlement}
+                    className="w-full bg-green-500 text-white hover:bg-green-600"
+                  >
+                    <DollarSign className="w-4 h-4 mr-2" />
+                    Submit Resettlement Request
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
 
-export const calculateSavings = (originalPrice: number, currentPrice: number): number => {
-  return Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+          {activeTab === 'requests' && (
+            <div className="space-y-6">
+              {/* Credit Access Requests */}
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Pending Credit Access Requests</h3>
+                {pendingRequests.length === 0 ? (
+                  <p className="text-gray-600 text-center py-4">No pending access requests</p>
+                ) : (
+                  <div className="space-y-3">
+                    {pendingRequests.map((request) => (
+                      <div key={request.requestId} className="p-4 bg-gray-50 rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <p className="font-medium text-gray-900">Staff: {request.staffId}</p>
+                            <p className="text-sm text-gray-600">Target User: {request.targetUserId}</p>
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {request.timestamp.toLocaleString()}
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-700 mb-3">Reason: {request.reason}</p>
+                        <Button 
+                          onClick={() => handleApproveAccess(request.requestId)}
+                          className="bg-green-500 text-white hover:bg-green-600"
+                          size="sm"
+                        >
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          Approve Access
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Credit Resettlement Requests */}
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Pending Credit Resettlement Requests</h3>
+                {pendingResettlements.length === 0 ? (
+                  <p className="text-gray-600 text-center py-4">No pending resettlement requests</p>
+                ) : (
+                  <div className="space-y-3">
+                    {pendingResettlements.map((request) => (
+                      <div key={request.requestId} className="p-4 bg-gray-50 rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <p className="font-medium text-gray-900">Request ID: {request.requestId}</p>
+                            <p className="text-sm text-gray-600">Staff: {request.staffId}</p>
+                            <p className="text-sm text-gray-600">User: {request.targetUserId}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-lg font-bold text-green-600">{formatCredits(request.amount)}</p>
+                            <p className="text-xs text-gray-500">{request.timestamp.toLocaleString()}</p>
+                          </div>
+                        </div>
+                        <div className="mb-3">
+                          <p className="text-sm text-gray-700">
+                            <span className="font-medium">Category:</span> {request.category.replace('_', ' ')}
+                          </p>
+                          <p className="text-sm text-gray-700">
+                            <span className="font-medium">Reason:</span> {request.reason}
+                          </p>
+                          {request.evidence && (
+                            <p className="text-sm text-gray-700">
+                              <span className="font-medium">Evidence:</span> {request.evidence}
+                            </p>
+                          )}
+                        </div>
+                        <Button 
+                          onClick={() => handleApproveResettlement(request.requestId)}
+                          className="bg-green-500 text-white hover:bg-green-600"
+                          size="sm"
+                        >
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          Approve & Process
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };

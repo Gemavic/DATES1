@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Mail as MailIcon, Send, Inbox, Trash2, Star, Search, Plus, Paperclip, MessageCircle, Users, Newspaper, User, MessageSquare, Image, Upload } from 'lucide-react';
 import { creditManager, formatCredits } from '@/lib/creditSystem';
-import { sendEmailNotification } from '@/lib/emailNotifications';
+import { sendMessageNotification } from '@/lib/emailNotifications';
 import { MessageChatBox } from '@/components/MessageChatBox';
 
 interface MailProps {
@@ -188,7 +188,7 @@ export const Mail: React.FC<MailProps> = ({ onNavigate }) => {
       creditManager.markFirstMailSent('current-user', threadId);
       
       // Send email notification
-      sendEmailNotification(message.from, {
+      sendMessageNotification(message.from, {
         name: 'You',
         image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
         id: 'current-user'
