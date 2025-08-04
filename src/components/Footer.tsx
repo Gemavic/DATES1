@@ -29,6 +29,7 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="flex justify-around py-2 px-4">
           {tabs.map((tab) => {
                   className={`flex flex-col items-center py-2 px-2 lg:px-3 rounded-lg transition-all duration-300 hover:scale-105 ${
+                  }
             const isActive = activeTab === tab.id;
             
             if (tab.isChat) {
@@ -86,3 +87,8 @@ export const Footer: React.FC<FooterProps> = ({
     </>
   );
 };
+    }
+    )
+    }
+  )
+}
