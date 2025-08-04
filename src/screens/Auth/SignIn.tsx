@@ -131,82 +131,6 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   type={showPassword ? "text" : "password"}
-                  value={formData.password}
-                  onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                  placeholder="Enter your password"
-                  className="pl-10 pr-10 bg-white/90"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => onNavigate('forgot-password')}
-                className="text-white/80 text-sm hover:underline"
-              >
-                Forgot your password?
-              </button>
-            </div>
-
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-white text-pink-600 hover:bg-white/90 font-semibold py-3 transition-all duration-300 hover:scale-105 active:scale-95"
-            >
-              {isLoading ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-pink-600 mr-2"></div>
-                  Signing In...
-                </div>
-              ) : (
-                'Sign In'
-              )}
-            </Button>
-          </form>
-
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/20"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gradient-to-r from-pink-600 to-rose-500 text-white/80">Security Features</span>
-              </div>
-            </div>
-            
-            <div className="mt-4 grid grid-cols-2 gap-4 text-center">
-              <div className="flex flex-col items-center p-3 bg-white/10 rounded-lg">
-                <Shield className="w-5 h-5 text-white/80 mb-1" />
-                <span className="text-xs text-white/70">Encrypted</span>
-              </div>
-              <div className="flex flex-col items-center p-3 bg-white/10 rounded-lg">
-                <Lock className="w-5 h-5 text-white/80 mb-1" />
-                <span className="text-xs text-white/70">Secure</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <Input
-              type="email"
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="Enter your email"
-                className="pl-10 bg-white/90"
-                required
-              />
-            </div>
-          </div>
-
           <div className="text-center">
             <span className="text-white/80">Don't have an account? </span>
             <button
@@ -217,6 +141,8 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
             </button>
           </div>
         </div>
+      </div>
+    </Layout>
 
         {/* Social Sign In */}
         <div className="mt-8">
