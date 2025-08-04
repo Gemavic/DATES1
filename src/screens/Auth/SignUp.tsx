@@ -301,7 +301,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onNavigate = () => {} }) => {
         <div className="mt-4 sm:mt-6 text-center">
           <span className="text-white/80">Already have an account? </span>
           <button
-            onClick={() => onNavigate?.('auth-signin') || (window.location.href = '/auth-signin')}
+            onClick={() => onNavigate?.('signin') || (window.location.href = '/signin')}
             className="text-white font-semibold hover:underline"
           >
             Sign In
