@@ -319,16 +319,16 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
               <div className="flex space-x-2">
                 <Button
                   onClick={() => setShowMessageBox(false)}
-                  className="bg-gray-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 text-sm"
+                  className="bg-gray-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 text-sm touch-manipulation active:scale-95"
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleSendMessage}
                   disabled={!message.trim()}
-                  className="bg-pink-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 flex items-center text-sm"
+                  className="bg-pink-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 flex items-center text-sm touch-manipulation active:scale-95"
                 >
-                  <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
                   Send
                 </Button>
               </div>
@@ -344,22 +344,22 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
               />
               <button
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                className="absolute left-2 sm:left-3 top-2 sm:top-3 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100 touch-manipulation"
+                className="absolute left-2 sm:left-3 top-2 sm:top-3 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100 touch-manipulation active:scale-95"
                 title="Add emoji"
               >
-                <Smile className="w-3 h-3 sm:w-4 sm:h-4" />
+                <Smile className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
               </button>
             </div>
             
             {/* Emoji Picker */}
             {showEmojiPicker && (
-              <div className="bg-gray-50 rounded-lg p-2 sm:p-3 border">
-                <div className="grid grid-cols-6 sm:grid-cols-8 gap-1 sm:gap-2">
+              <div className="bg-gray-50 rounded-lg p-2 sm:p-3 border max-h-32 overflow-y-auto">
+                <div className="grid grid-cols-8 sm:grid-cols-10 gap-1">
                   {emojis.map((emoji, index) => (
                     <button
                       key={index}
                       onClick={() => addEmoji(emoji)}
-                      className="text-lg sm:text-xl hover:bg-gray-200 rounded p-0.5 sm:p-1 transition-colors"
+                      className="text-base sm:text-lg hover:bg-gray-200 rounded p-1 transition-colors touch-manipulation active:scale-95"
                     >
                       {emoji}
                     </button>
@@ -375,31 +375,50 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
       <div className="flex justify-center items-center gap-2 sm:gap-3 p-4 sm:p-6 bg-white">
         <button
           onClick={() => onPass(profile.id)}
-          className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-500 hover:bg-gray-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group touch-manipulation active:scale-95"
+          className={cn(
+            "w-12 h-12 sm:w-14 sm:h-14 bg-gray-500 hover:bg-gray-600 rounded-full shadow-xl",
+            "flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300",
+            "hover:shadow-2xl group touch-manipulation"
+          )}
         >
-          <X className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
+          <X className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow-sm group-hover:scale-110 transition-transform flex-shrink-0" />
         </button>
         
         <button
           onClick={handleBlink}
-          className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group touch-manipulation active:scale-95"
+          className={cn(
+            "w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-yellow-400 to-orange-500",
+            "hover:from-yellow-500 hover:to-orange-600 rounded-full shadow-xl",
+            "flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300",
+            "hover:shadow-2xl group touch-manipulation"
+          )}
           title="Send a Blink"
         >
-          <span className="text-white text-base sm:text-lg drop-shadow-sm group-hover:scale-110 transition-transform">👁️</span>
+          <span className="text-white text-lg sm:text-xl drop-shadow-sm group-hover:scale-110 transition-transform">👁️</span>
         </button>
         
         <button
           onClick={() => setShowMessageBox(!showMessageBox)}
-          className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group touch-manipulation active:scale-95"
+          className={cn(
+            "w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-blue-500 to-cyan-500",
+            "hover:from-blue-600 hover:to-cyan-600 rounded-full shadow-xl",
+            "flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300",
+            "hover:shadow-2xl group touch-manipulation"
+          )}
         >
-          <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
+          <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow-sm group-hover:scale-110 transition-transform flex-shrink-0" />
         </button>
         
         <button
           onClick={() => onSuperLike(profile.id)}
-          className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group touch-manipulation active:scale-95"
+          className={cn(
+            "w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-purple-500 to-pink-500",
+            "hover:from-purple-600 hover:to-pink-600 rounded-full shadow-xl",
+            "flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300",
+            "hover:shadow-2xl group touch-manipulation"
+          )}
         >
-          <Star className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
+          <Star className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow-sm group-hover:scale-110 transition-transform flex-shrink-0" />
         </button>
       </div>
 

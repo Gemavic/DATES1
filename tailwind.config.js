@@ -138,6 +138,12 @@ module.exports = {
         'safe-bottom': 'env(safe-area-inset-bottom)',
         'safe-top': 'env(safe-area-inset-top)',
       },
+      inset: {
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
+      },
     },
     container: { center: true, padding: "2rem", screens: { "2xl": "1400px" } },
   },
@@ -167,6 +173,18 @@ module.exports = {
         },
         '.tap-highlight-transparent': {
           '-webkit-tap-highlight-color': 'transparent',
+        },
+        '.safe-area-inset-top': {
+          'padding-top': 'env(safe-area-inset-top)',
+        },
+        '.safe-area-inset-bottom': {
+          'padding-bottom': 'env(safe-area-inset-bottom)',
+        },
+        '.safe-area-inset-left': {
+          'padding-left': 'env(safe-area-inset-left)',
+        },
+        '.safe-area-inset-right': {
+          'padding-right': 'env(safe-area-inset-right)',
         },
       }
       addUtilities(newUtilities)
