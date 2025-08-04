@@ -186,7 +186,8 @@ export const Discovery: React.FC<DiscoveryProps> = ({ onNavigate }) => {
                   </div>
                   <Button
                     onClick={() => onNavigate('profile')}
-                    className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-xl"
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-xl cursor-pointer touch-manipulation active:scale-95"
+                    type="button"
                   >
                     View Profile
                   </Button>

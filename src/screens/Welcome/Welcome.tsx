@@ -1,7 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Heart, Users, MessageCircle, Sparkles } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 interface WelcomeProps {
   onGetStarted?: () => void;
@@ -14,28 +14,27 @@ export const Welcome: React.FC<WelcomeProps> = ({ onGetStarted, onNavigate = () 
   const handleGetStarted = () => {
     console.log('Get Started button clicked'); // Debug log
     
-    if (onGetStarted) {
-      console.log('Calling onGetStarted prop');
-      onGetStarted();
-      return;
-    }
-    
     // Try multiple navigation methods
     try {
       console.log('Attempting navigation to signin');
       
       // Method 1: Use onNavigate prop
       if (onNavigate) {
-        onNavigate('signin');
+        console.log('Using onNavigate prop');
+        onNavigate('auth-signin');
+        return;
       }
       
       // Method 2: Use React Router navigate
-      navigate('/signin');
+      if (navigate) {
+        console.log('Using React Router navigate');
+        navigate('/signin');
+        return;
+      }
       
       // Method 3: Fallback to window.location
-      setTimeout(() => {
-        window.location.href = '/signin';
-      }, 100);
+      console.log('Using window.location fallback');
+      window.location.href = '/signin';
       
     } catch (error) {
       console.error('Navigation error:', error);
@@ -157,7 +156,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onGetStarted, onNavigate = () 
         <div className="px-4 sm:px-6 pb-6 sm:pb-8 relative z-10">
           <Button
             onClick={handleGetStarted}
-            className="w-full h-12 sm:h-14 bg-white text-pink-600 hover:scale-105 active:scale-95 text-base sm:text-lg font-semibold rounded-2xl shadow-2xl transition-all duration-300 cursor-pointer touch-manipulation"
+            className="w-full h-12 sm:h-14 bg-white text-pink-600 hover:scale-105 active:scale-95 text-base sm:text-lg font-semibold rounded-2xl shadow-2xl transition-all duration-300 cursor-pointer touch-manipulation select-none"
             type="button"
           >
             Get Started

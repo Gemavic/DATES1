@@ -55,22 +55,23 @@ export const Footer: React.FC<FooterProps> = ({
                   e.stopPropagation();
                   console.log('Footer tab clicked:', tab.id);
                   
-                  if (tab.id === 'mail') {
-                    onNavigate('mail');
-                  } else if (tab.id === 'newsfeed') {
-                    onNavigate('newsfeed');
-                  } else {
+                  // Ensure onNavigate is called properly
+                  if (typeof onNavigate === 'function') {
                     onNavigate(tab.id);
+                  } else {
+                    console.error('onNavigate is not a function:', onNavigate);
                   }
                 }}
                 className={cn(
                   "flex flex-col items-center py-2 px-1 sm:px-3 rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation min-w-0",
-                  "cursor-pointer select-none",
+                  "cursor-pointer select-none user-select-none",
                   isActive 
                     ? 'text-white bg-pink-500 shadow-lg' 
                     : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50'
                 )}
                 type="button"
+                role="button"
+                tabIndex={0}
               >
                 <Icon className={cn(
                   "w-5 h-5 sm:w-6 sm:h-6 mb-1 drop-shadow-sm flex-shrink-0",
@@ -89,19 +90,22 @@ export const Footer: React.FC<FooterProps> = ({
             <span>© 2025 Dates</span>
             <button 
               onClick={() => onNavigate('privacy')}
-              className="hover:text-pink-600 underline touch-manipulation"
+              className="hover:text-pink-600 underline touch-manipulation cursor-pointer"
+              type="button"
             >
               Privacy
             </button>
             <button 
               onClick={() => onNavigate('terms')}
-              className="hover:text-pink-600 underline touch-manipulation"
+              className="hover:text-pink-600 underline touch-manipulation cursor-pointer"
+              type="button"
             >
               Terms
             </button>
             <button 
               onClick={() => onNavigate('disclaimer')}
-              className="hover:text-pink-600 underline touch-manipulation"
+              className="hover:text-pink-600 underline touch-manipulation cursor-pointer"
+              type="button"
             >
               Disclaimer
             </button>

@@ -164,12 +164,14 @@ export const Menu: React.FC<MenuProps> = ({ onNavigate, currentScreen }) => {
                         onClick={() => handleNavigation(item.id)}
                         className={cn(
                           "w-full flex items-center space-x-3 p-3 sm:p-4 rounded-xl transition-all duration-200",
-                          "touch-manipulation active:scale-95 hover:scale-[1.02] cursor-pointer",
+                          "touch-manipulation active:scale-95 hover:scale-[1.02] cursor-pointer select-none user-select-none",
                           isActive 
                             ? 'bg-white/30 text-white shadow-lg' 
                             : 'text-white/80 hover:bg-white/20 hover:text-white'
                         )}
                         type="button"
+                        role="button"
+                        tabIndex={0}
                       >
                         <Icon className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
                         <div className="flex-1 text-left">
