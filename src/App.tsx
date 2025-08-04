@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ResponsiveLayout } from './components/ResponsiveLayout';
 import { Welcome } from './screens/Welcome/Welcome';
-import { SignIn } from './screens/Auth/SignIn';
+import { AuthSignIn } from './screens/Auth/AuthSignIn';
 import { AuthSignUp } from './screens/Auth/AuthSignUp';
 import { Discovery } from './screens/Discovery/Discovery';
 import { ModernDiscovery } from './screens/Discovery/ModernDiscovery';
@@ -68,16 +68,12 @@ function App() {
               window.location.href = `/${screen}`;
             }
           }} />} />
-          <Route path="/signin" element={<SignIn onNavigate={(screen) => {
+          <Route path="/signin" element={<AuthSignIn onNavigate={(screen) => {
             console.log('SignIn onNavigate called with:', screen);
             window.location.href = `/${screen}`;
           }} />} />
-          <Route path="/auth-signin" element={<SignIn onNavigate={(screen) => {
+          <Route path="/auth-signin" element={<AuthSignIn onNavigate={(screen) => {
             console.log('SignIn onNavigate called with:', screen);
-            window.location.href = `/${screen}`;
-          }} />} />
-          <Route path="/signup" element={<SignUp onNavigate={(screen) => {
-            console.log('SignUp onNavigate called with:', screen);
             window.location.href = `/${screen}`;
           }} />} />
           <Route path="/signup" element={<AuthSignUp onNavigate={(screen) => {
