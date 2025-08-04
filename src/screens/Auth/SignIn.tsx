@@ -3,7 +3,7 @@ import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Eye, EyeOff, Heart, Mail, Lock, Shield, AlertTriangle } from 'lucide-react';
-import { SecurityManager, TwoFactorAuth } from '@/lib/security';
+import { SecurityManager } from '@/lib/security';
 import { useAuth } from '@/hooks/useAuth';
 
 interface SignInProps {
@@ -12,8 +12,6 @@ interface SignInProps {
 
 export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showTwoFactor, setShowTwoFactor] = useState(false);
-  const [twoFactorCode, setTwoFactorCode] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSocialLoading, setIsSocialLoading] = useState(false);
@@ -22,9 +20,9 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
     password: ''
   });
 
-  const { signInWithGoogle, signInWithFacebook } = useAuth();
+  const { signIn, signInWithGoogle, signInWithFacebook } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors([]);
     setIsLoading(true);
@@ -43,21 +41,28 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
       return;
     }
 
-    // Simulate authentication
-    setTimeout(() => {
+    try {
+      const { error } = await signIn(formData.email, formData.password);
+      
+      if (error) {
+        let errorMessage = error.message;
+        if (error.message === 'Invalid login credentials') {
+          errorMessage = 'The email or password you entered is incorrect. Please check your credentials and try again.';
+        } else if (error.message === 'Email not confirmed') {
+          errorMessage = 'Please check your email and click the confirmation link before signing in.';
+        } else if (error.message === 'Too many requests') {
+          errorMessage = 'Too many sign-in attempts. Please wait a few minutes before trying again.';
+        }
+        
+        setErrors([errorMessage]);
+      } else {
+        // Navigate to discovery on successful sign in
+        onNavigate('discovery');
+      }
+    } catch (error) {
+      setErrors(['An unexpected error occurred. Please try again.']);
+    } finally {
       setIsLoading(false);
-      setShowTwoFactor(true);
-    }, 1000);
-  };
-
-  const handleTwoFactorSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const generatedCode = '123456'; // In real app, this would be sent via SMS/email
-    
-    if (TwoFactorAuth.verifyCode(twoFactorCode, generatedCode)) {
-      onNavigate('discovery');
-    } else {
-      setErrors(['Invalid verification code. Please try again.']);
     }
   };
 
@@ -88,65 +93,6 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
       setIsSocialLoading(false);
     }
   };
-  if (showTwoFactor) {
-    return (
-      <Layout
-        title="Two-Factor Authentication"
-        onBack={() => setShowTwoFactor(false)}
-        showClose={true}
-        onClose={() => onNavigate('welcome')}
-      >
-        <div className="px-6 py-8">
-          <div className="text-center mb-8">
-            <div className="w-20 h-20 mx-auto mb-4 bg-blue-500 rounded-full flex items-center justify-center">
-              <Shield className="w-10 h-10 text-white" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Verify Your Identity</h2>
-            <p className="text-gray-600">Enter the 6-digit code sent to your device</p>
-          </div>
-
-          <form onSubmit={handleTwoFactorSubmit} className="space-y-6">
-            <div>
-              <Input
-                type="text"
-                value={twoFactorCode}
-                onChange={(e) => setTwoFactorCode(e.target.value)}
-                placeholder="Enter 6-digit code"
-                className="text-center text-2xl tracking-widest"
-                maxLength={6}
-                required
-              />
-            </div>
-
-            {errors.length > 0 && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                {errors.map((error, index) => (
-                  <div key={index} className="flex items-center text-red-600 text-sm">
-                    <AlertTriangle className="w-4 h-4 mr-2" />
-                    {error}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <Button
-              type="submit"
-              className="w-full h-12 bg-blue-500 text-white font-semibold rounded-xl hover:bg-blue-600"
-              disabled={twoFactorCode.length !== 6}
-            >
-              Verify & Sign In
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <button className="text-blue-500 hover:underline text-sm">
-              Didn't receive code? Resend
-            </button>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
 
   return (
     <Layout
