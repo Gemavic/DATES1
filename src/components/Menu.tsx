@@ -23,6 +23,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { MessageChatBox } from './MessageChatBox';
+import { cn } from '@/lib/utils';
 
 interface MenuProps {
   onNavigate: (screen: any) => void;
@@ -103,42 +104,52 @@ export const Menu: React.FC<MenuProps> = ({ onNavigate, currentScreen }) => {
       {/* Menu Button */}
       <button
         onClick={toggleMenu}
-        className="fixed top-6 left-4 z-50 p-3 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 border-2 border-white/20"
+        className={cn(
+          "fixed top-6 left-4 z-50 p-3 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full shadow-2xl",
+          "hover:scale-110 active:scale-95 transition-all duration-300 border-2 border-white/20",
+          "touch-manipulation safe-area-inset-top"
+        )}
       >
         {isOpen ? (
-          <X className="w-6 h-6 text-white" />
+          <X className="w-6 h-6 text-white flex-shrink-0" />
         ) : (
-          <MenuIcon className="w-6 h-6 text-white" />
+          <MenuIcon className="w-6 h-6 text-white flex-shrink-0" />
         )}
       </button>
 
       {/* Message Chat Box */}
-      <div className="fixed top-6 right-20 z-50">
+      <div className="fixed top-6 right-4 z-50 safe-area-inset-top">
         <MessageChatBox />
       </div>
       {/* Menu Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" onClick={toggleMenu} />
+        <div 
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm touch-manipulation" 
+          onClick={toggleMenu}
+          onTouchStart={toggleMenu}
+        />
       )}
 
       {/* Menu Panel */}
-      <div className={`fixed top-0 left-0 h-full w-80 bg-gradient-to-br from-pink-600 via-rose-500 to-purple-600 shadow-2xl transform transition-transform duration-300 z-50 ${
+      <div className={cn(
+        "fixed top-0 left-0 h-full w-80 sm:w-96 bg-gradient-to-br from-pink-600 via-rose-500 to-purple-600 shadow-2xl",
+        "transform transition-transform duration-300 z-50 safe-area-inset-top safe-area-inset-bottom",
         isOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
-        <div className="p-6 h-full overflow-y-auto">
+      )}>
+        <div className="p-4 sm:p-6 h-full overflow-y-auto">
           {/* Menu Header */}
-          <div className="mb-8 pt-16">
+          <div className="mb-6 sm:mb-8 pt-16 sm:pt-20">
             <div className="flex items-center space-x-3 mb-2">
-              <h2 className="text-2xl font-bold text-white">Dates Menu</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Dates Menu</h2>
             </div>
-            <p className="text-white/80 text-sm">Navigate to any section</p>
+            <p className="text-white/80 text-sm sm:text-base">Navigate to any section</p>
           </div>
 
           {/* Menu Sections */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {menuSections.map((section, sectionIndex) => (
               <div key={sectionIndex}>
-                <h3 className="text-white/90 font-semibold text-sm uppercase tracking-wider mb-3 px-2">
+                <h3 className="text-white/90 font-semibold text-xs sm:text-sm uppercase tracking-wider mb-3 px-2">
                   {section.title}
                 </h3>
                 <div className="space-y-1">
@@ -150,16 +161,18 @@ export const Menu: React.FC<MenuProps> = ({ onNavigate, currentScreen }) => {
                       <button
                         key={item.id}
                         onClick={() => handleNavigation(item.id)}
-                        className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-200 ${
+                        className={cn(
+                          "w-full flex items-center space-x-3 p-3 sm:p-4 rounded-xl transition-all duration-200",
+                          "touch-manipulation active:scale-95 hover:scale-[1.02]",
                           isActive 
                             ? 'bg-white/30 text-white shadow-lg' 
                             : 'text-white/80 hover:bg-white/20 hover:text-white'
-                        }`}
+                        )}
                       >
-                        <Icon className="w-5 h-5 flex-shrink-0" />
+                        <Icon className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
                         <div className="flex-1 text-left">
-                          <div className="font-medium">{item.label}</div>
-                          <div className="text-xs opacity-75">{item.description}</div>
+                          <div className="font-medium text-sm sm:text-base truncate">{item.label}</div>
+                          <div className="text-xs sm:text-sm opacity-75 truncate">{item.description}</div>
                         </div>
                       </button>
                     );
@@ -170,7 +183,7 @@ export const Menu: React.FC<MenuProps> = ({ onNavigate, currentScreen }) => {
           </div>
 
           {/* Menu Footer */}
-          <div className="mt-8 pt-6 border-t border-white/20">
+          <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-white/20">
             <div className="text-center text-white/60 text-xs">
               <p>© 2025 Dates</p>
               <p className="mt-1">Made with ❤️ for finding love</p>
