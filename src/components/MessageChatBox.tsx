@@ -3,6 +3,7 @@ import { MessageCircle, X, Send, Smile, Paperclip, Image, Video, Phone, Users, C
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 import { creditManager, formatCredits } from '@/lib/creditSystem';
 import { sendMessageNotification } from '@/lib/emailNotifications';
 import { useAuth } from '@/hooks/useAuth';
