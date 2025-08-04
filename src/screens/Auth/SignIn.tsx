@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
+import { Menu } from '@/components/Menu';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Eye, EyeOff, Heart, Mail, Lock, Shield, AlertTriangle } from 'lucide-react';
@@ -66,12 +67,14 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
   };
 
   return (
-    <Layout>
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center mb-4">
+    <>
+      <Menu onNavigate={onNavigate} currentScreen="signin" />
+      <Layout
+        title="Sign In"
+        onBack={() => onNavigate?.('welcome') || (window.location.href = '/')}
+        showClose={true}
+        onClose={() => onNavigate?.('welcome') || (window.location.href = '/')}
+      >
               <Heart className="w-8 h-8 text-white mr-2" />
               <h1 className="text-3xl font-bold text-white">Welcome Back</h1>
             </div>
@@ -165,6 +168,7 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
           </div>
         </div>
       </div>
-    </Layout>
+      </Layout>
+    </>
   );
 };

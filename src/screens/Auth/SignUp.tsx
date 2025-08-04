@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
+import { Menu } from '@/components/Menu';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Eye, EyeOff, Heart, Mail, Lock, User, Shield, AlertTriangle, CheckCircle } from 'lucide-react';
@@ -139,12 +140,14 @@ export const SignUp: React.FC<SignUpProps> = ({ onNavigate = () => {} }) => {
   };
 
   return (
-    <Layout
-      title="Sign Up"
-      onBack={() => onNavigate?.('welcome') || (window.location.href = '/')}
-      showClose={true}
-      onClose={() => onNavigate?.('welcome') || (window.location.href = '/')}
-    >
+    <>
+      <Menu onNavigate={onNavigate} currentScreen="signup" />
+      <Layout
+        title="Sign Up"
+        onBack={() => onNavigate?.('welcome') || (window.location.href = '/')}
+        showClose={true}
+        onClose={() => onNavigate?.('welcome') || (window.location.href = '/')}
+      >
       <div className="px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
@@ -309,6 +312,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onNavigate = () => {} }) => {
         </div>
 
       </div>
-    </Layout>
+      </Layout>
+    </>
   );
 };
