@@ -105,6 +105,8 @@ export const SignIn: React.FC<SignInProps> = ({ onNavigate }) => {
           </div>
         </div>
       </div>
+    )
+    }
     </Layout>
   );
 };
