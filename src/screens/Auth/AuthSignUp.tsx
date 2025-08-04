@@ -7,10 +7,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
 
 interface AuthSignUpProps {
-  onNavigate: (screen: string) => void;
+  onNavigate?: (screen: string) => void;
 }
 
-export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
+export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate = () => {} }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -124,6 +124,7 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
         
         // Navigate directly to discovery after successful signup
         onNavigate('discovery');
+        window.location.href = '/app';
       }
     } catch (error) {
       toast({
@@ -139,9 +140,9 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
   return (
     <Layout
       title="Sign Up"
-      onBack={() => onNavigate('welcome')}
+      onBack={() => onNavigate?.('welcome') || (window.location.href = '/')}
       showClose={true}
-      onClose={() => onNavigate('welcome')}
+      onClose={() => onNavigate?.('welcome') || (window.location.href = '/')}
     >
       <div className="px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
@@ -280,14 +281,14 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
           <p className="text-white/70 text-xs sm:text-sm px-2">
             By signing up, you agree to our{' '}
             <button 
-              onClick={() => onNavigate('terms')}
+              onClick={() => onNavigate?.('terms')}
               className="text-white underline"
             >
               Terms of Service
             </button>
             {' '}and{' '}
             <button 
-              onClick={() => onNavigate('privacy')}
+              onClick={() => onNavigate?.('privacy')}
               className="text-white underline"
             >
               Privacy Policy
@@ -299,7 +300,7 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate }) => {
         <div className="mt-4 sm:mt-6 text-center">
           <span className="text-white/80">Already have an account? </span>
           <button
-            onClick={() => onNavigate('auth-signin')}
+            onClick={() => onNavigate?.('auth-signin') || (window.location.href = '/auth-signin')}
             className="text-white font-semibold hover:underline"
           >
             Sign In

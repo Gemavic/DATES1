@@ -7,10 +7,10 @@ import { useStripeCheckout } from '@/hooks/useStripeCheckout';
 import { useToast } from '@/components/ui/toast';
 
 interface CheckoutPageProps {
-  onNavigate: (screen: string) => void;
+  onNavigate?: (screen: string) => void;
 }
 
-export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
+export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate = () => {} }) => {
   const { createCheckoutSession, loading, error } = useStripeCheckout();
   const { toast } = useToast();
 
@@ -34,7 +34,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
   return (
     <Layout
       title="Checkout"
-      onBack={() => onNavigate('discovery')}
+      onBack={() => onNavigate?.('discovery') || (window.location.href = '/app')}
       showClose={false}
     >
       <div className="px-4 py-6">

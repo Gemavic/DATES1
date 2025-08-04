@@ -69,6 +69,7 @@ module.exports = {
         "fade-in-up": "fadeInUp 0.6s ease-out",
         "slide-in-left": "slideInLeft 0.5s ease-out",
         "slide-in-right": "slideInRight 0.5s ease-out",
+        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
       keyframes: {
         fadeIn: {
@@ -130,6 +131,13 @@ module.exports = {
         '8xl': '88rem',
         '9xl': '96rem',
       },
+      minHeight: {
+        'screen-safe': 'calc(100vh - env(safe-area-inset-bottom))',
+      },
+      spacing: {
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-top': 'env(safe-area-inset-top)',
+      },
     },
     container: { center: true, padding: "2rem", screens: { "2xl": "1400px" } },
   },
@@ -153,6 +161,12 @@ module.exports = {
           display: '-webkit-box',
           '-webkit-box-orient': 'vertical',
           '-webkit-line-clamp': '3',
+        },
+        '.touch-manipulation': {
+          'touch-action': 'manipulation',
+        },
+        '.tap-highlight-transparent': {
+          '-webkit-tap-highlight-color': 'transparent',
         },
       }
       addUtilities(newUtilities)

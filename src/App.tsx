@@ -50,8 +50,11 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Welcome />} />
+          <Route path="/welcome" element={<Welcome onNavigate={(screen) => window.location.href = `/${screen}`} />} />
           <Route path="/signin" element={<AuthSignIn />} />
+          <Route path="/auth-signin" element={<AuthSignIn onNavigate={(screen) => window.location.href = `/${screen}`} />} />
           <Route path="/signup" element={<AuthSignUp />} />
+          <Route path="/auth-signup" element={<AuthSignUp onNavigate={(screen) => window.location.href = `/${screen}`} />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/cancel" element={<CancelPage />} />

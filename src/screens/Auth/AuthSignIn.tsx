@@ -8,10 +8,10 @@ import { useToast } from '@/components/ui/toast';
 import { emailNotificationManager } from '@/lib/emailNotifications';
 
 interface AuthSignInProps {
-  onNavigate: (screen: string) => void;
+  onNavigate?: (screen: string) => void;
 }
 
-export const AuthSignIn: React.FC<AuthSignInProps> = ({ onNavigate }) => {
+export const AuthSignIn: React.FC<AuthSignInProps> = ({ onNavigate = () => {} }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -80,6 +80,7 @@ export const AuthSignIn: React.FC<AuthSignInProps> = ({ onNavigate }) => {
         }, 1000);
         
         onNavigate('discovery');
+        window.location.href = '/app';
       }
     } catch (error) {
       toast({
@@ -95,9 +96,9 @@ export const AuthSignIn: React.FC<AuthSignInProps> = ({ onNavigate }) => {
   return (
     <Layout
       title="Sign In"
-      onBack={() => onNavigate('welcome')}
+      onBack={() => onNavigate?.('welcome') || (window.location.href = '/')}
       showClose={true}
-      onClose={() => onNavigate('welcome')}
+      onClose={() => onNavigate?.('welcome') || (window.location.href = '/')}
     >
       <div className="px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
@@ -177,7 +178,7 @@ export const AuthSignIn: React.FC<AuthSignInProps> = ({ onNavigate }) => {
           <div className="text-center">
             <span className="text-white/80">Don't have an account? </span>
             <button
-              onClick={() => onNavigate('auth-signup')}
+              onClick={() => onNavigate?.('auth-signup') || (window.location.href = '/auth-signup')}
               className="text-white font-semibold hover:underline"
             >
               Sign Up

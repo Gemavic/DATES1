@@ -3,11 +3,19 @@ import { Button } from '@/components/ui/button';
 import { Heart, Users, MessageCircle, Sparkles } from 'lucide-react';
 
 interface WelcomeProps {
-  onGetStarted: () => void;
+  onGetStarted?: () => void;
   onNavigate?: (screen: string) => void;
 }
 
-export const Welcome: React.FC<WelcomeProps> = ({ onGetStarted, onNavigate }) => {
+export const Welcome: React.FC<WelcomeProps> = ({ onGetStarted, onNavigate = () => {} }) => {
+  const handleGetStarted = () => {
+    if (onGetStarted) {
+      onGetStarted();
+    } else {
+      onNavigate('auth-signin');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-500 via-rose-500 to-purple-600 flex flex-col relative overflow-hidden">
       {/* Animated Background */}
@@ -120,7 +128,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onGetStarted, onNavigate }) =>
         {/* CTA */}
         <div className="px-4 sm:px-6 pb-6 sm:pb-8 relative z-10">
           <Button
-            onClick={onGetStarted}
+            onClick={handleGetStarted}
             className="w-full h-12 sm:h-14 bg-white text-pink-600 hover:scale-105 text-base sm:text-lg font-semibold rounded-2xl shadow-2xl transition-all duration-300"
           >
             Get Started
@@ -128,7 +136,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onGetStarted, onNavigate }) =>
           <p className="text-center text-white/70 text-xs sm:text-sm mt-3 sm:mt-4 drop-shadow-sm px-2">
             By continuing, you agree to our{' '}
             <button 
-              onClick={() => onNavigate('terms')}
+              onClick={() => onNavigate?.('terms')}
               className="underline hover:text-white"
             >
               Terms of Service

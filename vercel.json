@@ -15,6 +15,23 @@
       "dest": "/index.html"
     }
   ],
+  "redirects": [
+    {
+      "source": "/old-blog/:slug",
+      "destination": "/blog/:slug",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/about",
+      "destination": "/about-us"
+    },
+    {
+      "source": "/api/user",
+      "destination": "/api/user.js"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

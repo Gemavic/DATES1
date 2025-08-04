@@ -344,7 +344,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
               />
               <button
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                className="absolute left-2 sm:left-3 top-2 sm:top-3 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
+                className="absolute left-2 sm:left-3 top-2 sm:top-3 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100 touch-manipulation"
                 title="Add emoji"
               >
                 <Smile className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -375,14 +375,14 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
       <div className="flex justify-center items-center gap-2 sm:gap-3 p-4 sm:p-6 bg-white">
         <button
           onClick={() => onPass(profile.id)}
-          className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-500 hover:bg-gray-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
+          className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-500 hover:bg-gray-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group touch-manipulation active:scale-95"
         >
           <X className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
         </button>
         
         <button
           onClick={handleBlink}
-          className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
+          className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group touch-manipulation active:scale-95"
           title="Send a Blink"
         >
           <span className="text-white text-base sm:text-lg drop-shadow-sm group-hover:scale-110 transition-transform">👁️</span>
@@ -390,14 +390,14 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
         
         <button
           onClick={() => setShowMessageBox(!showMessageBox)}
-          className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
+          className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group touch-manipulation active:scale-95"
         >
           <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
         </button>
         
         <button
           onClick={() => onSuperLike(profile.id)}
-          className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group"
+          className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-2xl group touch-manipulation active:scale-95"
         >
           <Star className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-sm group-hover:scale-110 transition-transform" />
         </button>

@@ -2,7 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle, ArrowRight, Home, CreditCard } from 'lucide-react';
 
-export const SuccessPage: React.FC = () => {
+interface SuccessPageProps {
+  onNavigate?: (screen: string) => void;
+}
+
+export const SuccessPage: React.FC<SuccessPageProps> = ({ onNavigate = () => {} }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
@@ -29,28 +33,28 @@ export const SuccessPage: React.FC = () => {
         </div>
 
         <div className="space-y-3">
-          <Link
-            to="/app"
+          <button
+            onClick={() => onNavigate?.('discovery') || (window.location.href = '/app')}
             className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 flex items-center justify-center group"
           >
             Start Exploring
             <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-          </Link>
+          </button>
           
-          <Link
-            to="/credits"
+          <button
+            onClick={() => onNavigate?.('credits') || (window.location.href = '/credits')}
             className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors duration-200 flex items-center justify-center"
           >
             View Credit Balance
-          </Link>
+          </button>
           
-          <Link
-            to="/"
+          <button
+            onClick={() => window.location.href = '/'}
             className="w-full text-gray-500 py-2 px-6 rounded-lg hover:text-gray-700 transition-colors duration-200 flex items-center justify-center"
           >
             <Home className="w-4 h-4 mr-2" />
             Back to Home
-          </Link>
+          </button>
         </div>
 
         <div className="mt-8 pt-6 border-t border-gray-100">

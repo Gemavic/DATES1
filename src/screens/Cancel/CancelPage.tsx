@@ -4,14 +4,14 @@ import { Button } from '@/components/ui/button';
 import { XCircle, ArrowLeft, CreditCard } from 'lucide-react';
 
 interface CancelPageProps {
-  onNavigate: (screen: string) => void;
+  onNavigate?: (screen: string) => void;
 }
 
-export const CancelPage: React.FC<CancelPageProps> = ({ onNavigate }) => {
+export const CancelPage: React.FC<CancelPageProps> = ({ onNavigate = () => {} }) => {
   return (
     <Layout
       title="Payment Cancelled"
-      onBack={() => onNavigate('checkout')}
+      onBack={() => onNavigate?.('checkout') || (window.location.href = '/checkout')}
       showClose={false}
     >
       <div className="px-4 py-6">
@@ -46,7 +46,7 @@ export const CancelPage: React.FC<CancelPageProps> = ({ onNavigate }) => {
         {/* Action Buttons */}
         <div className="space-y-4">
           <Button
-            onClick={() => onNavigate('checkout')}
+            onClick={() => onNavigate?.('checkout') || (window.location.href = '/checkout')}
             className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold hover:scale-105 transition-all duration-300"
           >
             <CreditCard className="w-4 h-4 mr-2" />
@@ -54,7 +54,7 @@ export const CancelPage: React.FC<CancelPageProps> = ({ onNavigate }) => {
           </Button>
           
           <Button
-            onClick={() => onNavigate('discovery')}
+            onClick={() => onNavigate?.('discovery') || (window.location.href = '/app')}
             className="w-full bg-white/20 text-white hover:bg-white/30 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
