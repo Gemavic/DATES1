@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Your Supabase URL and anon key
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project-url.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://dates.care.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpka3hvbnVmaXVhZ2tyaHBybmJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzMjQ0NzQsImV4cCI6MjA2OTkwMDQ3NH0.auHwnh0siI7u95WN-4Fh0aESjge2S6Yks7MNSnivo-k';
 
 // Custom fetch implementation with error handling
 const customFetch = async (url: string, options?: RequestInit) => {
