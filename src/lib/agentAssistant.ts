@@ -160,6 +160,170 @@ export const createSupportTicket = (
   return agentAssistant.createSupportTicket(userId, userEmail, userName, category, subject, description);
 };
 
+interface CreditAccessRequest {
+  staffId: string;
+  targetUserId: string;
+  reason: string;
+  timestamp: Date;
+  status: 'pending' | 'approved' | 'denied';
+  approvedBy?: string;
+}
+
+interface ChatKobo {
+  id: string;
+  value: number;
+  purchaseDate: Date;
+  used: boolean;
+}
+
+interface CreditTransaction {
+  type: 'earn' | 'spend';
+  amount: number;
+  description: string;
+  timestamp: Date;
+  category: 'premium' | 'gift' | 'bonus';
+}
+
+interface MailThreadData {
+  firstMailSent: boolean;
+  firstMailRead: boolean;
+  firstPhotoSent: boolean;
+  firstPhotoViewed: boolean;
+}
+
+interface UserCreditData {
+  complimentaryCredits: number;
+  purchasedCredits: number;
+  kobos: ChatKobo[];
+  transactions: CreditTransaction[];
+  mailThreads: Map<string, MailThreadData>;
+  dailyBonusLastClaimed?: Date;
+}
+
+interface PricingStructure {
+  chat: {
+    liveChat: number;
+    sendingPhotos: number;
+    audioMessages: number;
+    videoMessages: number;
+    stickers: number;
+  };
+  calls: {
+    videoCall: number;
+    audioCall: number;
+  };
+  mail: {
+    firstLetterCost: number;
+    followingLetterCost: number;
+    followingLetterReadCost: number;
+    followingPhotoCost: number;
+  };
+  media: {
+    photoViewing: number;
+    videoViewing: number;
+    profileVideos: number;
+  };
+  gifts: {
+    virtualGifts: { min: number; max: number };
+    presents: { min: number; max: number };
+  };
+  other: {
+    blink: number;
+    exclusivePost: number;
+  };
+}
+
+interface CreditPackage {
+  id: string;
+  name: string;
+  credits: number;
+  price: number;
+  originalPrice?: number;
+  discount?: number;
+  bonus?: number;
+  popular?: boolean;
+  savings?: string;
+  type: 'credits' | 'kobos' | 'combo';
+  features: string[];
+}
+
+interface GiftItem {
+  id: string;
+  name: string;
+  emoji: string;
+  price: number | string;
+  category: 'romantic' | 'luxury' | 'fun' | 'casual' | 'seasonal';
+  description: string;
+  popularity: number;
+}
+
+class ModernCreditManager {
+  private users: Map<string, UserCreditData> = new Map();
+  private staffMembers: Set<string> = new Set(['admin', 'support', 'moderator']);
+  private creditManagers: Set<string> = new Set(['admin', 'credit_manager']);
+  private creditAccessRequests: Map<string, CreditAccessRequest> = new Map();
+  
+  private pricing: PricingStructure = {
+    chat: {
+      liveChat: 2,
+      sendingPhotos: 10,
+      audioMessages: 30,
+      videoMessages: 50,
+      stickers: 5
+    },
+    calls: {
+      videoCall: 60,
+      audioCall: 50
+    },
+    mail: {
+      firstLetterCost: 10,
+      followingLetterCost: 30,
+      followingLetterReadCost: 10,
+      followingPhotoCost: 10
+    },
+    media: {
+      photoViewing: 10,
+      videoViewing: 50,
+      profileVideos: 50
+    },
+    gifts: {
+      virtualGifts: { min: 1, max: 1000 },
+      presents: { min: 5, max: 500 }
+    },
+    other: {
+      blink: 1,
+      exclusivePost: 50
+    }
+  };
+
+  constructor() {
+    this.initializeNewUserBonuses();
+  }
+
+  private initializeNewUserBonuses(): void {
+    // This would be called when a new user registers
+  }
+
+  private initializeUser(userId: string): void {
+    if (!this.users.has(userId)) {
+      this.users.set(userId, {
+        complimentaryCredits: 10,
+        purchasedCredits: 0,
+        kobos: this.generateKobos(10),
+        transactions: [],
+        mailThreads: new Map()
+      });
+    }
+  }
+
+  private isStaffMember(userId: string): boolean {
+    return this.staffMembers.has(userId);
+  }
+
+  private isCreditManager(userId: string): boolean {
+    return this.creditManagers.has(userId);
+  }
+
   // Request credit access for staff
   requestCreditAccess(staffId: string, targetUserId: string, reason: string): string {
     if (!this.isStaffMember(staffId)) {
