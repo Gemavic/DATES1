@@ -90,21 +90,21 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="flex justify-center space-x-3 text-xs text-gray-500">
             <span>© 2025 Dates</span>
             <button 
-              onClick={() => window.open('/privacy', '_blank')}
+              onClick={() => onNavigate('privacy')}
               className="hover:text-pink-600 underline touch-manipulation cursor-pointer"
               type="button"
             >
               Privacy
             </button>
             <button 
-              onClick={() => window.open('/terms', '_blank')}
+              onClick={() => onNavigate('terms')}
               className="hover:text-pink-600 underline touch-manipulation cursor-pointer"
               type="button"
             >
               Terms
             </button>
             <button 
-              onClick={() => window.open('/disclaimer', '_blank')}
+              onClick={() => onNavigate('disclaimer')}
               className="hover:text-pink-600 underline touch-manipulation cursor-pointer"
               type="button"
             >

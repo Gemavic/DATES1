@@ -215,6 +215,7 @@ export const ModernCredits: React.FC<ModernCreditsProps> = ({ onNavigate }) => {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
+                     console.log('Purchasing package:', pkg.id);
                       handlePurchase(pkg.id);
                     }}
                     disabled={isLoading}

@@ -60,11 +60,16 @@ export const PaymentGateway: React.FC<PaymentGatewayProps> = ({
       // Simulate payment processing
       setTimeout(() => {
         setIsProcessing(false);
+        console.log('Payment successful, calling onSuccess');
         onSuccess();
       }, 3000);
     } catch (error) {
       setIsProcessing(false);
-      alert('Payment processing failed. Please try again.');
+      const errorMessage = document.createElement('div');
+      errorMessage.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+      errorMessage.textContent = 'Payment processing failed. Please try again.';
+      document.body.appendChild(errorMessage);
+      setTimeout(() => document.body.removeChild(errorMessage), 3000);
     }
   };
 
@@ -75,10 +80,8 @@ export const PaymentGateway: React.FC<PaymentGatewayProps> = ({
       const cryptoAmount = calculateCryptoAmount(amount, selectedCrypto);
       const payment = cryptoPaymentManager.createPayment(
         'current-user',
-        'package-id',
+        amount,
         selectedCrypto,
-        cryptoAmount,
-        amount
       );
       
       setCryptoPayment(payment);
@@ -86,7 +89,11 @@ export const PaymentGateway: React.FC<PaymentGatewayProps> = ({
       setIsProcessing(false);
     } catch (error) {
       setIsProcessing(false);
-      alert('Failed to create crypto payment. Please try again.');
+      const errorMessage = document.createElement('div');
+      errorMessage.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+      errorMessage.textContent = 'Failed to create crypto payment. Please try again.';
+      document.body.appendChild(errorMessage);
+      setTimeout(() => document.body.removeChild(errorMessage), 3000);
     }
   };
 

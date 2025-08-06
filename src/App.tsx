@@ -28,6 +28,10 @@ import { CheckoutPage } from './screens/Checkout/CheckoutPage';
 import { SuccessPage } from './screens/Success/SuccessPage';
 import { CancelPage } from './screens/Cancel/CancelPage';
 import { Feedback } from './screens/Feedback/Feedback';
+import { Terms } from './screens/Legal/Terms';
+import { Privacy } from './screens/Legal/Privacy';
+import { Disclaimer } from './screens/Legal/Disclaimer';
+import { Dispute } from './screens/Legal/Dispute';
 import { useAuth } from './hooks/useAuth';
 
 // Main App Component with Navigation
@@ -129,16 +133,16 @@ const AppContent: React.FC = () => {
         navigate('/feedback');
         break;
       case 'terms':
-        window.open('/terms', '_blank');
+        navigate('/terms');
         break;
       case 'privacy':
-        window.open('/privacy', '_blank');
+        navigate('/privacy');
         break;
       case 'disclaimer':
-        window.open('/disclaimer', '_blank');
+        navigate('/disclaimer');
         break;
       case 'dispute':
-        window.open('/dispute', '_blank');
+        navigate('/dispute');
         break;
       default:
         console.log('Unknown screen:', screen);
