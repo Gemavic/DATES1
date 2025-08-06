@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ResponsiveLayout } from './components/ResponsiveLayout';
 import { Welcome } from './screens/Welcome/Welcome';
 import { AuthSignIn } from './screens/Auth/AuthSignIn';
@@ -33,8 +33,22 @@ import { useAuth } from './hooks/useAuth';
 // Main App Component with Navigation
 const AppContent: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, loading } = useAuth();
-  const [currentScreen, setCurrentScreen] = useState('discovery');
+  const [currentScreen, setCurrentScreen] = useState(() => {
+    const path = location.pathname;
+    if (path === '/app' || path === '/discovery') return 'discovery';
+    if (path === '/matches') return 'matches';
+    if (path === '/likes') return 'likes';
+    if (path === '/profile') return 'profile';
+    if (path === '/settings') return 'settings';
+    if (path === '/credits') return 'credits';
+    if (path === '/gifts') return 'gift-shop';
+    if (path === '/mail') return 'mail';
+    if (path === '/newsfeed') return 'newsfeed';
+    if (path === '/feedback') return 'feedback';
+    return 'discovery';
+  });
 
   const handleNavigation = (screen: string) => {
     console.log('Navigating to:', screen);
@@ -54,9 +68,12 @@ const AppContent: React.FC = () => {
         navigate('/signup');
         break;
       case 'discovery':
+      case 'search':
+      case 'people':
         navigate('/app');
         break;
       case 'matches':
+      case 'chat':
         navigate('/matches');
         break;
       case 'likes':
@@ -72,6 +89,7 @@ const AppContent: React.FC = () => {
         navigate('/credits');
         break;
       case 'gift-shop':
+      case 'gifts':
         navigate('/gifts');
         break;
       case 'mail':
@@ -110,11 +128,38 @@ const AppContent: React.FC = () => {
       case 'feedback':
         navigate('/feedback');
         break;
+      case 'terms':
+        window.open('/terms', '_blank');
+        break;
+      case 'privacy':
+        window.open('/privacy', '_blank');
+        break;
+      case 'disclaimer':
+        window.open('/disclaimer', '_blank');
+        break;
+      case 'dispute':
+        window.open('/dispute', '_blank');
+        break;
       default:
         console.log('Unknown screen:', screen);
         break;
     }
   };
+
+  // Update current screen when location changes
+  React.useEffect(() => {
+    const path = location.pathname;
+    if (path === '/app' || path === '/discovery') setCurrentScreen('discovery');
+    else if (path === '/matches') setCurrentScreen('matches');
+    else if (path === '/likes') setCurrentScreen('likes');
+    else if (path === '/profile') setCurrentScreen('profile');
+    else if (path === '/settings') setCurrentScreen('settings');
+    else if (path === '/credits') setCurrentScreen('credits');
+    else if (path === '/gifts') setCurrentScreen('gift-shop');
+    else if (path === '/mail') setCurrentScreen('mail');
+    else if (path === '/newsfeed') setCurrentScreen('newsfeed');
+    else if (path === '/feedback') setCurrentScreen('feedback');
+  }, [location.pathname]);
 
   if (loading) {
     return (
@@ -154,7 +199,7 @@ const AppContent: React.FC = () => {
       <Route path="/discovery" element={
         user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
-            <Discovery onNavigate={handleNavigation} />
+            <ModernDiscovery onNavigate={handleNavigation} />
           </ResponsiveLayout>
         ) : (
           <Navigate to="/signin" replace />

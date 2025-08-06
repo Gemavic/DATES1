@@ -143,14 +143,18 @@ export const CoupleTherapy: React.FC<CoupleTherapyProps> = ({ onNavigate }) => {
                       </div>
                     </div>
                     <p className="text-white/80 text-sm mb-1">{therapist.specialization}</p>
-                    <p className="text-white/70 text-xs mb-2">{therapist.experience} experience</p>
+                    <p className="text-white/70 text-xs mb-2">{therapist.experience} experience • {therapist.rating}⭐</p>
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-white font-medium text-sm">{therapist.price}</span>
                       <span className="text-green-400 text-xs">{therapist.availability}</span>
                     </div>
                     <Button
-                      onClick={() => bookSession(therapist.name)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        bookSession(therapist.name);
+                      }}
                       className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm hover:scale-105 transition-all duration-300"
+                      type="button"
                     >
                       <Calendar className="w-4 h-4 mr-2" />
                       Book Session

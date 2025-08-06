@@ -68,10 +68,20 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
           <div className="w-80 bg-white/10 backdrop-blur-sm border-r border-white/20 flex-shrink-0">
             <div className="p-6">
               <div className="flex items-center space-x-3 mb-8">
-                <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center">
+                <button 
+                  onClick={() => onNavigate('discovery')}
+                  className="w-12 h-12 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center hover:scale-110 transition-transform cursor-pointer"
+                  type="button"
+                >
                   <span className="text-white font-bold text-xl">D</span>
-                </div>
-                <h1 className="text-2xl font-bold text-white">Dates</h1>
+                </button>
+                <button 
+                  onClick={() => onNavigate('discovery')}
+                  className="text-2xl font-bold text-white hover:text-white/80 transition-colors cursor-pointer"
+                  type="button"
+                >
+                  Dates
+                </button>
               </div>
               
               {/* Quick Stats */}
@@ -91,6 +101,34 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
                       <span className="text-white/80">Messages</span>
                       <span className="text-white font-medium">23</span>
                     </div>
+                  </div>
+                </div>
+                
+                {/* Quick Navigation */}
+                <div className="bg-white/10 rounded-2xl p-4">
+                  <h3 className="text-white font-semibold mb-3">Quick Access</h3>
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => onNavigate('matches')}
+                      className="w-full text-left text-white/80 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
+                      type="button"
+                    >
+                      💬 Messages
+                    </button>
+                    <button
+                      onClick={() => onNavigate('credits')}
+                      className="w-full text-left text-white/80 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
+                      type="button"
+                    >
+                      💳 Buy Credits
+                    </button>
+                    <button
+                      onClick={() => onNavigate('verification')}
+                      className="w-full text-left text-white/80 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
+                      type="button"
+                    >
+                      ✅ Get Verified
+                    </button>
                   </div>
                 </div>
               </div>
@@ -127,7 +165,12 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
                   { name: 'Jessica', image: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=100' },
                   { name: 'Alex', image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=100' }
                 ].map((user, i) => (
-                  <div key={i} className="flex items-center space-x-3">
+                  <button 
+                    key={i} 
+                    onClick={() => onNavigate('matches')}
+                    className="w-full flex items-center space-x-3 p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                    type="button"
+                  >
                     <div className="relative">
                       <img
                         src={user.image}
@@ -140,7 +183,7 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
                       <p className="text-white font-medium text-sm">{user.name}</p>
                       <p className="text-white/70 text-xs">Online now</p>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

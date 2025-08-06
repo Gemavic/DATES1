@@ -21,7 +21,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onGetStarted, onNavigate = () 
       // Method 1: Use onNavigate prop
       if (onNavigate) {
         console.log('Using onNavigate prop');
-        onNavigate('auth-signin');
+        onNavigate('signin');
         return;
       }
       

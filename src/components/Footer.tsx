@@ -15,13 +15,25 @@ export const Footer: React.FC<FooterProps> = ({
   className = ""
 }) => {
   const tabs = [
-    { id: 'discovery', icon: Search, label: 'Search' },
-    { id: 'chat', icon: MessageCircle, label: 'Chat', isChat: true },
-    { id: 'mail', icon: Mail, label: 'Mail' },
-    { id: 'newsfeed', icon: Newspaper, label: 'News' },
-    { id: 'feedback', icon: MessageSquare, label: 'Feedback' },
-    { id: 'profile', icon: Users, label: 'People' },
+    { id: 'discovery', icon: Search, label: 'Search', onClick: () => onNavigate('discovery') },
+    { id: 'chat', icon: MessageCircle, label: 'Chat', isChat: true, onClick: () => onNavigate('matches') },
+    { id: 'mail', icon: Mail, label: 'Mail', onClick: () => onNavigate('mail') },
+    { id: 'newsfeed', icon: Newspaper, label: 'News', onClick: () => onNavigate('newsfeed') },
+    { id: 'feedback', icon: MessageSquare, label: 'Feedback', onClick: () => onNavigate('feedback') },
+    { id: 'profile', icon: Users, label: 'People', onClick: () => onNavigate('profile') },
   ];
+
+  const handleTabClick = (tab: any) => {
+    console.log('Footer tab clicked:', tab.id);
+    
+    if (tab.isChat) {
+      onNavigate('matches');
+    } else if (tab.onClick) {
+      tab.onClick();
+    } else {
+      onNavigate(tab.id);
+    }
+  };
 
   return (
     <>
@@ -50,18 +62,7 @@ export const Footer: React.FC<FooterProps> = ({
             return (
               <button
                 key={tab.id}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  console.log('Footer tab clicked:', tab.id);
-                  
-                  // Ensure onNavigate is called properly
-                  if (typeof onNavigate === 'function') {
-                    onNavigate(tab.id);
-                  } else {
-                    console.error('onNavigate is not a function:', onNavigate);
-                  }
-                }}
+                onClick={() => handleTabClick(tab)}
                 className={cn(
                   "flex flex-col items-center py-2 px-1 sm:px-3 rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation min-w-0",
                   "cursor-pointer select-none user-select-none",
@@ -89,21 +90,21 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="flex justify-center space-x-3 text-xs text-gray-500">
             <span>© 2025 Dates</span>
             <button 
-              onClick={() => onNavigate('privacy')}
+              onClick={() => window.open('/privacy', '_blank')}
               className="hover:text-pink-600 underline touch-manipulation cursor-pointer"
               type="button"
             >
               Privacy
             </button>
             <button 
-              onClick={() => onNavigate('terms')}
+              onClick={() => window.open('/terms', '_blank')}
               className="hover:text-pink-600 underline touch-manipulation cursor-pointer"
               type="button"
             >
               Terms
             </button>
             <button 
-              onClick={() => onNavigate('disclaimer')}
+              onClick={() => window.open('/disclaimer', '_blank')}
               className="hover:text-pink-600 underline touch-manipulation cursor-pointer"
               type="button"
             >

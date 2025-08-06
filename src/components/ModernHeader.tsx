@@ -67,9 +67,13 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
 
           {title && (
             <div className="flex items-center space-x-2">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <button 
+                onClick={() => window.location.href = '/'}
+                className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center flex-shrink-0 hover:scale-110 transition-transform cursor-pointer"
+                type="button"
+              >
                 <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" />
-              </div>
+              </button>
               <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">{title}</h1>
             </div>
           )}
@@ -79,9 +83,13 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
         <div className="flex-1 flex justify-center">
           {!title && (
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <button 
+                onClick={() => window.location.href = '/'}
+                className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center flex-shrink-0 hover:scale-110 transition-transform cursor-pointer"
+                type="button"
+              >
                 <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" />
-              </div>
+              </button>
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Dates</h1>
             </div>
           )}

@@ -128,11 +128,14 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
       return botResponses.safety;
     }
     if (message.includes('contact') || message.includes('support') || message.includes('help') || message.includes('phone')) {
-      return botResponses.contact;
+      return {
+        message: 'Contact Dates.care:\n\n📧 Email Support:\n• General: info@dates.care\n• Support: supports@dates.care\n• Technical: tech@dates.care\n• Billing: billing@dates.care\n• Safety: safety@dates.care\n• Admin: admin@dates.care\n• Verification: verification@dates.care\n\n📞 Phone: +1 (424) 488-7950\n📍 Address: 5515 Eglinton Ave, Etobicoke, ON, Canada\n\n⏰ Available 24/7 for urgent matters!\n🎫 Create support ticket for detailed assistance\n📊 Average response time: 2-4 hours',
+        quickReplies: ['Email support', 'Call support', 'Create support ticket', 'Emergency help']
+      };
     }
     if (message.includes('human') || message.includes('agent') || message.includes('ticket')) {
       return {
-        message: 'I can connect you with our human support team! You can:\n\n🎫 Create a support ticket for detailed assistance\n📞 Call us at +1 (613) 861-5799\n📧 Email supports@dates.care\n\nOur agents specialize in:\n• Billing & Payments (Sarah)\n• Technical Issues (Mike & David)\n• Safety & Moderation (Emma)\n• Account & Verification (Mike)\n\nAverage response time: 2-4 hours\nUrgent matters: 15 minutes',
+        message: 'I can connect you with our human support team! You can:\n\n🎫 Create a support ticket for detailed assistance\n📞 Call us at +1 (424) 488-7950\n📧 Email supports@dates.care\n\nOur agents specialize in:\n• Billing & Payments (Sarah)\n• Technical Issues (Mike & David)\n• Safety & Moderation (Emma)\n• Account & Verification (Mike)\n\nAverage response time: 2-4 hours\nUrgent matters: 15 minutes',
         quickReplies: ['Create support ticket', 'Call support', 'Email support', 'View agent availability']
       };
     }
@@ -436,8 +439,9 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
             {/* Contact Options */}
             <div className="mt-3 flex justify-center space-x-4 text-xs">
               <button 
-                onClick={() => window.open('tel:+16138615799')}
+                onClick={() => window.open('tel:+14244887950')}
                 className="flex items-center space-x-1 text-gray-500 hover:text-blue-500"
+                type="button"
               >
                 <Phone className="w-3 h-3" />
                 <span>Call Support</span>
@@ -445,6 +449,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
               <button 
                 onClick={() => window.open('mailto:supports@dates.care')}
                 className="flex items-center space-x-1 text-gray-500 hover:text-blue-500"
+                type="button"
               >
                 <Mail className="w-3 h-3" />
                 <span>Email Support</span>
@@ -452,6 +457,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
               <button 
                 onClick={() => setShowTicketForm(true)}
                 className="flex items-center space-x-1 text-gray-500 hover:text-blue-500"
+                type="button"
               >
                 <HelpCircle className="w-3 h-3" />
                 <span>Create Ticket</span>

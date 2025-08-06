@@ -213,15 +213,21 @@ export const VideoChat: React.FC<VideoChatProps> = ({ onNavigate }) => {
                   </div>
                   
                   <Button
-                    onClick={() => startVideoCall(match.name)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                     className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 hover:scale-105 transition-all duration-300"
                     disabled={match.status !== 'online'}
+                    type="button"
+                    type="button"
                   >
                     <Video className="w-4 h-4 mr-2" />
                     Call
                   </Button>
                   <div className="flex space-x-2 ml-2">
-                    <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       onClick={() => {
                         const successMessage = document.createElement('div');
                         successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';

@@ -52,18 +52,33 @@ export const ModernCredits: React.FC<ModernCreditsProps> = ({ onNavigate }) => {
   const handlePurchase = async (packageId: string) => {
     const pkg = creditPackages.find(p => p.id === packageId);
     if (pkg) {
+      console.log('Purchasing package:', pkg.name);
       setSelectedPackage(pkg);
       setShowPayment(true);
     }
   };
 
   const handlePaymentSuccess = () => {
+    console.log('Payment successful');
     setShowPayment(false);
     setSelectedPackage(null);
-    alert('Payment successful! Credits added to your account.');
+    
+    // Add credits to user account
+    if (selectedPackage) {
+      const totalCredits = selectedPackage.credits + (selectedPackage.bonus || 0);
+      creditManager.addCredits('current-user', totalCredits, `Purchased ${selectedPackage.name}`, true);
+      
+      // Show success message
+      const successMessage = document.createElement('div');
+      successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+      successMessage.textContent = `✅ ${selectedPackage.name} purchased! ${totalCredits} credits added.`;
+      document.body.appendChild(successMessage);
+      setTimeout(() => document.body.removeChild(successMessage), 5000);
+    }
   };
 
   const handlePaymentCancel = () => {
+    console.log('Payment cancelled');
     setShowPayment(false);
     setSelectedPackage(null);
   };
@@ -197,7 +212,11 @@ export const ModernCredits: React.FC<ModernCreditsProps> = ({ onNavigate }) => {
                   </div>
 
                   <Button
-                    onClick={() => handlePurchase(pkg.id)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handlePurchase(pkg.id);
+                    }}
                     disabled={isLoading}
                     className={`w-full bg-gradient-to-r ${gradient} text-white font-semibold hover:scale-105 transition-all duration-300 cursor-pointer touch-manipulation active:scale-95`}
                     type="button"

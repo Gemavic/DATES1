@@ -104,6 +104,7 @@ export const ModernDiscovery: React.FC<ModernDiscoveryProps> = ({ onNavigate = (
   };
 
   const handlePass = (profileId: string) => {
+    console.log('Passed profile:', profileId);
     nextProfile();
   };
 
@@ -170,11 +171,13 @@ export const ModernDiscovery: React.FC<ModernDiscoveryProps> = ({ onNavigate = (
   };
 
   const handleReport = (profileId: string) => {
+    console.log('Reported profile:', profileId);
     alert(`Profile reported: ${currentProfile.name}`);
     nextProfile();
   };
 
   const handleBlock = (profileId: string) => {
+    console.log('Blocked profile:', profileId);
     alert(`Profile blocked: ${currentProfile.name}`);
     nextProfile();
   };

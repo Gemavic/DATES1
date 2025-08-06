@@ -160,7 +160,9 @@ export const Counselling: React.FC<CounsellingProps> = ({ onNavigate }) => {
                       <span className="text-green-400 text-xs">Next: {counsellor.nextAvailable}</span>
                     </div>
                     <Button
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         const successMessage = document.createElement('div');
                         successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
                         successMessage.textContent = `📅 Session booked with ${counsellor.name}!`;
@@ -168,6 +170,7 @@ export const Counselling: React.FC<CounsellingProps> = ({ onNavigate }) => {
                         setTimeout(() => document.body.removeChild(successMessage), 3000);
                       }}
                       className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white text-sm hover:scale-105 transition-all duration-300"
+                      type="button"
                     >
                       <Calendar className="w-4 h-4 mr-2" />
                       Book Session

@@ -1,208 +1,164 @@
-// Modern Credit System for Dates Platform
-export interface CreditTransaction {
-  type: 'spend' | 'earn';
-  amount: number;
+// AI Agent Assistant for Dates Platform Support
+export interface SupportTicket {
+  id: string;
+  userId: string;
+  userEmail: string;
+  userName: string;
+  category: 'general' | 'technical' | 'billing' | 'account' | 'safety' | 'urgent';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  subject: string;
   description: string;
+  status: 'open' | 'in_progress' | 'resolved' | 'closed';
+  createdAt: Date;
+  updatedAt: Date;
+  assignedTo?: string;
+  responses: SupportResponse[];
+}
+
+export interface SupportResponse {
+  id: string;
+  ticketId: string;
+  responderId: string;
+  responderName: string;
+  message: string;
   timestamp: Date;
-  category: 'chat' | 'mail' | 'media' | 'gifts' | 'premium';
+  isStaff: boolean;
 }
 
-export interface ChatGem {
+export interface AIResponse {
   id: string;
-  value: number; // 1 gem = 1 minute of chat
-  purchaseDate: Date;
-  used: boolean;
+  query: string;
+  response: string;
+  confidence: number;
+  category: string;
+  suggestedActions: string[];
+  timestamp: Date;
 }
 
-export interface ChatKobo {
-  id: string;
-  value: number; // 1 kobo = 1 minute of chat
-  purchaseDate: Date;
-  used: boolean;
-}
-
-export interface UserCreditData {
-  complimentaryCredits: number;
-  purchasedCredits: number;
-  kobos: ChatKobo[];
-  transactions: CreditTransaction[];
-  dailyBonusLastClaimed: Date | null;
-  mailThreads: Map<string, { 
-    firstMailSent: boolean; 
-    firstMailRead: boolean; 
-    firstPhotoSent: boolean;
-    firstPhotoViewed: boolean;
-  }>;
-  chatThreads: Map<string, {
-    firstChatFree: boolean;
-    totalMinutesUsed: number;
-  }>;
-}
-
-export interface CreditPackage {
-  id: string;
-  name: string;
-  credits: number;
-  price: number;
-  bonus?: number;
-  popular?: boolean;
-  savings?: string;
-  type: 'credits' | 'kobos' | 'combo';
-  features: string[];
-  originalPrice?: number;
-  discount?: number;
-}
-
-export interface GiftItem {
-  id: string;
-  name: string;
-  emoji: string;
-  price: number;
-  category: 'romantic' | 'luxury' | 'fun' | 'seasonal' | 'casual';
-  description: string;
-  popularity: number;
-}
-
-// Exact pricing structure from La-Date
-export interface PricingStructure {
-  chat: {
-    liveChat: { credits: number; kobos: number; perMinute: boolean };
-    stickers: number;
-    sendingPhotos: number;
-    openingAudios: number;
-    openingVideos: number;
-    exclusivePost: number;
-    videoCall: number;
-    audioCall: number;
-    videoMessage: number;
-    audioMessage: number;
-  };
-  mail: {
-    firstLetterCost: number;
-    followingLetterCost: number;
-    firstLetterFree: boolean; // First letter to read is free
-    followingLetterReadCost: number;
-    sendingPhotos: number; // Free of charge
-    firstPhotoFree: boolean;
-    followingPhotoCost: number;
-    openingVideos: number;
-  };
-  media: {
-    profileVideos: number;
-    photoViewing: number;
-  };
-  gifts: {
-    virtualGifts: string;
-    presents: string;
-  };
-}
-
-class ModernCreditManager {
-  private users: Map<string, UserCreditData> = new Map();
+class AIAgentAssistant {
+  private tickets: Map<string, SupportTicket> = new Map();
+  private knowledgeBase: Map<string, string> = new Map();
   
-  // Pricing structure for Dates platform
-  private pricing: PricingStructure = {
-    chat: {
-      liveChat: { credits: 2, kobos: 1, perMinute: true },
-      stickers: 5,
-      sendingPhotos: 10,
-      openingAudios: 10,
-      openingVideos: 50,
-      exclusivePost: 50,
-      videoCall: 60,
-      audioCall: 50,
-      videoMessage: 50,
-      audioMessage: 30
-    },
-    mail: {
-      firstLetterCost: 10, // First letter in thread costs 10 credits
-      followingLetterCost: 30, // Following letters cost 30 credits
-      firstLetterFree: true, // First letter to READ is free
-      followingLetterReadCost: 10, // Following letters to read cost 10 credits
-      sendingPhotos: 0, // Free of charge
-      firstPhotoFree: true, // First photo in thread is free
-      followingPhotoCost: 10, // Following photos cost 10 credits
-      openingVideos: 50 // 50 credits per video
-    },
-    media: {
-      profileVideos: 50,
-      photoViewing: 10
-    },
-    gifts: {
-      virtualGifts: 'See gift catalog',
-      presents: 'See presents catalog'
+  constructor() {
+    this.initializeKnowledgeBase();
+  }
+
+  private initializeKnowledgeBase(): void {
+    this.knowledgeBase.set('credits', 'Our credit system works like this:\n\n💳 Credits are used for premium features:\n• Live Chat: 2 credits/minute or 1 kobo/minute\n• Send Photos: 10 credits\n• Video Calls: 60 credits/minute\n• Audio Calls: 50 credits/minute\n• Mail: 10-30 credits\n• Virtual Gifts: varies\n\n💖 Kobos are priority chat credits (1 kobo = 1 minute)\n\n🎁 New users get 10 complimentary credits + 10 kobos!');
+    
+    this.knowledgeBase.set('payment', 'We accept multiple payment methods:\n\n💳 Credit/Debit Cards (Visa, MasterCard, Amex)\n₿ Cryptocurrencies:\n  • Bitcoin (3 confirmations)\n  • Ethereum (12 confirmations)\n  • USDT, USDC, BNB, ADA, SOL, MATIC, LTC, DOGE\n📱 Mobile Payments (Apple Pay, Google Pay, Samsung Pay)\n💙 PayPal: histogm@gmail.com\n\n🔒 All payments secured with 256-bit SSL encryption\n📤 Upload payment proof for crypto payments\n⏱️ Crypto processing: 2-30 minutes');
+    
+    this.knowledgeBase.set('contact', 'Contact Dates.care:\n\n📧 Email Support:\n• General: info@dates.care\n• Support: supports@dates.care\n• Technical: tech@dates.care\n• Billing: billing@dates.care\n• Safety: safety@dates.care\n• Admin: admin@dates.care\n• Verification: verification@dates.care\n\n📞 Phone: +1 (424) 488-7950\n📍 Address: 5515 Eglinton Ave, Etobicoke, ON, Canada\n\n⏰ Available 24/7 for urgent matters!\n🎫 Create support ticket for detailed assistance\n📊 Average response time: 2-4 hours');
+    
+    this.knowledgeBase.set('technical', 'I can help with technical issues:\n\n🔧 Common solutions:\n• Clear browser cache and cookies\n• Try a different browser (Chrome, Firefox, Safari)\n• Check internet connection\n• Update your browser to latest version\n• Disable browser extensions\n• Check camera/microphone permissions for calls\n\n📧 For complex issues: tech@dates.care\n📞 Urgent technical support: +1 (424) 488-7950');
+  }
+
+  // Create support ticket
+  createSupportTicket(
+    userId: string,
+    userEmail: string,
+    userName: string,
+    category: SupportTicket['category'],
+    subject: string,
+    description: string
+  ): string {
+    const ticketId = 'TK-' + Math.random().toString(36).substring(2).toUpperCase();
+    
+    const priority = this.determinePriority(category, description);
+    
+    const ticket: SupportTicket = {
+      id: ticketId,
+      userId,
+      userEmail,
+      userName,
+      category,
+      priority,
+      subject,
+      description,
+      status: 'open',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      responses: []
+    };
+
+    this.tickets.set(ticketId, ticket);
+    
+    console.log(`Support ticket created: ${ticketId}`);
+    return ticketId;
+  }
+
+  // Determine ticket priority
+  private determinePriority(category: string, description: string): SupportTicket['priority'] {
+    if (category === 'urgent') return 'urgent';
+    if (category === 'billing' || category === 'safety') return 'high';
+    if (category === 'technical') return 'medium';
+    return 'low';
+  }
+
+  // Get AI response
+  getAIResponse(query: string): AIResponse {
+    const queryLower = query.toLowerCase();
+    let response = '';
+    let confidence = 0;
+    let category = 'general';
+    let suggestedActions: string[] = [];
+    
+    if (queryLower.includes('credit') || queryLower.includes('kobo')) {
+      response = this.knowledgeBase.get('credits') || '';
+      confidence = 0.9;
+      category = 'credits';
+      suggestedActions = ['Buy more credits', 'View pricing', 'Contact billing'];
+    } else if (queryLower.includes('pay') || queryLower.includes('billing')) {
+      response = this.knowledgeBase.get('payment') || '';
+      confidence = 0.9;
+      category = 'payment';
+      suggestedActions = ['Payment methods', 'Crypto wallets', 'Contact billing'];
+    } else if (queryLower.includes('contact') || queryLower.includes('support')) {
+      response = this.knowledgeBase.get('contact') || '';
+      confidence = 0.9;
+      category = 'contact';
+      suggestedActions = ['Call support', 'Email support', 'Create ticket'];
+    } else if (queryLower.includes('technical') || queryLower.includes('bug')) {
+      response = this.knowledgeBase.get('technical') || '';
+      confidence = 0.9;
+      category = 'technical';
+      suggestedActions = ['Clear cache', 'Try different browser', 'Contact tech support'];
+    } else {
+      response = 'I can help you with questions about credits, payments, technical issues, and general support. What would you like to know?';
+      confidence = 0.5;
+      suggestedActions = ['Credits & Pricing', 'Payment Methods', 'Technical Support', 'Contact Support'];
     }
-  };
-
-  // Initialize user with welcome bonus
-  initializeUser(userId: string): void {
-    if (!this.users.has(userId)) {
-      this.users.set(userId, {
-        complimentaryCredits: 10, // Welcome bonus - 10 complimentary credits
-        purchasedCredits: 0,
-        kobos: this.generateKobos(10), // Welcome bonus - 10 kobos
-        transactions: [],
-        dailyBonusLastClaimed: null,
-        mailThreads: new Map(),
-        chatThreads: new Map()
-      });
-      
-      this.addTransaction(userId, {
-        type: 'earn',
-        amount: 10,
-        description: 'New User Bonus - 10 Complimentary Credits',
-        timestamp: new Date(),
-        category: 'premium'
-      });
-      
-      this.addTransaction(userId, {
-        type: 'earn',
-        amount: 10,
-        description: 'New User Bonus - 10 Kobos for Chat',
-        timestamp: new Date(),
-        category: 'premium'
-      });
-      
-      console.log(`Initialized user ${userId} with welcome bonus`);
-    }
+    
+    return {
+      id: Math.random().toString(36).substring(2),
+      query,
+      response,
+      confidence,
+      category,
+      suggestedActions,
+      timestamp: new Date()
+    };
   }
+}
 
-  // Staff member check
-  isStaffMember(userId: string): boolean {
-    const staffEmails = [
-      'admin@dates.care',
-      'support@dates.care',
-      'supports@dates.care',
-      'info@dates.care',
-      'tech@dates.care',
-      'help@dates.care',
-      'moderator@dates.care',
-      'staff@dates.care',
-      'manager@dates.care',
-      'creditmanager@dates.care'
-    ];
-    return staffEmails.includes(userId.toLowerCase());
-  }
+// Create singleton instance
+export const agentAssistant = new AIAgentAssistant();
 
-  // Credit Manager check
-  isCreditManager(userId: string): boolean {
-    const creditManagerEmails = [
-      'admin@dates.care',
-      'creditmanager@dates.care',
-      'manager@dates.care'
-    ];
-    return creditManagerEmails.includes(userId.toLowerCase());
-  }
+// Export utility functions
+export const getAIResponse = (query: string): AIResponse => {
+  return agentAssistant.getAIResponse(query);
+};
 
-  // Staff credit access requests
-  private creditAccessRequests: Map<string, {
-    staffId: string;
-    targetUserId: string;
-    reason: string;
-    timestamp: Date;
-    status: 'pending' | 'approved' | 'denied';
-    approvedBy?: string;
-  }> = new Map();
+export const createSupportTicket = (
+  userId: string,
+  userEmail: string,
+  userName: string,
+  category: SupportTicket['category'],
+  subject: string,
+  description: string
+): string => {
+  return agentAssistant.createSupportTicket(userId, userEmail, userName, category, subject, description);
+};
 
   // Request credit access for staff
   requestCreditAccess(staffId: string, targetUserId: string, reason: string): string {

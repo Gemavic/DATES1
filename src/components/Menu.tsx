@@ -161,7 +161,12 @@ export const Menu: React.FC<MenuProps> = ({ onNavigate, currentScreen }) => {
                     return (
                       <button
                         key={item.id}
-                        onClick={() => handleNavigation(item.id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          console.log('Menu item clicked:', item.id);
+                          handleNavigation(item.id);
+                        }}
                         className={cn(
                           "w-full flex items-center space-x-3 p-3 sm:p-4 rounded-xl transition-all duration-200",
                           "touch-manipulation active:scale-95 hover:scale-[1.02] cursor-pointer select-none user-select-none",

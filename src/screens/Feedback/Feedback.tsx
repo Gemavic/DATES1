@@ -380,7 +380,7 @@ export const Feedback: React.FC<FeedbackProps> = ({ onNavigate }) => {
             <p><strong>Development:</strong> dev@dates.care</p>
             <p><strong>Design:</strong> design@dates.care</p>
             <p><strong>Business:</strong> business@dates.care</p>
-            <p><strong>Phone:</strong> +1 (613) 861-5799</p>
+            <p><strong>Phone:</strong> +1 (424) 488-7950</p>
           </div>
         </div>
       </div>

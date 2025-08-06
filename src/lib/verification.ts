@@ -343,7 +343,7 @@ class UserVerificationManager {
         <p>We've reviewed your verification documents and need some updates before we can approve your account.</p>
         <p><strong>Reason:</strong> ${reason}</p>
         <p>Please log into your account and resubmit the required documents. Our team is here to help if you have any questions.</p>
-        <p>Contact us at verification@dates.care for assistance.</p>
+        <p>Contact us at verification@dates.care or call +1 (424) 488-7950 for assistance.</p>
         <p>Best regards,<br>The Dates.care Team</p>
       `
     };
