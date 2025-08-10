@@ -23,29 +23,49 @@ export const useAuth = () => {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    return { data, error };
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      return { data, error };
+    } catch (error) {
+      console.error('Sign in error:', error);
+      return { 
+        data: null, 
+        error: { message: 'Authentication service temporarily unavailable. Please try again.' }
+      };
+    }
   };
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+          },
         },
-      },
-    });
-    return { data, error };
+      });
+      return { data, error };
+    } catch (error) {
+      console.error('Sign up error:', error);
+      return { 
+        data: null, 
+        error: { message: 'Registration service temporarily unavailable. Please try again.' }
+      };
+    }
   };
 
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
   };
 
   const getFirstName = () => {

@@ -1,157 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Override global console.error to filter out Supabase-related errors
-const originalConsoleError = console.error;
-console.error = (...args) => {
-  // Filter out Supabase-related errors
-  const message = args.join(' ').toLowerCase();
-  if (
-    message.includes('supabase') ||
-    message.includes('postgrest') ||
-    message.includes('realtime') ||
-    message.includes('auth') ||
-    message.includes('fetch') ||
-    message.includes('network') ||
-    message.includes('cors') ||
-    message.includes('connection')
-  ) {
-    // Silently ignore these errors
-    return;
-  }
-  // Allow other errors to be logged normally
-  originalConsoleError.apply(console, args);
-};
-
 // Your Supabase URL and anon key
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://dates.care.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpka3hvbnVmaXVhZ2tyaHBybmJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzMjQ0NzQsImV4cCI6MjA2OTkwMDQ3NH0.auHwnh0siI7u95WN-4Fh0aESjge2S6Yks7MNSnivo-k';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://zdkxonufigragkrhprnbd.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpka3hvbnVmaWdhZ2tyaHBybmJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU5NTQ4NzAsImV4cCI6MjA1MTUzMDg3MH0.FrJwPwjB6gqFQmMOlUUnPFqwAFLLYNO_vGoQztj5Rt8';
 
-// Custom fetch implementation with error handling
-const customFetch = async (url: string, options?: RequestInit) => {
-  try {
-    return await fetch(url, options)
-  } catch (error) {
-    // Handle network errors gracefully without console output
-    // Return a mock response to prevent application crashes
-    return new Response(JSON.stringify({ error: 'Network unavailable' }), {
-      status: 503,
-      statusText: 'Service Unavailable',
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-}
-
-// Wrapper for authentication methods to handle errors gracefully
-const createAuthWrapper = (originalAuth: any) => {
-  return {
-    ...originalAuth,
-    signInWithPassword: async (...args: any[]) => {
-      try {
-        return await originalAuth.signInWithPassword(...args);
-      } catch (error) {
-        return { data: null, error: { message: 'Authentication service unavailable' } };
-      }
-    },
-    signUp: async (...args: any[]) => {
-      try {
-        return await originalAuth.signUp(...args);
-      } catch (error) {
-        return { data: null, error: { message: 'Registration service unavailable' } };
-      }
-    },
-    signOut: async (...args: any[]) => {
-      try {
-        return await originalAuth.signOut(...args);
-      } catch (error) {
-        return { data: null, error: null };
-      }
-    },
-    getSession: async (...args: any[]) => {
-      try {
-        return await originalAuth.getSession(...args);
-      } catch (error) {
-        return { data: { session: null }, error: null };
-      }
-    },
-    onAuthStateChange: (...args: any[]) => {
-      try {
-        return originalAuth.onAuthStateChange(...args);
-      } catch (error) {
-        return { data: { subscription: { unsubscribe: () => {} } } };
-      }
-    }
-  };
-};
-
-// Create Supabase client with custom fetch and error handling
-const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+// Create Supabase client
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true
-  },
-  global: {
-    fetch: customFetch
   }
 });
-
-// Wrap the auth methods
-const wrappedAuth = createAuthWrapper(supabaseClient.auth);
-
-// Create the final client with wrapped auth
-export const supabase = {
-  ...supabaseClient,
-  auth: wrappedAuth,
-  from: (table: string) => {
-    try {
-      return supabaseClient.from(table);
-    } catch (error) {
-      // Return a mock query builder that handles errors gracefully
-      return {
-        select: () => ({ data: [], error: null }),
-        insert: () => ({ data: null, error: null }),
-        update: () => ({ data: null, error: null }),
-        delete: () => ({ data: null, error: null }),
-        upsert: () => ({ data: null, error: null }),
-        eq: function() { return this; },
-        neq: function() { return this; },
-        gt: function() { return this; },
-        gte: function() { return this; },
-        lt: function() { return this; },
-        lte: function() { return this; },
-        like: function() { return this; },
-        ilike: function() { return this; },
-        is: function() { return this; },
-        in: function() { return this; },
-        contains: function() { return this; },
-        containedBy: function() { return this; },
-        rangeGt: function() { return this; },
-        rangeGte: function() { return this; },
-        rangeLt: function() { return this; },
-        rangeLte: function() { return this; },
-        rangeAdjacent: function() { return this; },
-        overlaps: function() { return this; },
-        textSearch: function() { return this; },
-        match: function() { return this; },
-        not: function() { return this; },
-        or: function() { return this; },
-        filter: function() { return this; },
-        order: function() { return this; },
-        limit: function() { return this; },
-        range: function() { return this; },
-        abortSignal: function() { return this; },
-        single: () => Promise.resolve({ data: null, error: null }),
-        maybeSingle: () => Promise.resolve({ data: null, error: null }),
-        csv: () => Promise.resolve({ data: '', error: null }),
-        geojson: () => Promise.resolve({ data: null, error: null }),
-        explain: () => Promise.resolve({ data: null, error: null }),
-        rollback: () => Promise.resolve({ data: null, error: null }),
-        returns: function() { return this; }
-      };
-    throw error
-  }
-  }
-};
 
 export type Database = {
   public: {

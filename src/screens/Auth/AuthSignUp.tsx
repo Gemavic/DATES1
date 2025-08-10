@@ -114,16 +114,16 @@ export const AuthSignUp: React.FC<AuthSignUpProps> = ({ onNavigate = () => {} })
         // Give new user 10 complimentary credits + 10 kobos (updated bonus)
         creditManager.initializeUser('current-user');
         
-        toast({
-          variant: 'success',
-          title: 'Account Created!',
-          description: 'Welcome to Dates! You can now sign in with your credentials.'
-        });
-        
         // Check if staff member and give unlimited credits
         if (formData.email.endsWith('@dates.care')) {
           creditManager.addCredits('current-user', 999999, 'Staff Member - Unlimited Credits', false);
         }
+        
+        toast({
+          variant: 'success',
+          title: 'Account Created!',
+          description: 'Welcome to Dates! You received 10 complimentary credits + 10 kobos!'
+        });
         
         // Navigate directly to discovery after successful signup
         onNavigate('discovery');

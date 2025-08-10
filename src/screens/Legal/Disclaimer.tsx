@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Layout } from '@/components/Layout';
 import { AlertTriangle, Shield, Heart, Users, Gavel, FileText, Phone, Mail, Clock } from 'lucide-react';
 
@@ -7,7 +7,18 @@ interface DisclaimerProps {
 }
 
 export const Disclaimer: React.FC<DisclaimerProps> = ({ onNavigate = () => {} }) => {
+  // Loading fallback component
+  const LoadingSpinner = () => (
+    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-rose-500 to-purple-600 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+        <p className="text-white">Loading Legal Disclaimer...</p>
+      </div>
+    </div>
+  );
+
   return (
+    <Suspense fallback={<LoadingSpinner />}>
     <Layout
       title="Legal Disclaimer"
       onBack={() => onNavigate('welcome')}
@@ -251,5 +262,6 @@ export const Disclaimer: React.FC<DisclaimerProps> = ({ onNavigate = () => {} })
         </div>
       </div>
     </Layout>
+    </Suspense>
   );
 };

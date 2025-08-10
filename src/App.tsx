@@ -390,6 +390,12 @@ const AppContent: React.FC = () => {
         )
       } />
       
+      {/* Legal Routes - Public Access */}
+      <Route path="/terms" element={<Terms onNavigate={handleNavigation} />} />
+      <Route path="/privacy" element={<Privacy onNavigate={handleNavigation} />} />
+      <Route path="/disclaimer" element={<Disclaimer onNavigate={handleNavigation} />} />
+      <Route path="/dispute" element={<Dispute onNavigate={handleNavigation} />} />
+      
       {/* Catch all route */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

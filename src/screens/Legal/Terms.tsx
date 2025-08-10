@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Layout } from '@/components/Layout';
 import { Shield, FileText, Users, Heart, Gavel, AlertTriangle, Clock } from 'lucide-react';
 
@@ -7,7 +7,18 @@ interface TermsProps {
 }
 
 export const Terms: React.FC<TermsProps> = ({ onNavigate = () => {} }) => {
+  // Loading fallback component
+  const LoadingSpinner = () => (
+    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-rose-500 to-purple-600 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+        <p className="text-white">Loading Terms of Service...</p>
+      </div>
+    </div>
+  );
+
   return (
+    <Suspense fallback={<LoadingSpinner />}>
     <Layout
       title="Terms of Service"
       onBack={() => onNavigate('welcome')}
@@ -297,5 +308,6 @@ export const Terms: React.FC<TermsProps> = ({ onNavigate = () => {} }) => {
         </div>
       </div>
     </Layout>
+    </Suspense>
   );
 };

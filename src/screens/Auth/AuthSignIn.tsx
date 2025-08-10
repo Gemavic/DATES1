@@ -7,6 +7,7 @@ import { Eye, EyeOff, Heart, Mail, Lock, Shield } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
 import { emailNotificationManager } from '@/lib/emailNotifications';
+import { creditManager } from '@/lib/creditSystem';
 
 interface AuthSignInProps {
   onNavigate?: (screen: string) => void;
@@ -54,7 +55,8 @@ export const AuthSignIn: React.FC<AuthSignInProps> = ({ onNavigate = () => {} })
         });
       } else {
         // Initialize email notifications
-        emailNotificationManager.initializeEmailSettings('current-user', formData.email);
+        // Initialize credit system for new user
+        creditManager.initializeUser('current-user');
         
         // Show personalized welcome back message after navigation
         setTimeout(() => {
