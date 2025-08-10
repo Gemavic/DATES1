@@ -12,9 +12,6 @@ export default defineConfig({
     hmr: {
       port: 5173,
     },
-    watch: {
-      usePolling: true
-    }
   },
   resolve: {
     alias: {
