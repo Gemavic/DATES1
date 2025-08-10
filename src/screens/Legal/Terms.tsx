@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Layout } from '@/components/Layout';
 import { Shield, FileText, Users, Heart, Gavel, AlertTriangle, Clock } from 'lucide-react';
 
@@ -7,18 +7,7 @@ interface TermsProps {
 }
 
 export const Terms: React.FC<TermsProps> = ({ onNavigate = () => {} }) => {
-  // Loading fallback component
-  const LoadingSpinner = () => (
-    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-rose-500 to-purple-600 flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-        <p className="text-white">Loading Terms of Service...</p>
-      </div>
-    </div>
-  );
-
   return (
-    <Suspense fallback={<LoadingSpinner />}>
     <Layout
       title="Terms of Service"
       onBack={() => onNavigate('welcome')}
@@ -140,113 +129,6 @@ export const Terms: React.FC<TermsProps> = ({ onNavigate = () => {} }) => {
             </div>
           </section>
 
-          {/* 5. Privacy and Data Protection */}
-          <section>
-            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">5. Privacy and Data Protection</h3>
-            <div className="space-y-3 text-gray-700">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 className="font-semibold text-blue-900 mb-2">PIPEDA and CPPA Compliance</h4>
-                <ul className="space-y-1 text-blue-800">
-                  <li>• Personal information collected with consent (PIPEDA Principle 3)</li>
-                  <li>• Data minimization practices implemented</li>
-                  <li>• User rights to access, correct, and delete personal data</li>
-                  <li>• Cross-border data transfer restrictions respected</li>
-                  <li>• Breach notification within 72 hours as required</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          {/* 6. Intellectual Property */}
-          <section>
-            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">6. Intellectual Property Rights</h3>
-            <div className="space-y-3 text-gray-700">
-              <p className="leading-relaxed">
-                All content, features, and functionality are owned by Dates.care Inc. and protected by 
-                Canadian copyright, trademark, and other intellectual property laws.
-              </p>
-              <div>
-                <h4 className="font-semibold mb-2">User Content License:</h4>
-                <ul className="space-y-1 ml-4 list-disc">
-                  <li>You retain ownership of content you submit</li>
-                  <li>You grant us license to use, display, and distribute your content</li>
-                  <li>You represent that you own or have rights to all submitted content</li>
-                  <li>We may remove content that violates these Terms</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          {/* 7. Limitation of Liability */}
-          <section>
-            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">7. Limitation of Liability</h3>
-            <div className="space-y-3 text-gray-700">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <h4 className="font-semibold text-red-900 mb-2">Ontario Courts Jurisdiction</h4>
-                <p className="text-red-800 leading-relaxed">
-                  To the maximum extent permitted by Ontario and Canadian law, Dates.care Inc. shall not be liable 
-                  for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, 
-                  data, or other intangible losses.
-                </p>
-              </div>
-              <p className="leading-relaxed">
-                Our maximum liability is limited to the amount paid by you for the service in the 12 months 
-                preceding the claim, in accordance with Ontario's Sale of Goods Act.
-              </p>
-            </div>
-          </section>
-
-          {/* 8. Termination */}
-          <section>
-            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">8. Termination</h3>
-            <div className="space-y-3 text-gray-700">
-              <p className="leading-relaxed">
-                We may terminate or suspend your account with reasonable notice, except in cases of 
-                serious misconduct where immediate termination is justified under Ontario employment and contract law.
-              </p>
-              <div>
-                <h4 className="font-semibold mb-2">Grounds for Immediate Termination:</h4>
-                <ul className="space-y-1 ml-4 list-disc">
-                  <li>Violation of criminal laws</li>
-                  <li>Harassment or abuse of other users</li>
-                  <li>Fraudulent payment or identity information</li>
-                  <li>Violation of platform community guidelines</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          {/* 9. Dispute Resolution */}
-          <section>
-            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">9. Dispute Resolution</h3>
-            <div className="space-y-3 text-gray-700">
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                <h4 className="font-semibold text-purple-900 mb-2">Ontario Alternative Dispute Resolution</h4>
-                <ol className="space-y-1 text-purple-800 list-decimal ml-4">
-                  <li>Informal negotiation (30 days)</li>
-                  <li>Mediation through Ontario Commercial Mediation Centre</li>
-                  <li>Binding arbitration under Ontario Arbitration Act, 1991</li>
-                  <li>Ontario Superior Court of Justice as final resort</li>
-                </ol>
-              </div>
-            </div>
-          </section>
-
-          {/* 10. Consumer Rights */}
-          <section>
-            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">10. Consumer Rights (Ontario CPA)</h3>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <h4 className="font-semibold text-green-900 mb-2">Your Rights Under Ontario Law</h4>
-              <ul className="space-y-1 text-green-800">
-                <li>• Right to cancel subscriptions within 10 business days</li>
-                <li>• Right to clear disclosure of all fees and charges</li>
-                <li>• Right to dispute unauthorized charges</li>
-                <li>• Protection against unfair business practices</li>
-                <li>• Access to Ontario's Consumer Protection Agency for complaints</li>
-              </ul>
-            </div>
-          </section>
-
           {/* Contact Information */}
           <section>
             <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">11. Legal Contact Information</h3>
@@ -260,32 +142,6 @@ export const Terms: React.FC<TermsProps> = ({ onNavigate = () => {} }) => {
                 <p><strong>Legal Department:</strong> legal@dates.care</p>
                 <p><strong>Phone:</strong> +1 (424) 488-7950</p>
                 <p><strong>Dispute Resolution:</strong> disputes@dates.care</p>
-              </div>
-              <div className="text-xs text-gray-600 mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded">
-                <p><strong>Regulatory Compliance:</strong></p>
-                <p>• Registered with Ontario Consumer Protection Agency</p>
-                <p>• Compliant with Personal Information Protection and Electronic Documents Act (PIPEDA)</p>
-                <p>• Following Consumer Protection Act, 2002 (Ontario)</p>
-              </div>
-            </div>
-          </section>
-
-          {/* Effective Date and Amendments */}
-          <section>
-            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">12. Amendments and Notice</h3>
-            <div className="space-y-3 text-gray-700">
-              <p className="leading-relaxed">
-                We reserve the right to modify these Terms with 30 days advance notice via email and 
-                platform notification, in compliance with Ontario Consumer Protection Act requirements.
-              </p>
-              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                <h4 className="font-semibold text-orange-900 mb-2">Notice Requirements</h4>
-                <ul className="space-y-1 text-orange-800">
-                  <li>• Email notification to registered address</li>
-                  <li>• In-app notification for 30 days</li>
-                  <li>• Posted notice on website legal section</li>
-                  <li>• Continued use constitutes acceptance of changes</li>
-                </ul>
               </div>
             </div>
           </section>
@@ -308,6 +164,5 @@ export const Terms: React.FC<TermsProps> = ({ onNavigate = () => {} }) => {
         </div>
       </div>
     </Layout>
-    </Suspense>
   );
 };
