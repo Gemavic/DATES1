@@ -49,7 +49,7 @@ export default defineConfig({
   
   // CSS configuration
   css: {
-    postcss: './postcss.config.js'
+    postcss: './postcss.config.cjs'
   },
   
   // Environment variables
