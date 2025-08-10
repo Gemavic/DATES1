@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { MessageCircle, Heart, Brain, Shield, Phone, Video, Calendar } from 'lucide-react';
@@ -8,6 +9,25 @@ interface CounsellingProps {
 }
 
 export const Counselling: React.FC<CounsellingProps> = ({ onNavigate }) => {
+  const [showBookingCalendar, setShowBookingCalendar] = useState(false);
+  const [selectedTherapist, setSelectedTherapist] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+
+  // Available dates for the next 7 days
+  const availableDates = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() + i + 1);
+    return date.toISOString().split('T')[0];
+  });
+
+  // Available time slots
+  const availableTimes = [
+    '9:00 AM', '10:00 AM', '11:00 AM',
+    '1:00 PM', '2:00 PM', '3:00 PM',
+    '4:00 PM', '5:00 PM', '6:00 PM'
+  ];
+
   const counsellingTypes = [
     {
       icon: Heart,
@@ -40,7 +60,7 @@ export const Counselling: React.FC<CounsellingProps> = ({ onNavigate }) => {
   ];
 
   const bookSession = (counsellorId: string, counsellorName: string) => {
-    setSelectedCounsellor(counsellorId);
+    setSelectedTherapist(counsellorId);
     setShowBookingCalendar(true);
   };
 
@@ -50,7 +70,7 @@ export const Counselling: React.FC<CounsellingProps> = ({ onNavigate }) => {
       return;
     }
     
-    const counsellor = counsellors.find(c => c.id === selectedCounsellor);
+    const counsellor = counsellors.find(c => c.id === selectedTherapist);
     const successMessage = document.createElement('div');
     successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
     successMessage.textContent = `📅 Session booked with ${counsellor?.name} on ${selectedDate} at ${selectedTime}!`;
@@ -59,7 +79,7 @@ export const Counselling: React.FC<CounsellingProps> = ({ onNavigate }) => {
     
     // Reset booking state
     setShowBookingCalendar(false);
-    setSelectedCounsellor(null);
+    setSelectedTherapist(null);
     setSelectedDate('');
     setSelectedTime('');
   };
@@ -237,20 +257,20 @@ export const Counselling: React.FC<CounsellingProps> = ({ onNavigate }) => {
             </div>
 
             {/* Counsellor Info */}
-            {selectedCounsellor && (
+            {selectedTherapist && (
               <div className="mb-6 p-4 bg-green-50 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <img
-                    src={counsellors.find(c => c.id === selectedCounsellor)?.image}
+                    src={counsellors.find(c => c.id === selectedTherapist)?.image}
                     alt="Counsellor"
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <div>
                     <h4 className="font-semibold text-gray-900">
-                      {counsellors.find(c => c.id === selectedCounsellor)?.name}
+                      {counsellors.find(c => c.id === selectedTherapist)?.name}
                     </h4>
                     <p className="text-sm text-gray-600">
-                      {counsellors.find(c => c.id === selectedCounsellor)?.specialization}
+                      {counsellors.find(c => c.id === selectedTherapist)?.specialization}
                     </p>
                   </div>
                 </div>
@@ -315,10 +335,10 @@ export const Counselling: React.FC<CounsellingProps> = ({ onNavigate }) => {
                 </p>
                 <p className="text-sm text-blue-700">Time: {selectedTime}</p>
                 <p className="text-sm text-blue-700">
-                  Counsellor: {counsellors.find(c => c.id === selectedCounsellor)?.name}
+                  Counsellor: {counsellors.find(c => c.id === selectedTherapist)?.name}
                 </p>
                 <p className="text-sm text-blue-700">
-                  Cost: {counsellors.find(c => c.id === selectedCounsellor)?.price}
+                  Cost: {counsellors.find(c => c.id === selectedTherapist)?.price}
                 </p>
               </div>
             )}
