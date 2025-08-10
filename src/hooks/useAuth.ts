@@ -48,6 +48,7 @@ export const useAuth = () => {
           id: 'mock-user-id',
           email: email,
           user_metadata: {
+        console.log('User signed in successfully:', data.user.email);
             full_name: email.includes('@dates.care') ? 'Staff Member' : 'Demo User'
           }
         } as User;
@@ -98,6 +99,7 @@ export const useAuth = () => {
 
   const signUp = async (email: string, password: string, fullName: string) => {
     const authClient = supabaseClient;
+        console.log('User signed up successfully:', data.user.email);
     try {
       // Check for mock authentication in development
       if (email.includes('@dates.care') || email === 'demo@example.com') {

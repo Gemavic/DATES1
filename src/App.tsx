@@ -191,203 +191,123 @@ const AppContent: React.FC = () => {
       
       {/* Protected Routes */}
       <Route path="/app" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <ModernDiscovery onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/discovery" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <ModernDiscovery onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/matches" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <Matches onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/likes" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <Likes onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/profile" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <Profile onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/settings" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <Settings onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/credits" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <ModernCredits onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/gifts" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <GiftShop onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/mail" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <Mail onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/audio-chat" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <AudioChat onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/video-chat" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <VideoChat onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/counselling" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <Counselling onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/couple-therapy" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <CoupleTherapy onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/verification" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <Verification />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/onboarding" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <Onboarding onComplete={() => handleNavigation('discovery')} onBack={() => handleNavigation('welcome')} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/match-suitor" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <MatchSuitor onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/newsfeed" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <Newsfeed onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/menu" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <MenuShowcase onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/staff" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <StaffPanel />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       <Route path="/feedback" element={
-        user ? (
           <ResponsiveLayout currentScreen={currentScreen} onNavigate={handleNavigation}>
             <Feedback onNavigate={handleNavigation} />
           </ResponsiveLayout>
-        ) : (
-          <Navigate to="/signin" replace />
-        )
       } />
       
       {/* Legal Routes - Public Access */}
