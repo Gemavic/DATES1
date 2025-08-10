@@ -131,7 +131,7 @@ export const Terms: React.FC<TermsProps> = ({ onNavigate = () => {} }) => {
 
           {/* Contact Information */}
           <section>
-            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">11. Legal Contact Information</h3>
+            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">5. Legal Contact Information</h3>
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div>
                 <h4 className="font-semibold text-gray-900">Dates.care Inc.</h4>
