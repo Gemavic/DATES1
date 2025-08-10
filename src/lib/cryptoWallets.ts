@@ -4,6 +4,9 @@ export interface CryptoWalletInfo {
   name: string;
   address: string;
   network: string;
+  icon: string;
+  color: string;
+  currency: string;
   qrCode?: string;
   minAmount: number;
   maxAmount: number;

@@ -181,10 +181,10 @@ const AppContent: React.FC = () => {
       {/* Public Routes */}
       <Route path="/" element={<Welcome onNavigate={handleNavigation} />} />
       <Route path="/welcome" element={<Welcome onNavigate={handleNavigation} />} />
-      <Route path="/signin" element={<AuthSignIn onNavigate={handleNavigation} />} />
-      <Route path="/auth-signin" element={<AuthSignIn onNavigate={handleNavigation} />} />
-      <Route path="/signup" element={<AuthSignUp onNavigate={handleNavigation} />} />
-      <Route path="/auth-signup" element={<AuthSignUp onNavigate={handleNavigation} />} />
+      <Route path="/signin" element={<SignIn onNavigate={handleNavigation} />} />
+      <Route path="/auth-signin" element={<SignIn onNavigate={handleNavigation} />} />
+      <Route path="/signup" element={<SignUp onNavigate={handleNavigation} />} />
+      <Route path="/auth-signup" element={<SignUp onNavigate={handleNavigation} />} />
       <Route path="/checkout" element={<CheckoutPage onNavigate={handleNavigation} />} />
       <Route path="/success" element={<SuccessPage onNavigate={handleNavigation} />} />
       <Route path="/cancel" element={<CancelPage onNavigate={handleNavigation} />} />

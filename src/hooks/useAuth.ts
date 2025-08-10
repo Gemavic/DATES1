@@ -96,7 +96,7 @@ export const useAuth = () => {
   const signUp = async (email: string, password: string, fullName: string) => {
     try {
       // Check for mock authentication in development
-      if (email.includes('@dates.care') || email === 'demo@example.com') {
+      if (email.includes('@dates.care') || email === 'demo@example.com' || !supabaseUrl || !supabaseAnonKey) {
         const mockUser = {
           id: 'mock-user-' + Date.now(),
           email: email,
