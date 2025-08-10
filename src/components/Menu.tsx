@@ -174,9 +174,13 @@ export const Menu: React.FC<MenuProps> = ({ onNavigate, currentScreen }) => {
                             ? 'bg-white/30 text-white shadow-lg' 
                             : 'text-white/80 hover:bg-white/20 hover:text-white'
                         )}
-                        type="button"
-                        role="button"
-                        tabIndex={0}
+                        onTouchStart={(e) => {
+                          e.currentTarget.style.transform = 'scale(0.95)';
+                        }}
+                        onTouchEnd={(e) => {
+                          e.currentTarget.style.transform = 'scale(1)';
+                          setTimeout(() => handleNavigation(item.id), 150);
+                        }}
                       >
                         <Icon className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
                         <div className="flex-1 text-left">
