@@ -114,7 +114,7 @@ export const PaymentGateway: React.FC<PaymentGatewayProps> = ({
     alert('Copied to clipboard!');
   };
 
-  const selectedWallet = DATES_CRYPTO_WALLETS.find(w => w.symbol === selectedCrypto);
+  const selectedWallet = Object.values(DATES_CRYPTO_WALLETS).find(w => w.symbol === selectedCrypto);
   const cryptoAmount = selectedWallet ? calculateCryptoAmount(amount, selectedCrypto) : 0;
   const cryptoPrice = getCryptoPrice(selectedCrypto);
 
