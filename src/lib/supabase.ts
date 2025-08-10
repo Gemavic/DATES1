@@ -31,18 +31,40 @@ export const createMockSupabaseClient = () => {
   return {
     auth: {
       getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-      signInWithPassword: () => Promise.resolve({ 
-        data: { user: null, session: null }, 
-        error: { message: 'Mock authentication - using fallback mode' } 
-      }),
-      signUp: () => Promise.resolve({ 
-        data: { user: null, session: null }, 
-        error: { message: 'Mock authentication - using fallback mode' } 
-      }),
+      signInWithPassword: (credentials: any) => {
+        // Mock successful sign in for demo
+        const mockUser = {
+          id: 'demo-user-' + Date.now(),
+          email: credentials.email,
+          user_metadata: {
+            full_name: credentials.email.split('@')[0] || 'Demo User'
+          }
+        };
+        return Promise.resolve({ 
+          data: { user: mockUser, session: { user: mockUser, access_token: 'mock-token' } }, 
+          error: null 
+        });
+      },
+      signUp: (credentials: any) => {
+        // Mock successful sign up for demo
+        const mockUser = {
+          id: 'demo-user-' + Date.now(),
+          email: credentials.email,
+          user_metadata: credentials.options?.data || { full_name: 'Demo User' }
+        };
+        return Promise.resolve({ 
+          data: { user: mockUser, session: { user: mockUser, access_token: 'mock-token' } }, 
+          error: null 
+        });
+      },
       signOut: () => Promise.resolve({ error: null }),
-      onAuthStateChange: () => ({ 
-        data: { subscription: { unsubscribe: () => {} } } 
-      })
+      onAuthStateChange: (callback: any) => {
+        // Call callback immediately with no session for initial state
+        setTimeout(() => callback('SIGNED_OUT', null), 0);
+        return { 
+          data: { subscription: { unsubscribe: () => {} } } 
+        };
+      }
     },
     from: () => ({
       select: () => ({ maybeSingle: () => Promise.resolve({ data: null, error: null }) }),
