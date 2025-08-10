@@ -17,19 +17,19 @@
   ],
   "redirects": [
     {
-      "source": "/old-blog/:slug",
-      "destination": "/blog/:slug",
-      "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/about",
-      "destination": "/about-us"
+      "source": "/legal",
+      "destination": "/terms",
+      "permanent": false
     },
     {
-      "source": "/api/user",
-      "destination": "/api/user.js"
+      "source": "/tos",
+      "destination": "/terms",
+      "permanent": false
+    },
+    {
+      "source": "/pp",
+      "destination": "/privacy",
+      "permanent": false
     }
   ],
   "headers": [
@@ -47,8 +47,17 @@
         {
           "key": "X-XSS-Protection",
           "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
         }
       ]
     }
-  ]
+  ],
+  "framework": "vite"
 }

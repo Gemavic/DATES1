@@ -40,13 +40,13 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
       )}
 
       {/* Main Content Container */}
-      <div className="relative z-10 min-h-screen">
+      <div className="relative z-10 min-h-screen safe-area-inset-top safe-area-inset-bottom">
         {/* Mobile Layout (default) */}
         <div className="lg:hidden">
-          <div className="max-w-md mx-auto min-h-screen relative">
+          <div className="w-full max-w-md mx-auto min-h-screen relative px-safe-left px-safe-right">
             <div className={cn(
               "relative z-10",
-              showFooter ? "pb-24" : "pb-8"
+              showFooter ? "pb-24 safe-area-inset-bottom" : "pb-8 safe-area-inset-bottom"
             )}>
               {children}
             </div>
@@ -56,7 +56,7 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
               <Footer
                 activeTab={currentScreen}
                 onNavigate={onNavigate}
-                className="lg:hidden"
+                className="lg:hidden safe-area-inset-bottom"
               />
             )}
           </div>

@@ -38,11 +38,11 @@ export const Footer: React.FC<FooterProps> = ({
   return (
     <>
       <div className={cn(
-        "fixed bottom-0 left-0 right-0 w-full bg-white/90 backdrop-blur-sm border-t border-gray-200 shadow-2xl z-40",
+        "fixed bottom-0 left-0 right-0 w-full bg-white/90 backdrop-blur-sm border-t border-gray-200 shadow-2xl z-40 pb-safe-bottom",
         "safe-area-inset-bottom",
         className
       )}>
-        <div className="max-w-md mx-auto lg:max-w-full">
+        <div className="w-full max-w-md mx-auto lg:max-w-full px-safe-left px-safe-right">
           <div className="flex justify-around py-3 px-2 sm:px-4">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;

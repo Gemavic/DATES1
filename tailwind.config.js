@@ -15,11 +15,20 @@ module.exports = {
         'xl': '1280px',
         '2xl': '1536px',
         '3xl': '1920px',
+        // Mobile-first breakpoints
+        'mobile': '320px',
+        'tablet': '768px',
+        'desktop': '1024px',
+        'wide': '1440px',
       },
       spacing: {
         '18': '4.5rem',
         '88': '22rem',
         '128': '32rem',
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
       },
       colors: {
         border: "hsl(var(--border))",
