@@ -156,8 +156,14 @@ export const Welcome: React.FC<WelcomeProps> = ({ onGetStarted, onNavigate = () 
         <div className="px-4 sm:px-6 pb-6 sm:pb-8 relative z-10">
           <Button
             onClick={handleGetStarted}
+            onTouchStart={(e) => {
+              e.currentTarget.style.transform = 'scale(0.95)';
+            }}
+            onTouchEnd={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              setTimeout(() => handleGetStarted(), 150);
+            }}
             className="w-full h-12 sm:h-14 bg-white text-pink-600 hover:scale-105 active:scale-95 text-base sm:text-lg font-semibold rounded-2xl shadow-2xl transition-all duration-300 cursor-pointer touch-manipulation select-none"
-            type="button"
           >
             Get Started
           </Button>

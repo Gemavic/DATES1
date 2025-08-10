@@ -95,6 +95,7 @@ export const Menu: React.FC<MenuProps> = ({ onNavigate, currentScreen }) => {
   };
 
   const handleNavigation = (screenId: string) => {
+    console.log('Menu navigation triggered:', screenId);
     onNavigate(screenId);
     setIsOpen(false);
   };

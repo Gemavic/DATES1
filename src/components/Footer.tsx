@@ -26,12 +26,19 @@ export const Footer: React.FC<FooterProps> = ({
   const handleTabClick = (tab: any) => {
     console.log('Footer tab clicked:', tab.id);
     
-    if (tab.isChat) {
-      onNavigate('matches');
-    } else if (tab.onClick) {
-      tab.onClick();
-    } else {
-      onNavigate(tab.id);
+    try {
+      if (tab.isChat) {
+        console.log('Navigating to matches for chat');
+        onNavigate('matches');
+      } else if (tab.onClick) {
+        console.log('Using tab onClick handler');
+        tab.onClick();
+      } else {
+        console.log('Navigating to tab:', tab.id);
+        onNavigate(tab.id);
+      }
+    } catch (error) {
+      console.error('Navigation error:', error);
     }
   };
 
