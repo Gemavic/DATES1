@@ -135,8 +135,6 @@ export const Terms: React.FC<TermsProps> = ({ onNavigate = () => {} }) => {
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div>
                 <h4 className="font-semibold text-gray-900">Dates.care Inc.</h4>
-                <p className="text-gray-700">Ontario Corporation #123456789</p>
-              </div>
               <div className="space-y-1 text-gray-700">
                 <p><strong>Registered Address:</strong> 5515 Eglinton Ave, Etobicoke, ON M9C 5K5, Canada</p>
                 <p><strong>Legal Department:</strong> legal@dates.care</p>
