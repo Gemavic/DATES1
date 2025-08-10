@@ -1,15 +1,26 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Your Supabase URL and anon key
+// Default configuration for development (can be overridden by environment variables)
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://zdkxonufigragkrhprnbd.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpka3hvbnVmaWdhZ2tyaHBybmJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU5NTQ4NzAsImV4cCI6MjA1MTUzMDg3MH0.FrJwPwjB6gqFQmMOlUUnPFqwAFLLYNO_vGoQztj5Rt8';
 
-// Create Supabase client
+// Validate configuration
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.warn('Supabase configuration missing. Using mock authentication.');
+}
+
+// Create Supabase client with enhanced configuration
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
+    detectSessionInUrl: true,
+    flowType: 'pkce'
+  },
+  global: {
+    headers: {
+      'X-Client-Info': 'dates-care-app'
+    }
   }
 });
 
