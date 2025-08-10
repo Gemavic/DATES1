@@ -444,7 +444,7 @@ export const PaymentGateway: React.FC<PaymentGatewayProps> = ({
                 Select Cryptocurrency
               </h5>
               <div className="grid grid-cols-1 gap-2 mb-4">
-                {DATES_CRYPTO_WALLETS.slice(0, 6).map((wallet) => (
+                {Object.values(DATES_CRYPTO_WALLETS).slice(0, 6).map((wallet) => (
                   <button
                     key={wallet.symbol}
                     onClick={() => setSelectedCrypto(wallet.symbol)}
