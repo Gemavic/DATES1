@@ -53,7 +53,7 @@ export const useAuth = () => {
         return { data: { user: mockUser }, error: null };
       }
 
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
         email,
         password,
       });
