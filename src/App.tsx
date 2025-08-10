@@ -188,6 +188,7 @@ const AppContent: React.FC = () => {
       <Route path="/checkout" element={<CheckoutPage onNavigate={handleNavigation} />} />
       <Route path="/success" element={<SuccessPage onNavigate={handleNavigation} />} />
       <Route path="/cancel" element={<CancelPage onNavigate={handleNavigation} />} />
+      <Route path="/checkout" element={<CheckoutPage onNavigate={handleNavigation} />} />
       
       {/* Protected Routes */}
       <Route path="/app" element={
