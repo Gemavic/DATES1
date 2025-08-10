@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Users, Heart, MessageCircle, Calendar, Star, Shield } from 'lucide-react';
