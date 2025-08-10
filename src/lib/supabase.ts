@@ -52,6 +52,9 @@ export const createMockSupabaseClient = () => {
   };
 };
 
+// Use mock client if real client is not available
+export const supabaseClient = supabase || createMockSupabaseClient();
+
 export type Database = {
   public: {
     Tables: {

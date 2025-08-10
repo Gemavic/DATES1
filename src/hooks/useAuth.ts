@@ -53,7 +53,7 @@ export const useAuth = () => {
         return { data: { user: mockUser }, error: null };
       }
 
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -109,7 +109,7 @@ export const useAuth = () => {
         return { data: { user: mockUser }, error: null };
       }
 
-      const { data, error } = await supabaseClient.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -156,7 +156,7 @@ export const useAuth = () => {
 
   const signOut = async () => {
     try {
-      await supabaseClient.auth.signOut();
+      await authClient.auth.signOut();
     } catch (error) {
       console.warn('Sign out error:', error);
     } finally {
