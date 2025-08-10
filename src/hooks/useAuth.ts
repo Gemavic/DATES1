@@ -10,7 +10,8 @@ export const useAuth = () => {
     // Get initial session
     const initializeAuth = async () => {
       const authClient = supabaseClient;
-        const { data: { session }, error } = await supabase.auth.getSession();
+      try {
+        const { data: { session }, error } = await authClient.auth.getSession();
         if (error) {
           console.warn('Auth session error:', error.message);
           setUser(null);
@@ -29,15 +30,17 @@ export const useAuth = () => {
 
     // Listen for auth changes
     const authClient = supabaseClient;
+    const subscription = authClient.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => subscription.data.subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
     const authClient = supabaseClient;
+    try {
       // Check for mock authentication in development
       if (email.includes('@dates.care') || email === 'demo@example.com') {
         // Mock successful authentication for staff/demo
@@ -53,7 +56,7 @@ export const useAuth = () => {
         return { data: { user: mockUser }, error: null };
       }
 
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await authClient.auth.signInWithPassword({
         email,
         password,
       });
@@ -95,8 +98,9 @@ export const useAuth = () => {
 
   const signUp = async (email: string, password: string, fullName: string) => {
     const authClient = supabaseClient;
+    try {
       // Check for mock authentication in development
-      if (email.includes('@dates.care') || email === 'demo@example.com' || !supabaseUrl || !supabaseAnonKey) {
+      if (email.includes('@dates.care') || email === 'demo@example.com') {
         const mockUser = {
           id: 'mock-user-' + Date.now(),
           email: email,
@@ -109,7 +113,7 @@ export const useAuth = () => {
         return { data: { user: mockUser }, error: null };
       }
 
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error } = await authClient.auth.signUp({
         email,
         password,
         options: {
@@ -156,6 +160,7 @@ export const useAuth = () => {
 
   const signOut = async () => {
     const authClient = supabaseClient;
+    try {
       await authClient.auth.signOut();
     } catch (error) {
       console.warn('Sign out error:', error);
