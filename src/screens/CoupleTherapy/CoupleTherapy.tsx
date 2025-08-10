@@ -1,68 +1,55 @@
 import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
-import { Users, Heart, MessageCircle, Calendar, Star, Shield } from 'lucide-react';
+import { Users, Heart, MessageCircle, Calendar, Star, Shield, Phone, Video, Clock, CheckCircle } from 'lucide-react';
+import { CalendarScheduling } from '@/components/CalendarScheduling';
+import { creditManager, formatCredits } from '@/lib/creditSystem';
 
 interface CoupleTherapyProps {
   onNavigate: (screen: string) => void;
 }
 
 export const CoupleTherapy: React.FC<CoupleTherapyProps> = ({ onNavigate }) => {
-  const [selectedTherapist, setSelectedTherapist] = useState<string | null>(null);
-  const [showBookingCalendar, setShowBookingCalendar] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<string>('');
-  const [selectedTime, setSelectedTime] = useState<string>('');
-
-  const availableDates = [
-    '2025-01-15',
-    '2025-01-16', 
-    '2025-01-17',
-    '2025-01-18',
-    '2025-01-19',
-    '2025-01-22',
-    '2025-01-23'
-  ];
-
-  const availableTimes = [
-    '09:00 AM',
-    '10:00 AM',
-    '11:00 AM',
-    '02:00 PM',
-    '03:00 PM',
-    '04:00 PM',
-    '05:00 PM'
-  ];
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [bookedSessions, setBookedSessions] = useState<any[]>([]);
+  const [userBalance, setUserBalance] = useState(creditManager.getBalance('current-user'));
 
   const therapists = [
     {
       id: '1',
       name: 'Dr. Sarah Johnson',
-      specialization: 'Relationship Counseling',
-      experience: '15 years',
+      title: 'PhD, Licensed Marriage Therapist',
+      specialization: 'Couples & Relationship Therapy',
+      experience: '15 years experience',
       rating: 4.9,
       image: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
-      price: '$120/session',
-      availability: 'Available today'
+      hourlyRate: 150,
+      availableDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
+      sessionTypes: ['video', 'audio'] as ('video' | 'audio' | 'text')[]
     },
     {
       id: '2',
-      name: 'Dr. Michael Chen',
-      specialization: 'Marriage Therapy',
-      experience: '12 years',
+      name: 'Dr. Michael Chen', 
+      title: 'LMFT, Certified Couples Therapist',
+      specialization: 'Marriage & Family Therapy',
+      experience: '12 years experience',
       rating: 4.8,
       image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
-      price: '$100/session',
-      availability: 'Available tomorrow'
+      hourlyRate: 130,
+      availableDays: ['monday', 'wednesday', 'friday', 'saturday', 'sunday'],
+      sessionTypes: ['video', 'audio', 'text'] as ('video' | 'audio' | 'text')[]
     },
     {
       id: '3',
       name: 'Dr. Emily Rodriguez',
-      specialization: 'Communication Skills',
-      experience: '10 years',
+      title: 'PsyD, Relationship Specialist', 
+      specialization: 'Communication & Conflict Resolution',
+      experience: '10 years experience',
       rating: 4.9,
       image: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=400',
-      price: '$110/session',
-      availability: 'Available this week'
+      hourlyRate: 140,
+      availableDays: ['tuesday', 'thursday', 'friday', 'saturday'],
+      sessionTypes: ['video', 'audio'] as ('video' | 'audio' | 'text')[]
     }
   ];
 
@@ -93,12 +80,60 @@ export const CoupleTherapy: React.FC<CoupleTherapyProps> = ({ onNavigate }) => {
     }
   ];
 
-  const bookSession = (therapistName: string) => {
-    const successMessage = document.createElement('div');
-    successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
-    successMessage.textContent = `📅 Session booked with ${therapistName}!`;
-    document.body.appendChild(successMessage);
-    setTimeout(() => document.body.removeChild(successMessage), 3000);
+  const handleBookSession = (therapistId: string, date: string, time: string, duration: number, type: 'video' | 'audio' | 'text') => {
+    const therapist = therapists.find(t => t.id === therapistId);
+    const cost = Math.round((therapist!.hourlyRate * duration / 60) * 100) / 100;
+    
+    // Check if user can afford the session (couple therapy costs more)
+    const creditsNeeded = Math.ceil(cost * 1.2); // 20% markup for couple sessions
+    
+    if (creditManager.canAfford('current-user', creditsNeeded) || creditManager.isStaffMember('current-user')) {
+      if (!creditManager.isStaffMember('current-user')) {
+        const success = creditManager.spendCredits('current-user', creditsNeeded, `Couple therapy session with ${therapist!.name}`);
+        if (success) {
+          setUserBalance(creditManager.getBalance('current-user'));
+        }
+      }
+      
+      const newBooking = {
+        id: Math.random().toString(36).substring(2),
+        therapistId,
+        therapistName: therapist!.name,
+        date,
+        time,
+        duration,
+        type,
+        cost: cost * 1.2, // Couple therapy premium
+        status: 'confirmed',
+        isCouple: true
+      };
+      
+      setBookedSessions(prev => [...prev, newBooking]);
+      
+      // Show success message
+      const successMessage = document.createElement('div');
+      successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+      successMessage.innerHTML = `
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <div>
+            <div class="font-bold">Couple Therapy Booked!</div>
+            <div class="text-sm">${therapist!.name} • ${date} at ${time}</div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(successMessage);
+      setTimeout(() => {
+        if (document.body.contains(successMessage)) {
+          document.body.removeChild(successMessage);
+        }
+      }, 5000);
+      
+    } else {
+      alert(`Need ${formatCredits(creditsNeeded)} to book this couple therapy session!`);
+    }
   };
 
   return (
@@ -110,16 +145,30 @@ export const CoupleTherapy: React.FC<CoupleTherapyProps> = ({ onNavigate }) => {
       <div className="px-4 py-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <img 
-            src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=400" 
-            alt="Couple Therapy" 
-            className="w-20 h-20 mx-auto mb-4 rounded-full object-cover shadow-lg"
-          />
           <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
             <Users className="w-10 h-10 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Couple Therapy</h2>
           <p className="text-white/80">Professional guidance for stronger relationships</p>
+        </div>
+
+        {/* Credits Balance */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-white/80 text-sm">Your Credits</p>
+              <p className="text-2xl font-bold text-white">{formatCredits(userBalance)}</p>
+            </div>
+            <div className="text-right">
+              <Button
+                onClick={() => onNavigate('credits')}
+                className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2"
+              >
+                Buy More
+              </Button>
+              <p className="text-white/60 text-xs mt-1">Couple sessions: +20% cost</p>
+            </div>
+          </div>
         </div>
 
         {/* Services */}
@@ -144,53 +193,131 @@ export const CoupleTherapy: React.FC<CoupleTherapyProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Available Therapists */}
-        <div className="mb-8">
-          <h3 className="text-white font-semibold text-lg mb-4">Available Therapists</h3>
-          <div className="space-y-4">
-            {therapists.map((therapist) => (
-              <div
-                key={therapist.id}
-                className="bg-white/10 backdrop-blur-sm rounded-2xl p-4"
-              >
-                <div className="flex items-start space-x-4">
-                  <img
-                    src={therapist.image}
-                    alt={therapist.name}
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <h4 className="text-white font-medium">{therapist.name}</h4>
-                      <div className="flex items-center space-x-1">
-                        <Star className="w-4 h-4 text-yellow-400" fill="currentColor" />
-                        <span className="text-white text-sm">{therapist.rating}</span>
+        {/* Booked Sessions */}
+        {bookedSessions.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-white font-semibold text-lg mb-4">Your Upcoming Couple Sessions</h3>
+            <div className="space-y-3">
+              {bookedSessions.map((session) => (
+                <div key={session.id} className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                        <Users className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="text-white font-medium">{session.therapistName}</h4>
+                        <p className="text-white/70 text-sm">{session.date} at {session.time}</p>
+                        <p className="text-white/60 text-xs">{session.duration} min • {session.type} • Couple Session</p>
                       </div>
                     </div>
-                    <p className="text-white/80 text-sm mb-1">{therapist.specialization}</p>
-                    <p className="text-white/70 text-xs mb-2">{therapist.experience} experience • {therapist.rating}⭐</p>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-white font-medium text-sm">{therapist.price}</span>
-                      <span className="text-green-400 text-xs">{therapist.availability}</span>
+                    <div className="text-right">
+                      <p className="text-white font-bold">${session.cost}</p>
+                      <span className="text-green-400 text-xs">Confirmed</span>
                     </div>
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        bookSession(therapist.name);
-                      }}
-                      className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm hover:scale-105 transition-all duration-300"
-                      type="button"
-                    >
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Book Session
-                    </Button>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
+        {/* Calendar Scheduling */}
+        {showCalendar ? (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white font-semibold text-lg">Schedule Couple Therapy</h3>
+              <Button
+                onClick={() => setShowCalendar(false)}
+                className="bg-white/20 text-white hover:bg-white/30"
+              >
+                Close Calendar
+              </Button>
+            </div>
+            <CalendarScheduling
+              therapists={therapists}
+              onBookSession={handleBookSession}
+              serviceType="couple-therapy"
+            />
+          </div>
+        ) : (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white font-semibold text-lg">Our Couple Therapists</h3>
+              <Button
+                onClick={() => setShowCalendar(true)}
+                className="bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:scale-105 transition-all duration-300"
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                View Calendar
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              {therapists.map((therapist) => (
+                <div
+                  key={therapist.id}
+                  className="bg-white/10 backdrop-blur-sm rounded-2xl p-4"
+                >
+                  <div className="flex items-start space-x-4">
+                    <img
+                      src={therapist.image}
+                      alt={therapist.name}
+                      className="w-16 h-16 rounded-full object-cover border-2 border-white/30"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <h4 className="text-white font-medium">{therapist.name}</h4>
+                          <p className="text-white/60 text-xs">{therapist.title}</p>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <div className="flex">
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i} className={`text-sm ${i < Math.floor(therapist.rating) ? 'text-yellow-400' : 'text-white/30'}`}>
+                                ⭐
+                              </span>
+                            ))}
+                          </div>
+                          <span className="text-white/70 text-xs">({therapist.rating})</span>
+                        </div>
+                      </div>
+                      
+                      <p className="text-white/80 text-sm mb-2">{therapist.specialization}</p>
+                      <p className="text-white/70 text-xs mb-3">{therapist.experience}</p>
+                      
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-white font-medium text-sm">${therapist.hourlyRate}/hour</span>
+                          <span className="text-pink-400 text-xs">(+20% for couples)</span>
+                          <span className="text-white/60 text-xs">•</span>
+                          <div className="flex space-x-1">
+                            {therapist.sessionTypes.map((type, i) => {
+                              const Icon = type === 'video' ? Video : type === 'audio' ? Phone : MessageCircle;
+                              return (
+                                <Icon key={i} className="w-3 h-3 text-white/60" />
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <span className="text-green-400 text-xs">Available</span>
+                      </div>
+                      
+                      <Button
+                        onClick={() => setShowCalendar(true)}
+                        className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm hover:scale-105 transition-all duration-300 cursor-pointer touch-manipulation active:scale-95"
+                        type="button"
+                      >
+                        <Calendar className="w-4 h-4 mr-2" />
+                        View Availability
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {/* How It Works */}
         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4">
           <h3 className="text-white font-semibold text-lg mb-4">How It Works</h3>
@@ -226,126 +353,137 @@ export const CoupleTherapy: React.FC<CoupleTherapyProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Booking Calendar Modal */}
-      {showBookingCalendar && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900">Book Session</h3>
-              <button
-                onClick={() => setShowBookingCalendar(false)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+        {/* Calendar Scheduling */}
+        {showCalendar ? (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white font-semibold text-lg">Schedule Couple Therapy</h3>
+              <Button
+                onClick={() => setShowCalendar(false)}
+                className="bg-white/20 text-white hover:bg-white/30"
               >
-                ×
-              </button>
+                Close Calendar
+              </Button>
             </div>
-
-            {/* Therapist Info */}
-            {selectedTherapist && (
-              <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <img
-                    src={therapists.find(t => t.id === selectedTherapist)?.image}
-                    alt="Therapist"
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">
-                      {therapists.find(t => t.id === selectedTherapist)?.name}
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      {therapists.find(t => t.id === selectedTherapist)?.specialization}
-                    </p>
+            <CalendarScheduling
+              therapists={therapists}
+              onBookSession={handleBookSession}
+              serviceType="couple-therapy"
+            />
+          </div>
+        ) : (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white font-semibold text-lg">Our Couple Therapists</h3>
+              <Button
+                onClick={() => setShowCalendar(true)}
+                className="bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:scale-105 transition-all duration-300"
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                View Calendar
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              {therapists.map((therapist) => (
+                <div
+                  key={therapist.id}
+                  className="bg-white/10 backdrop-blur-sm rounded-2xl p-4"
+                >
+                  <div className="flex items-start space-x-4">
+                    <img
+                      src={therapist.image}
+                      alt={therapist.name}
+                      className="w-16 h-16 rounded-full object-cover border-2 border-white/30"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <h4 className="text-white font-medium">{therapist.name}</h4>
+                          <p className="text-white/60 text-xs">{therapist.title}</p>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <div className="flex">
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i} className={`text-sm ${i < Math.floor(therapist.rating) ? 'text-yellow-400' : 'text-white/30'}`}>
+                                ⭐
+                              </span>
+                            ))}
+                          </div>
+                          <span className="text-white/70 text-xs">({therapist.rating})</span>
+                        </div>
+                      </div>
+                      
+                      <p className="text-white/80 text-sm mb-2">{therapist.specialization}</p>
+                      <p className="text-white/70 text-xs mb-3">{therapist.experience}</p>
+                      
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-white font-medium text-sm">${therapist.hourlyRate}/hour</span>
+                          <span className="text-pink-400 text-xs">(+20% for couples)</span>
+                          <span className="text-white/60 text-xs">•</span>
+                          <div className="flex space-x-1">
+                            {therapist.sessionTypes.map((type, i) => {
+                              const Icon = type === 'video' ? Video : type === 'audio' ? Phone : MessageCircle;
+                              return (
+                                <Icon key={i} className="w-3 h-3 text-white/60" />
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <span className="text-green-400 text-xs">Available</span>
+                      </div>
+                      
+                      <Button
+                        onClick={() => setShowCalendar(true)}
+                        className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm hover:scale-105 transition-all duration-300 cursor-pointer touch-manipulation active:scale-95"
+                        type="button"
+                      >
+                        <Calendar className="w-4 h-4 mr-2" />
+                        View Availability
+                      </Button>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {/* Couple Therapy Benefits */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-8">
+          <h3 className="text-white font-semibold text-lg mb-4">Why Choose Couple Therapy?</h3>
+          <div className="space-y-3">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center">
+                <Heart className="w-4 h-4 text-white" />
               </div>
-            )}
-
-            {/* Date Selection */}
-            <div className="mb-6">
-              <h4 className="font-semibold text-gray-900 mb-3">Select Date</h4>
-              <div className="grid grid-cols-2 gap-2">
-                {availableDates.map((date) => (
-                  <button
-                    key={date}
-                    onClick={() => setSelectedDate(date)}
-                    className={`p-3 rounded-lg border-2 transition-colors ${
-                      selectedDate === date
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    {new Date(date).toLocaleDateString('en-US', { 
-                      weekday: 'short', 
-                      month: 'short', 
-                      day: 'numeric' 
-                    })}
-                  </button>
-                ))}
+              <div>
+                <p className="text-white font-medium">Strengthen Your Bond</p>
+                <p className="text-white/70 text-sm">Deepen emotional connection and intimacy</p>
               </div>
             </div>
-
-            {/* Time Selection */}
-            <div className="mb-6">
-              <h4 className="font-semibold text-gray-900 mb-3">Select Time</h4>
-              <div className="grid grid-cols-3 gap-2">
-                {availableTimes.map((time) => (
-                  <button
-                    key={time}
-                    onClick={() => setSelectedTime(time)}
-                    className={`p-2 rounded-lg border-2 transition-colors text-sm ${
-                      selectedTime === time
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    {time}
-                  </button>
-                ))}
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                <MessageCircle className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-white font-medium">Improve Communication</p>
+                <p className="text-white/70 text-sm">Learn healthy ways to express feelings</p>
               </div>
             </div>
-
-            {/* Booking Summary */}
-            {selectedDate && selectedTime && (
-              <div className="mb-6 p-4 bg-green-50 rounded-lg">
-                <h5 className="font-semibold text-green-800 mb-2">Booking Summary</h5>
-                <p className="text-sm text-green-700">
-                  Date: {new Date(selectedDate).toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}
-                </p>
-                <p className="text-sm text-green-700">Time: {selectedTime}</p>
-                <p className="text-sm text-green-700">
-                  Therapist: {therapists.find(t => t.id === selectedTherapist)?.name}
-                </p>
-                <p className="text-sm text-green-700">
-                  Cost: {therapists.find(t => t.id === selectedTherapist)?.price}
-                </p>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                <Shield className="w-4 h-4 text-white" />
               </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="flex space-x-3">
-              <Button
-                onClick={() => setShowBookingCalendar(false)}
-                className="flex-1 bg-gray-500 text-white hover:bg-gray-600"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={confirmBooking}
-                disabled={!selectedDate || !selectedTime}
-                className="flex-1 bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50"
-              >
-                Confirm Booking
-              </Button>
+              <div>
+                <p className="text-white font-medium">Resolve Conflicts</p>
+                <p className="text-white/70 text-sm">Navigate disagreements constructively</p>
+              </div>
             </div>
           </div>
         </div>
-      )}
+
     </Layout>
   );
 };
