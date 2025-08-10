@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ResponsiveLayout } from './components/ResponsiveLayout';
 import { Welcome } from './screens/Welcome/Welcome';
-import { AuthSignIn } from './screens/Auth/AuthSignIn';
-import { AuthSignUp } from './screens/Auth/AuthSignUp';
+import { SignIn } from './screens/Auth/SignIn';
+import { SignUp } from './screens/Auth/SignUp';
 import { Discovery } from './screens/Discovery/Discovery';
 import { ModernDiscovery } from './screens/Discovery/ModernDiscovery';
 import { Matches } from './screens/Matches/Matches';
