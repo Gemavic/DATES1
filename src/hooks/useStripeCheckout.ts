@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabaseClient } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 
 interface CheckoutOptions {
   priceId: string;
@@ -17,7 +17,7 @@ export function useStripeCheckout() {
     setError(null);
 
     try {
-      const { data: { session } } = await supabaseClient.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       
       if (!session?.access_token) {
         throw new Error('No authentication token found');
