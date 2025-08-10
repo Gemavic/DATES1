@@ -8,8 +8,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "vercel --prod",
-    "vercel-build": "vite build"
+    "vercel-build": "vite build",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "npm run build"
   },
   "dependencies": {
     "@radix-ui/react-progress": "^1.1.0",
