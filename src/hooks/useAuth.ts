@@ -109,7 +109,7 @@ export const useAuth = () => {
         return { data: { user: mockUser }, error: null };
       }
 
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
         options: {
@@ -135,7 +135,7 @@ export const useAuth = () => {
       
       // Fallback authentication for development
       if (email && password.length >= 6 && fullName.trim()) {
-        const mockUser = {
+        const fallbackUser = {
           id: 'demo-user-' + Date.now(),
           email: email,
           user_metadata: {
@@ -143,8 +143,8 @@ export const useAuth = () => {
           }
         } as User;
         
-        setUser(mockUser);
-        return { data: { user: mockUser }, error: null };
+        setUser(fallbackUser);
+        return { data: { user: fallbackUser }, error: null };
       }
       
       return { 
@@ -156,7 +156,7 @@ export const useAuth = () => {
 
   const signOut = async () => {
     try {
-      await supabase.auth.signOut();
+      await supabaseClient.auth.signOut();
     } catch (error) {
       console.warn('Sign out error:', error);
     } finally {

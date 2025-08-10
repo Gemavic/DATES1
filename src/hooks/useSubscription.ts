@@ -29,7 +29,7 @@ export function useSubscription() {
 
     const fetchSubscription = async () => {
       try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
           .from('stripe_user_subscriptions')
           .select('*')
           .maybeSingle();
