@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { creditManager, formatCredits, formatKobos, formatPrice } from '@/lib/creditSystem';
 import { PaymentGateway } from '@/components/PaymentGateway';
+import { StripeCheckout } from '@/components/StripeCheckout';
 import { securityManager, generateSecurityReport } from '@/lib/encryption';
 import { DATES_CRYPTO_WALLETS } from '@/lib/cryptoWallets';
 
@@ -35,6 +36,7 @@ export const ModernCredits: React.FC<ModernCreditsProps> = ({ onNavigate }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'credits' | 'kobos' | 'combo'>('credits');
   const [showPayment, setShowPayment] = useState(false);
+  const [showStripeCheckout, setShowStripeCheckout] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
   const [securityReport, setSecurityReport] = useState<any>(null);
   
@@ -54,13 +56,13 @@ export const ModernCredits: React.FC<ModernCreditsProps> = ({ onNavigate }) => {
     if (pkg) {
       console.log('Purchasing package:', pkg.name);
       setSelectedPackage(pkg);
-      setShowPayment(true);
+      setShowStripeCheckout(true);
     }
   };
 
   const handlePaymentSuccess = () => {
     console.log('Payment successful');
-    setShowPayment(false);
+    setShowStripeCheckout(false);
     setSelectedPackage(null);
     
     // Add credits to user account
@@ -79,7 +81,7 @@ export const ModernCredits: React.FC<ModernCreditsProps> = ({ onNavigate }) => {
 
   const handlePaymentCancel = () => {
     console.log('Payment cancelled');
-    setShowPayment(false);
+    setShowStripeCheckout(false);
     setSelectedPackage(null);
   };
 
@@ -502,6 +504,15 @@ export const ModernCredits: React.FC<ModernCreditsProps> = ({ onNavigate }) => {
         </div>
 
         {/* Payment Gateway */}
+        {showStripeCheckout && selectedPackage && (
+          <StripeCheckout
+            package={selectedPackage}
+            onSuccess={handlePaymentSuccess}
+            onCancel={handlePaymentCancel}
+          />
+        )}
+        
+        {/* Alternative Payment Gateway */}
         {showPayment && selectedPackage && (
           <PaymentGateway
             amount={selectedPackage.price}
