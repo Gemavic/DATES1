@@ -1,26 +1,38 @@
 import react from "@vitejs/plugin-react";
-import tailwind from "tailwindcss";
+import { resolve } from "path";
 import { defineConfig } from "vite";
-import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "./",
+  base: "/",
   server: {
     host: true,
+    port: 5173,
     hmr: {
       port: 5173,
     },
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": resolve(__dirname, "./src"),
     },
   },
-  css: {
-    postcss: {
-      plugins: [tailwind()],
-    },
+  build: {
+    outDir: "dist",
+    assetsDir: "assets",
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['lucide-react', 'clsx', 'tailwind-merge']
+        }
+      }
+    }
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom']
+  }
 });
