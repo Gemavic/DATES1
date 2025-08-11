@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
-import { Users, Heart, MessageCircle, Calendar, Star, Shield } from 'lucide-react';
+import { Users, Heart, MessageCircle, Calendar, Star, Shield, Clock } from 'lucide-react';
+import { BookingCalendar } from '@/components/BookingCalendar';
 
 interface CoupleTherapyProps {
   onNavigate: (screen: string) => void;
@@ -10,28 +11,6 @@ interface CoupleTherapyProps {
 export const CoupleTherapy: React.FC<CoupleTherapyProps> = ({ onNavigate }) => {
   const [selectedTherapist, setSelectedTherapist] = useState<string | null>(null);
   const [showBookingCalendar, setShowBookingCalendar] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<string>('');
-  const [selectedTime, setSelectedTime] = useState<string>('');
-
-  const availableDates = [
-    '2025-01-15',
-    '2025-01-16', 
-    '2025-01-17',
-    '2025-01-18',
-    '2025-01-19',
-    '2025-01-22',
-    '2025-01-23'
-  ];
-
-  const availableTimes = [
-    '09:00 AM',
-    '10:00 AM',
-    '11:00 AM',
-    '02:00 PM',
-    '03:00 PM',
-    '04:00 PM',
-    '05:00 PM'
-  ];
 
   const therapists = [
     {
@@ -93,12 +72,34 @@ export const CoupleTherapy: React.FC<CoupleTherapyProps> = ({ onNavigate }) => {
     }
   ];
 
-  const bookSession = (therapistName: string) => {
+  const handleBookingConfirm = (therapistId: string, date: string, time: string) => {
+    const therapist = therapists.find(t => t.id === therapistId);
+    const formattedDate = new Date(date).toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      month: 'long', 
+      day: 'numeric',
+      year: 'numeric'
+    });
+    
     const successMessage = document.createElement('div');
     successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
-    successMessage.textContent = `📅 Session booked with ${therapistName}!`;
+    successMessage.innerHTML = `
+      <div class="flex items-center space-x-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <div>
+          <div class="font-bold">Couple Therapy Session Booked!</div>
+          <div class="text-sm">${therapist?.name} • ${formattedDate} at ${time}</div>
+        </div>
+      </div>
+    `;
     document.body.appendChild(successMessage);
-    setTimeout(() => document.body.removeChild(successMessage), 3000);
+    setTimeout(() => {
+      if (document.body.contains(successMessage)) {
+        document.body.removeChild(successMessage);
+      }
+    }, 7000);
   };
 
   return (
@@ -176,7 +177,9 @@ export const CoupleTherapy: React.FC<CoupleTherapyProps> = ({ onNavigate }) => {
                     <Button
                       onClick={(e) => {
                         e.preventDefault();
-                        bookSession(therapist.name);
+                        e.stopPropagation();
+                        setSelectedTherapist(therapist.id);
+                        setShowBookingCalendar(true);
                       }}
                       className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm hover:scale-105 transition-all duration-300"
                       type="button"
@@ -226,125 +229,14 @@ export const CoupleTherapy: React.FC<CoupleTherapyProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Booking Calendar Modal */}
+      {/* Enhanced Booking Calendar */}
       {showBookingCalendar && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900">Book Session</h3>
-              <button
-                onClick={() => setShowBookingCalendar(false)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              >
-                ×
-              </button>
-            </div>
-
-            {/* Therapist Info */}
-            {selectedTherapist && (
-              <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <img
-                    src={therapists.find(t => t.id === selectedTherapist)?.image}
-                    alt="Therapist"
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">
-                      {therapists.find(t => t.id === selectedTherapist)?.name}
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      {therapists.find(t => t.id === selectedTherapist)?.specialization}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Date Selection */}
-            <div className="mb-6">
-              <h4 className="font-semibold text-gray-900 mb-3">Select Date</h4>
-              <div className="grid grid-cols-2 gap-2">
-                {availableDates.map((date) => (
-                  <button
-                    key={date}
-                    onClick={() => setSelectedDate(date)}
-                    className={`p-3 rounded-lg border-2 transition-colors ${
-                      selectedDate === date
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    {new Date(date).toLocaleDateString('en-US', { 
-                      weekday: 'short', 
-                      month: 'short', 
-                      day: 'numeric' 
-                    })}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Time Selection */}
-            <div className="mb-6">
-              <h4 className="font-semibold text-gray-900 mb-3">Select Time</h4>
-              <div className="grid grid-cols-3 gap-2">
-                {availableTimes.map((time) => (
-                  <button
-                    key={time}
-                    onClick={() => setSelectedTime(time)}
-                    className={`p-2 rounded-lg border-2 transition-colors text-sm ${
-                      selectedTime === time
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    {time}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Booking Summary */}
-            {selectedDate && selectedTime && (
-              <div className="mb-6 p-4 bg-green-50 rounded-lg">
-                <h5 className="font-semibold text-green-800 mb-2">Booking Summary</h5>
-                <p className="text-sm text-green-700">
-                  Date: {new Date(selectedDate).toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}
-                </p>
-                <p className="text-sm text-green-700">Time: {selectedTime}</p>
-                <p className="text-sm text-green-700">
-                  Therapist: {therapists.find(t => t.id === selectedTherapist)?.name}
-                </p>
-                <p className="text-sm text-green-700">
-                  Cost: {therapists.find(t => t.id === selectedTherapist)?.price}
-                </p>
-              </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="flex space-x-3">
-              <Button
-                onClick={() => setShowBookingCalendar(false)}
-                className="flex-1 bg-gray-500 text-white hover:bg-gray-600"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={confirmBooking}
-                disabled={!selectedDate || !selectedTime}
-                className="flex-1 bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50"
-              >
-                Confirm Booking
-              </Button>
-            </div>
-          </div>
-        </div>
+        <BookingCalendar
+          therapists={therapists}
+          onBookingConfirm={handleBookingConfirm}
+          onClose={() => setShowBookingCalendar(false)}
+          selectedTherapist={selectedTherapist}
+        />
       )}
     </Layout>
   );
